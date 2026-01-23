@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>監控畫面</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: url('/monitor0314/images/background.jpg') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .video-grid {
+      width: 90%;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    video {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      background: black;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="video-grid">
+    <video src="/monitor0314/videos/video1.mp4" controls></video>
+    <video src="/monitor0314/videos/video2.mp4" controls></video>
+    <video src="/monitor0314/videos/video3.mp4" controls></video>
+    <video src="/monitor0314/videos/video4.mp4" controls></video>
+  </div>
+
+</body>
+</html>
