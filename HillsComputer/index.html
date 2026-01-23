@@ -305,6 +305,7 @@ monitorFolder.addEventListener('click',()=>{
   });
 });
 
+/* 關閉監視器視窗 */
 folderCloseBtn.addEventListener('click',()=>{folderWin.style.display='none';});
 
 /* ===== 一般資料夾示範 ===== */
@@ -350,10 +351,22 @@ trash.addEventListener('drop',e=>{
 function makeDraggable(win){
   let drag=false,offsetX,offsetY;
   const title=win.querySelector('.folder-titlebar');
-  title.onmousedown=e=>{drag=true;offsetX=e.clientX-win.offsetLeft;offsetY=e.clientY-win.offsetTop;}
-  document.onmousemove=e=>{if(drag){win.style.left=(e.clientX-offsetX)+'px';win.style.top=(e.clientY-offsetY)+'px';}}
-  document.onmouseup=()=>{drag=false;}
+  title.onmousedown=e=>{
+    drag=true;
+    offsetX=e.clientX-win.offsetLeft;
+    offsetY=e.clientY-win.offsetTop;
+    win.style.zIndex=20; // 提升拖曳視窗層級
+  };
+  document.onmousemove=e=>{
+    if(drag){
+      win.style.left=(e.clientX-offsetX)+'px';
+      win.style.top=(e.clientY-offsetY)+'px';
+    }
+  };
+  document.onmouseup=()=>{drag=false; win.style.zIndex=10;}
 }
+
+// 將兩個視窗都設為可拖曳
 makeDraggable(folderWin);
 makeDraggable(sampleFolderWin);
 </script>
