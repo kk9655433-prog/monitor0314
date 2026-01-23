@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>系統入口</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: url('images/background.jpg') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #eaeaea;
+    }
+
+    .container {
+      max-width: 720px;
+      background: rgba(0, 0, 0, 0.55);
+      padding: 36px 40px;
+      border-radius: 14px;
+      line-height: 1.8;
+      text-align: center; /* 關鍵：文字全部置中 */
+    }
+
+    .title {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .content {
+      font-size: 18px;
+      margin-bottom: 32px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 16px 48px;
+      font-size: 20px;
+      font-weight: 700;
+      background: #2ecc71;
+      color: #000;
+      text-decoration: none;
+      border-radius: 12px;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">網路入侵系統</div>
+
+    <div class="content">
+      歡迎您使用本駭客軟體。<br><br>
+
+      接下來，您必須入侵正確的 IP 位址，才能獲取您想要的東西。<br><br>
+
+      IP 位址示意格式為：<br>
+      <strong>XXX.XXX.XXX.XXX</strong><br><br>
+
+      系統共包含四組數字，每組數值範圍為 0–256。<br>
+      請確認輸入內容符合規則，否則將無法通過驗證。
+    </div>
+
+    <a class="btn" href="https://kk9655433-prog.github.io/START/">
+      開始入侵
+    </a>
+  </div>
+</body>
+</html>
