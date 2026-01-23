@@ -37,72 +37,51 @@ html,body{
   height:48px;
   margin-bottom:6px;
 }
-.modal{
+.window{
+  display:none;
   position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  opacity:0;
-  pointer-events:none;
-  transition:.3s;
-}
-.modal.active{
-  opacity:1;
-  pointer-events:auto;
-}
-.modal-content{
   background:#1e1e1e;
-  color:white;
-  padding:20px;
-  border-radius:12px;
-  max-width:90vw;
-  max-height:90vh;
-  position:relative;
+  border:1px solid #000;
+  border-radius:8px;
+  box-shadow:2px 2px 12px rgba(0,0,0,0.5);
+  overflow:hidden;
 }
-.close-btn{
-  position:absolute;
-  top:8px;
-  right:12px;
-  background:#ff4c4c;
-  border:none;
+.titlebar{
+  background:#0a64ad;
   color:white;
-  padding:4px 10px;
-  border-radius:6px;
+  padding:4px 8px;
+  cursor:move;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.content{
+  padding:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.folder-icon{
+  width:80px;
+  text-align:center;
   cursor:pointer;
+  color:white;
+}
+.folder-icon img{
+  width:48px;
+  height:48px;
+  margin-bottom:4px;
+}
+.video-content video{
+  width:100%;
+  height:100%;
+  border-radius:4px;
 }
 .pwd-box{
   width:48px;
   height:48px;
   font-size:24px;
   text-align:center;
-}
-.folder-window{
-  display:none;
-  position:fixed;
-  top:50px; left:50px;
-  width:600px; height:400px;
-  background:#c0d6f7;
-  border:1px solid #000;
-  box-shadow:2px 2px 10px rgba(0,0,0,0.5);
-}
-.folder-titlebar{
-  background:#0a64ad; color:white;
-  display:flex; justify-content:space-between; align-items:center;
-  padding:2px 6px;
-  cursor:move;
-}
-.folder-content{
-  padding:10px;
-  display:flex; flex-wrap:wrap; gap:12px;
-  overflow:auto; height:calc(100% - 28px);
-}
-.folder-icon{
-  width:80px; text-align:center; cursor:pointer;
-}
-.folder-icon img{
-  width:48px; height:48px; margin-bottom:6px;
 }
 </style>
 </head>
@@ -156,99 +135,65 @@ html,body{
     <img src="/monitor0314/icons/photo.png">瑪莉亞與喬登
   </div>
 
-  <div class="icon" data-type="folder" id="monitorFolder">
+  <div class="icon" data-type="folder" id="monitorIcon">
     <img src="/monitor0314/icons/monitor.png">監視器
   </div>
 </div>
 
-<!-- 共用彈窗 -->
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <button class="close-btn" id="closeBtn">X</button>
-    <div id="modalBody"></div>
+<!-- ===== Monitor Folder Window ===== -->
+<div class="window" id="monitorWindow" style="width:500px;height:350px;left:100px;top:100px;">
+  <div class="titlebar" id="monitorTitle">
+    <span>監視器</span>
+    <button id="monitorClose">X</button>
   </div>
+  <div class="content" id="monitorContent"></div>
 </div>
 
-<!-- 監視器資料夾視窗 -->
-<div class="folder-window" id="monitorFolderWindow">
-  <div class="folder-titlebar">
-    <span>監視器</span>
-    <div>
-      <button class="minimize-btn">-</button>
-      <button class="maximize-btn">口</button>
-      <button class="close-btn" id="folderCloseBtn">X</button>
-    </div>
+<!-- ===== Video Window ===== -->
+<div class="window" id="videoWindow" style="width:600px;height:400px;left:200px;top:120px;">
+  <div class="titlebar" id="videoTitle">
+    <span>監視器畫面</span>
+    <button id="videoClose">X</button>
   </div>
-  <div class="folder-content" id="folderContent"></div>
+  <div class="content video-content" id="videoContent"></div>
 </div>
 
 <script>
-const modal=document.getElementById('modal');
-const modalBody=document.getElementById('modalBody');
-document.getElementById('closeBtn').onclick=()=>{modal.classList.remove('active');modalBody.innerHTML='';};
-
 /* ===== 全部圖片預加載 ===== */
 document.querySelectorAll('.icon img').forEach(img=>{
-  const pre=new Image();
-  pre.src=img.src;
+  const pre=new Image(); pre.src=img.src;
 });
 document.querySelectorAll('.icon[data-type="gallery"]').forEach(icon=>{
   JSON.parse(icon.dataset.images).forEach(src=>{
-    const pre=new Image();
-    pre.src=src;
-  });
+    const pre=new Image(); pre.src=src;
 });
 
 /* ===== 一般 icon 點擊事件 ===== */
 document.querySelectorAll('.icon').forEach(icon=>{
   icon.addEventListener('click',()=>{
     const type=icon.dataset.type;
-    if(!type || type==='folder') return; // 監視器單獨處理
+    if(!type || type==='folder') return;
 
     const src=icon.dataset.src;
     const pwd=icon.dataset.password;
 
     if(type==='url'){window.open(src,'_blank');return;}
-    if(type==='text'){modalBody.innerHTML=`<p>${src}</p>`;modal.classList.add('active');return;}
-    if(type==='image'){modalBody.innerHTML=`<img src="${src}" style="max-width:90vw;max-height:90vh;">`;modal.classList.add('active');return;}
-    if(type==='gallery'){
-      const images=JSON.parse(icon.dataset.images);
-      let i=0;
-      const render=()=>{
-        modalBody.innerHTML=`<button id="p">◀</button>
-          <img src="${images[i]}" style="max-width:80vw;max-height:80vh;">
-          <button id="n">▶</button>
-          <p>${i+1}/${images.length}</p>`;
-        document.getElementById('p').onclick=()=>{i=(i-1+images.length)%images.length;render();}
-        document.getElementById('n').onclick=()=>{i=(i+1)%images.length;render();}
-      };
-      render();modal.classList.add('active');return;
-    }
-    if(type==='pdf'){
-      modalBody.innerHTML=`<p>請輸入密碼</p>
-        <div style="display:flex;gap:8px;">${'<input class="pwd-box" maxlength="1">'.repeat(4)}</div>
-        <p id="err" style="color:red;display:none;">密碼錯誤</p>`;
-      modal.classList.add('active');
-      const ins=[...document.querySelectorAll('.pwd-box')]; ins[0].focus();
-      document.onkeydown=e=>{
-        if(e.key==='Enter'){
-          if(ins.map(i=>i.value).join('')===pwd){
-            modalBody.innerHTML=`<iframe src="${src}" style="width:90vw;height:80vh;"></iframe>`;
-          }else{
-            document.getElementById('err').style.display='block';
-            ins.forEach(i=>i.value=''); ins[0].focus();
-          }
-        }
-      };
-    }
+    if(type==='text'){alert(src);return;}
+    if(type==='image'){alert('顯示圖片: '+src);return;}
+    if(type==='gallery'){let imgs=JSON.parse(icon.dataset.images),i=0;const render=()=>{
+      const img=new Image(); img.src=imgs[i]; alert('顯示圖片: '+imgs[i]); i=(i+1)%imgs.length;};render();return;}
+    if(type==='pdf'){alert('PDF密碼:'+pwd);return;}
   });
 });
 
-/* ===== 監視器資料夾 ===== */
-const monitorFolder=document.getElementById('monitorFolder');
-const folderWin=document.getElementById('monitorFolderWindow');
-const folderContent=document.getElementById('folderContent');
-const folderCloseBtn=document.getElementById('folderCloseBtn');
+/* ===== Monitor Folder Window ===== */
+const monitorIcon = document.getElementById('monitorIcon');
+const monitorWindow = document.getElementById('monitorWindow');
+const monitorContent = document.getElementById('monitorContent');
+const monitorClose = document.getElementById('monitorClose');
+const videoWindow = document.getElementById('videoWindow');
+const videoContent = document.getElementById('videoContent');
+const videoClose = document.getElementById('videoClose');
 
 const videos=[
   '/monitor0314/videos/video1.mp4',
@@ -257,24 +202,41 @@ const videos=[
   '/monitor0314/videos/video4.mp4'
 ];
 
-monitorFolder.addEventListener('click',()=>{
-  folderContent.innerHTML=videos.map((v,i)=>`
+monitorIcon.onclick=()=>{
+  monitorContent.innerHTML=videos.map((v,i)=>`
     <div class="folder-icon" data-video="${v}">
-      <img src="/monitor0314/icons/monitor.png">
+      <img src="/monitor0314/icons/camera.png">
       <div>監視器 ${i+1}</div>
     </div>`).join('');
-  folderWin.style.display='block';
+  monitorWindow.style.display='block';
 
-  folderContent.querySelectorAll('.folder-icon').forEach(icon=>{
+  monitorContent.querySelectorAll('.folder-icon').forEach(icon=>{
     icon.onclick=()=>{
-      window.open(icon.dataset.video,'_blank','width=800,height=600');
+      videoContent.innerHTML=`<video src="${icon.dataset.video}" controls autoplay></video>`;
+      videoWindow.style.display='block';
     };
   });
-});
+};
 
-folderCloseBtn.addEventListener('click',()=>{folderWin.style.display='none';});
+monitorClose.onclick=()=>{monitorWindow.style.display='none';};
 
-/* ===== 資源回收桶拖曳 ===== */
+/* ===== Video Window Close ===== */
+videoClose.onclick=()=>{
+  videoWindow.style.display='none';
+  videoContent.innerHTML='';
+};
+
+/* ===== 拖曳功能 ===== */
+function makeDraggable(win,title){
+  let d=false,x=0,y=0;
+  title.onmousedown=e=>{d=true;x=e.clientX-win.offsetLeft;y=e.clientY-win.offsetTop;};
+  document.onmousemove=e=>{if(d){win.style.left=e.clientX-x+'px';win.style.top=e.clientY-y+'px';}};
+  document.onmouseup=()=>d=false;
+}
+makeDraggable(monitorWindow,document.getElementById('monitorTitle'));
+makeDraggable(videoWindow,document.getElementById('videoTitle'));
+
+/* ===== 資源回收桶拖曳帳本 ===== */
 const book=document.getElementById('accountBook');
 const trash=document.getElementById('trash');
 book.addEventListener('dragstart',e=>e.dataTransfer.setData('x','book'));
@@ -282,13 +244,6 @@ trash.addEventListener('dragover',e=>e.preventDefault());
 trash.addEventListener('drop',e=>{
   if(e.dataTransfer.getData('x')==='book') book.remove();
 });
-
-/* ===== 資料夾可拖曳 ===== */
-let drag=false,offsetX,offsetY;
-const titleBar=folderWin.querySelector('.folder-titlebar');
-titleBar.onmousedown=e=>{drag=true;offsetX=e.clientX-folderWin.offsetLeft;offsetY=e.clientY-folderWin.offsetTop;}
-document.onmousemove=e=>{if(drag){folderWin.style.left=(e.clientX-offsetX)+'px';folderWin.style.top=(e.clientY-offsetY)+'px';}}
-document.onmouseup=()=>{drag=false;}
 </script>
 
 </body>
