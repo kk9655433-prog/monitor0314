@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手機桌面模擬</title>
+  <style>
+    /* 全螢幕鎖定，無滾動 */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: linear-gradient(135deg, #4e4376, #2b5876); /* 背景漸層 */
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .desktop {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* ICON自適配 */
+      grid-auto-rows: 100px;
+      gap: 16px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      text-align: center;
+      padding: 8px;
+      color: white;
+      font-size: 14px;
+      user-select: none;
+    }
+
+    .icon:hover {
+      transform: scale(1.1);
+      background: rgba(255,255,255,0.2);
+    }
+
+    .icon img {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 6px;
+    }
+
+    /* 彈窗樣式 */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: #1e1e1e;
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 90%;
+      max-height: 90%;
+      overflow: auto;
+      text-align: center;
+      position: relative;
+    }
+
+    .modal-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      background: #ff4c4c;
+      color: white;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="desktop">
+    <div class="icon" data-type="image" data-src="/images/pic1.jpg">
+      <img src="/icons/icon1.png" alt="圖片">
+      圖片
+    </div>
+
+    <div class="icon" data-type="text" data-src="這是一段文字彈窗內容(加密檔案)">
+      <img src="/icons/icon2.png" alt="文字">
+      文字
+    </div>
+
+    <div class="icon" data-type="url" data-src="https://example.com">
+      <img src="/icons/icon3.png" alt="網站">
+      網站
+    </div>
+
+    <div class="icon" data-type="image" data-src="/images/pic2.jpg">
+      <img src="/icons/icon4.png" alt="圖片2">
+      圖片2
+    </div>
+
+    <!-- 可以再加更多 ICON -->
+  </div>
+
+  <!-- 共用彈窗 -->
+  <div class="modal" id="modal">
+    <div class="modal-content" id="modalContent">
+      <button class="close-btn" id="closeBtn">X</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    const icons = document.querySelectorAll('.icon');
+    const modal = document.getElementById('modal');
+    const modalBody = document.getElementById('modalBody');
+    const closeBtn = document.getElementById('closeBtn');
+
+    icons.forEach(icon => {
+      icon.addEventListener('click', () => {
+        const type = icon.dataset.type;
+        const src = icon.dataset.src;
+
+        if (type === 'image') {
+          modalBody.innerHTML = `<img src="${src}" alt="彈窗圖片">`;
+          modal.classList.add('active');
+        } 
+        else if (type === 'text') {
+          modalBody.textContent = src;
+          modal.classList.add('active');
+        } 
+        else if (type === 'url') {
+          window.open(src, '_blank'); // 跳轉新頁
+        }
+      });
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+      modalBody.innerHTML = '';
+    });
+  </script>
+
+</body>
+</html>
