@@ -3,86 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>電腦入侵中……</title>
+<title>XP 桌面模擬</title>
 <style>
-html,body{
-  margin:0;
-  height:100%;
-  overflow:hidden;
-  background:url('/monitor0314/images/XP.jpg') no-repeat center/cover;
-  font-family:system-ui;
-}
-.desktop{
-  height:100%;
-  padding:20px;
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  align-items:flex-start;
-}
-.icon{
-  width:80px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  cursor:pointer;
-  color:white;
-  font-size:14px;
-  text-align:center;
-  text-shadow:0 2px 4px black;
-  user-select:none;
-}
-.icon img{
-  width:48px;
-  height:48px;
-  margin-bottom:6px;
-}
-.window{
-  display:none;
-  position:fixed;
-  background:#1e1e1e;
-  border:1px solid #000;
-  border-radius:8px;
-  box-shadow:2px 2px 12px rgba(0,0,0,0.5);
-  overflow:hidden;
-}
-.titlebar{
-  background:#0a64ad;
-  color:white;
-  padding:4px 8px;
-  cursor:move;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.content{
-  padding:10px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-}
-.folder-icon{
-  width:80px;
-  text-align:center;
-  cursor:pointer;
-  color:white;
-}
-.folder-icon img{
-  width:48px;
-  height:48px;
-  margin-bottom:4px;
-}
-.video-content video{
-  width:100%;
-  height:100%;
-  border-radius:4px;
-}
-.pwd-box{
-  width:48px;
-  height:48px;
-  font-size:24px;
-  text-align:center;
-}
+html,body{margin:0;height:100%;overflow:hidden;background:url('/monitor0314/images/XP.jpg') no-repeat center/cover;font-family:system-ui;}
+.desktop{height:100%;padding:20px;display:flex;flex-direction:column;gap:16px;align-items:flex-start;}
+.icon{width:80px;display:flex;flex-direction:column;align-items:center;cursor:pointer;color:white;font-size:14px;text-align:center;text-shadow:0 2px 4px black;user-select:none;}
+.icon img{width:48px;height:48px;margin-bottom:6px;}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:.3s;}
+.modal.active{opacity:1;pointer-events:auto;}
+.modal-content{background:#1e1e1e;color:white;padding:20px;border-radius:12px;max-width:90vw;max-height:90vh;position:relative;}
+.close-btn{position:absolute;top:8px;right:12px;background:#ff4c4c;border:none;color:white;padding:4px 10px;border-radius:6px;cursor:pointer;}
+.pwd-box{width:48px;height:48px;font-size:24px;text-align:center;}
+.window{display:none;position:fixed;background:#c0d6f7;border:1px solid #000;box-shadow:2px 2px 10px rgba(0,0,0,0.5);}
+.window .titlebar{background:#0a64ad;color:white;padding:2px 6px;cursor:move;display:flex;justify-content:space-between;align-items:center;}
+.window .content{padding:10px;display:flex;flex-wrap:wrap;gap:12px;overflow:auto;height:calc(100% - 28px);}
+.folder-icon{width:80px;text-align:center;cursor:pointer;}
+.folder-icon img{width:48px;height:48px;margin-bottom:6px;}
 </style>
 </head>
 <body>
@@ -98,23 +34,17 @@ html,body{
 
   <div class="icon" data-type="gallery"
     data-images='[
-      "/monitor0314/images/Calendar01.jpg",
-      "/monitor0314/images/Calendar02.jpg",
-      "/monitor0314/images/Calendar03.jpg",
-      "/monitor0314/images/Calendar04.jpg",
-      "/monitor0314/images/Calendar05.jpg",
-      "/monitor0314/images/Calendar06.jpg",
-      "/monitor0314/images/Calendar07.jpg",
-      "/monitor0314/images/Calendar08.jpg",
-      "/monitor0314/images/Calendar09.jpg",
-      "/monitor0314/images/Calendar10.jpg",
-      "/monitor0314/images/Calendar11.jpg",
-      "/monitor0314/images/Calendar12.jpg"
+      "/monitor0314/images/Calendar01.jpg","/monitor0314/images/Calendar02.jpg",
+      "/monitor0314/images/Calendar03.jpg","/monitor0314/images/Calendar04.jpg",
+      "/monitor0314/images/Calendar05.jpg","/monitor0314/images/Calendar06.jpg",
+      "/monitor0314/images/Calendar07.jpg","/monitor0314/images/Calendar08.jpg",
+      "/monitor0314/images/Calendar09.jpg","/monitor0314/images/Calendar10.jpg",
+      "/monitor0314/images/Calendar11.jpg","/monitor0314/images/Calendar12.jpg"
     ]'>
     <img src="/monitor0314/icons/Calendar.png">日曆
   </div>
 
-  <div class="icon" data-type="text" data-src="此為無關檔案。">
+  <div class="icon" data-type="folder" id="myFolder">
     <img src="/monitor0314/icons/File.png">資料夾
   </div>
 
@@ -135,115 +65,149 @@ html,body{
     <img src="/monitor0314/icons/photo.png">瑪莉亞與喬登
   </div>
 
-  <div class="icon" data-type="folder" id="monitorIcon">
+  <div class="icon" data-type="folder" id="monitorFolder">
     <img src="/monitor0314/icons/monitor.png">監視器
   </div>
 </div>
 
-<!-- ===== Monitor Folder Window ===== -->
-<div class="window" id="monitorWindow" style="width:500px;height:350px;left:100px;top:100px;">
+<!-- Modal -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <button class="close-btn" id="closeBtn">X</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- Monitor Folder Window -->
+<div class="window" id="monitorWindow" style="width:400px;height:300px;left:150px;top:150px;">
   <div class="titlebar" id="monitorTitle">
     <span>監視器</span>
     <button id="monitorClose">X</button>
   </div>
-  <div class="content" id="monitorContent"></div>
+  <div class="content">
+    <div class="folder-icon" data-video="/monitor0314/videos/video1.mp4"><img src="/monitor0314/icons/camera.png">監視器 1</div>
+    <div class="folder-icon" data-video="/monitor0314/videos/video2.mp4"><img src="/monitor0314/icons/camera.png">監視器 2</div>
+    <div class="folder-icon" data-video="/monitor0314/videos/video3.mp4"><img src="/monitor0314/icons/camera.png">監視器 3</div>
+    <div class="folder-icon" data-video="/monitor0314/videos/video4.mp4"><img src="/monitor0314/icons/camera.png">監視器 4</div>
+  </div>
 </div>
 
-<!-- ===== Video Window ===== -->
-<div class="window" id="videoWindow" style="width:600px;height:400px;left:200px;top:120px;">
-  <div class="titlebar" id="videoTitle">
-    <span>監視器畫面</span>
-    <button id="videoClose">X</button>
+<!-- Folder Window -->
+<div class="window" id="folderWindow" style="width:400px;height:300px;left:200px;top:200px;">
+  <div class="titlebar" id="folderTitle">
+    <span>資料夾</span>
+    <button id="folderClose">X</button>
   </div>
-  <div class="content video-content" id="videoContent"></div>
+  <div class="content" id="folderContent"></div>
+</div>
+
+<!-- Image Window -->
+<div class="window" id="imageWindow" style="width:500px;height:400px;left:250px;top:250px;">
+  <div class="titlebar" id="imageTitle">
+    <span>圖片</span>
+    <button id="imageClose">X</button>
+  </div>
+  <div class="content" id="imageContent"></div>
 </div>
 
 <script>
-/* ===== 全部圖片預加載 ===== */
-document.querySelectorAll('.icon img').forEach(img=>{
-  const pre=new Image(); pre.src=img.src;
-});
-document.querySelectorAll('.icon[data-type="gallery"]').forEach(icon=>{
-  JSON.parse(icon.dataset.images).forEach(src=>{
-    const pre=new Image(); pre.src=src;
+// 所有圖片預加載
+document.querySelectorAll('.icon[data-type="image"], .icon[data-type="gallery"]').forEach(icon=>{
+  if(icon.dataset.src) new Image().src=icon.dataset.src;
+  if(icon.dataset.images) JSON.parse(icon.dataset.images).forEach(s=>new Image().src=s);
 });
 
-/* ===== 一般 icon 點擊事件 ===== */
-document.querySelectorAll('.icon').forEach(icon=>{
-  icon.addEventListener('click',()=>{
-    const type=icon.dataset.type;
-    if(!type || type==='folder') return;
+// Modal
+const modal=document.getElementById('modal');
+const modalBody=document.getElementById('modalBody');
+document.getElementById('closeBtn').onclick=()=>{modal.classList.remove('active'); modalBody.innerHTML='';};
 
-    const src=icon.dataset.src;
-    const pwd=icon.dataset.password;
+// 監視器資料夾
+const monitorFolder=document.getElementById('monitorFolder');
+const monitorWindow=document.getElementById('monitorWindow');
+document.getElementById('monitorClose').onclick=()=>monitorWindow.style.display='none';
 
-    if(type==='url'){window.open(src,'_blank');return;}
-    if(type==='text'){alert(src);return;}
-    if(type==='image'){alert('顯示圖片: '+src);return;}
-    if(type==='gallery'){let imgs=JSON.parse(icon.dataset.images),i=0;const render=()=>{
-      const img=new Image(); img.src=imgs[i]; alert('顯示圖片: '+imgs[i]); i=(i+1)%imgs.length;};render();return;}
-    if(type==='pdf'){alert('PDF密碼:'+pwd);return;}
-  });
+monitorFolder.onclick=()=>monitorWindow.style.display='block';
+
+// 監控影片視窗
+const videoWindow=document.getElementById('imageWindow');
+const videoContent=document.getElementById('imageContent');
+document.getElementById('videoClose')?.remove?.(); // 移除舊的 videoClose 防衝突
+
+monitorWindow.querySelectorAll('.folder-icon').forEach(icon=>{
+  icon.onclick=()=>{
+    videoContent.innerHTML=`<video src="${icon.dataset.video}" controls autoplay style="max-width:100%;max-height:100%;"></video>`;
+    videoWindow.style.display='block';
+  };
 });
 
-/* ===== Monitor Folder Window ===== */
-const monitorIcon = document.getElementById('monitorIcon');
-const monitorWindow = document.getElementById('monitorWindow');
-const monitorContent = document.getElementById('monitorContent');
-const monitorClose = document.getElementById('monitorClose');
-const videoWindow = document.getElementById('videoWindow');
-const videoContent = document.getElementById('videoContent');
-const videoClose = document.getElementById('videoClose');
+// 普通資料夾
+const myFolder=document.getElementById('myFolder');
+const folderWindowEl=document.getElementById('folderWindow');
+const folderContent=document.getElementById('folderContent');
+document.getElementById('folderClose').onclick=()=>folderWindowEl.style.display='none';
 
-const videos=[
-  '/monitor0314/videos/video1.mp4',
-  '/monitor0314/videos/video2.mp4',
-  '/monitor0314/videos/video3.mp4',
-  '/monitor0314/videos/video4.mp4'
+const folderImages=[
+  '/monitor0314/images/folder01.jpg',
+  '/monitor0314/images/folder02.jpg',
+  '/monitor0314/images/folder03.jpg'
 ];
 
-monitorIcon.onclick=()=>{
-  monitorContent.innerHTML=videos.map((v,i)=>`
-    <div class="folder-icon" data-video="${v}">
-      <img src="/monitor0314/icons/monitor.png">
-      <div>監視器 ${i+1}</div>
-    </div>`).join('');
-  monitorWindow.style.display='block';
+myFolder.onclick=()=>{
+  folderContent.innerHTML=folderImages.map(s=>`<div class="folder-icon" data-src="${s}"><img src="${s}"><div style="color:white;font-size:12px;">${s.split('/').pop()}</div></div>`).join('');
+  folderWindowEl.style.display='block';
 
-  monitorContent.querySelectorAll('.folder-icon').forEach(icon=>{
+  folderContent.querySelectorAll('.folder-icon').forEach(icon=>{
     icon.onclick=()=>{
-      videoContent.innerHTML=`<video src="${icon.dataset.video}" controls autoplay></video>`;
+      videoContent.innerHTML=`<img src="${icon.dataset.src}" style="max-width:100%;max-height:100%;object-fit:contain;">`;
       videoWindow.style.display='block';
     };
   });
 };
 
-monitorClose.onclick=()=>{monitorWindow.style.display='none';};
+// 桌面普通 icon 點擊
+document.querySelectorAll('.desktop .icon').forEach(icon=>{
+  icon.addEventListener('click',()=>{
+    const type=icon.dataset.type, src=icon.dataset.src, pwd=icon.dataset.password;
+    if(type==='url'){window.open(src,'_blank'); return;}
+    if(type==='text'){modalBody.innerHTML=`<p>${src}</p>`; modal.classList.add('active'); return;}
+    if(type==='image'){modalBody.innerHTML=`<img src="${src}" style="max-width:90vw;max-height:90vh;object-fit:contain;border-radius:8px;">`; modal.classList.add('active'); return;}
+    if(type==='gallery'){
+      const images=JSON.parse(icon.dataset.images); let idx=0;
+      function render(){modalBody.innerHTML=`<div style="display:flex;align-items:center;gap:12px;">
+        <button id="prev">◀</button><img src="${images[idx]}" style="max-width:80vw;max-height:80vh;object-fit:contain;border-radius:8px;">
+        <button id="next">▶</button></div><p>${idx+1}/${images.length}</p>`;
+        document.getElementById('prev').onclick=()=>{idx=(idx-1+images.length)%images.length; render();}
+        document.getElementById('next').onclick=()=>{idx=(idx+1)%images.length; render();}
+      }
+      render(); modal.classList.add('active'); return;
+    }
+    if(type==='pdf' && pwd){
+      modalBody.innerHTML=`<p>請輸入密碼</p><div style="display:flex;gap:8px;justify-content:center;">
+        <input class="pwd-box" maxlength="1"><input class="pwd-box" maxlength="1">
+        <input class="pwd-box" maxlength="1"><input class="pwd-box" maxlength="1"></div>
+        <p id="err" style="color:red;display:none;">密碼錯誤</p>`;
+      modal.classList.add('active');
+      const inputs=[...document.querySelectorAll('.pwd-box')]; inputs[0].focus();
+      inputs.forEach((i,idx)=>i.oninput=()=>{i.value=i.value.replace(/\D/g,''); if(i.value && inputs[idx+1]) inputs[idx+1].focus();});
+      document.onkeydown=e=>{if(e.key==='Enter'){const v=inputs.map(i=>i.value).join('');if(v===pwd){modalBody.innerHTML=`<iframe src="${src}" style="width:90vw;height:80vh;" frameborder="0"></iframe>`;}else{document.getElementById('err').style.display='block';inputs.forEach(i=>i.value='');inputs[0].focus();}}};
+      return;
+    }
+  });
+});
 
-/* ===== Video Window Close ===== */
-videoClose.onclick=()=>{
-  videoWindow.style.display='none';
-  videoContent.innerHTML='';
-};
-
-/* ===== 拖曳功能 ===== */
-function makeDraggable(win,title){
-  let d=false,x=0,y=0;
-  title.onmousedown=e=>{d=true;x=e.clientX-win.offsetLeft;y=e.clientY-win.offsetTop;};
-  document.onmousemove=e=>{if(d){win.style.left=e.clientX-x+'px';win.style.top=e.clientY-y+'px';}};
-  document.onmouseup=()=>d=false;
-}
-makeDraggable(monitorWindow,document.getElementById('monitorTitle'));
-makeDraggable(videoWindow,document.getElementById('videoTitle'));
-
-/* ===== 資源回收桶拖曳帳本 ===== */
+// 拖曳帳本到資源回收桶
 const book=document.getElementById('accountBook');
 const trash=document.getElementById('trash');
-book.addEventListener('dragstart',e=>e.dataTransfer.setData('x','book'));
+book.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain','accountBook'));
 trash.addEventListener('dragover',e=>e.preventDefault());
-trash.addEventListener('drop',e=>{
-  if(e.dataTransfer.getData('x')==='book') book.remove();
-});
+trash.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.getData('text/plain')==='accountBook'){book.remove();alert('帳本已刪除');}});
+
+// 拖曳視窗
+function makeDraggable(win,title){let d=false,x=0,y=0;title.onmousedown=e=>{d=true;x=e.clientX-win.offsetLeft;y=e.clientY-win.offsetTop;};document.onmousemove=e=>{if(d){win.style.left=e.clientX-x+'px';win.style.top=e.clientY-y+'px';}};document.onmouseup=()=>d=false;}
+makeDraggable(monitorWindow,document.getElementById('monitorTitle'));
+makeDraggable(folderWindowEl,document.getElementById('folderTitle'));
+makeDraggable(videoWindow,document.getElementById('imageTitle'));
 </script>
 
 </body>
