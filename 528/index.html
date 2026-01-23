@@ -5,14 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>手機桌面模擬</title>
   <style>
-    /* 全螢幕鎖定，無滾動 */
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: url('/monitor0314/images/XP.jpg') no-repeat center center; /* 自訂背景 */
+      background: url('/monitor0314/images/XP.jpg') no-repeat center center;
       background-size: cover;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     }
@@ -21,8 +20,8 @@
       width: 100%;
       height: 100%;
       display: flex;
-      flex-direction: column; /* 縱向排列 */
-      align-items: flex-start; /* 靠左對齊 */
+      flex-direction: column;
+      align-items: flex-start;
       padding: 20px;
       box-sizing: border-box;
       gap: 16px;
@@ -56,7 +55,6 @@
       margin-bottom: 6px;
     }
 
-    /* 彈窗樣式 */
     .modal {
       position: fixed;
       inset: 0;
@@ -87,12 +85,6 @@
       position: relative;
     }
 
-    .modal-content img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-    }
-
     .close-btn {
       position: absolute;
       top: 8px;
@@ -105,45 +97,57 @@
       cursor: pointer;
       font-weight: bold;
     }
+
+    /* 正方形密碼格 */
+    .pwd-box {
+      width: 56px;
+      height: 56px;
+      font-size: 28px;
+      text-align: center;
+      border-radius: 10px;
+      border: 2px solid #888;
+      outline: none;
+      background: #111;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+    }
+
+    .pwd-box:focus {
+      border-color: #4da3ff;
+      box-shadow: 0 0 0 2px rgba(77,163,255,0.3);
+    }
   </style>
 </head>
 <body>
 
-  <div class="desktop">
-    <div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg">
-      <img src="/monitor0314/icons/Desktop.png" alt="圖片">
-      我的電腦
-    </div>
-
-    <div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg">
-      <img src="/monitor0314/icons/Trash.png" alt="圖片">
-      資源回收桶
-    </div>
-
-    <div class="icon" data-type="text" data-src="此為無關檔案。">
-      <img src="/monitor0314/icons/File.png" alt="文字">
-      資料夾
-    </div>
-
-    <div class="icon" data-type="url" data-src="https://www.google.com/">
-      <img src="/monitor0314/icons/google.png" alt="網站">
-      GOOGOO
-    </div>
-
-<div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg" data-password="0314">
-  <img src="/monitor0314/icons/Notepad.png" alt="圖片">
-  帳本
-</div>
-
-    <div class="icon" data-type="image" data-src="/monitor0314/images/family.jpg">
-      <img src="/monitor0314/icons/photo.png" alt="家人照片">
-      瑪莉亞與喬登
-    </div>
+<div class="desktop">
+  <div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg">
+    <img src="/monitor0314/icons/Desktop.png">我的電腦
   </div>
 
-<!-- 共用彈窗 -->
+  <div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg">
+    <img src="/monitor0314/icons/Trash.png">資源回收桶
+  </div>
+
+  <div class="icon" data-type="text" data-src="此為無關檔案。">
+    <img src="/monitor0314/icons/File.png">資料夾
+  </div>
+
+  <div class="icon" data-type="url" data-src="https://www.google.com/">
+    <img src="/monitor0314/icons/google.png">GOOGOO
+  </div>
+
+  <div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg" data-password="0314">
+    <img src="/monitor0314/icons/Notepad.png">帳本
+  </div>
+
+  <div class="icon" data-type="image" data-src="/monitor0314/images/family.jpg">
+    <img src="/monitor0314/icons/photo.png">瑪莉亞與喬登
+  </div>
+</div>
+
 <div class="modal" id="modal">
-  <div class="modal-content" id="modalContent">
+  <div class="modal-content">
     <button class="close-btn" id="closeBtn">X</button>
     <div id="modalBody"></div>
   </div>
@@ -155,26 +159,25 @@ const modal = document.getElementById('modal');
 const modalBody = document.getElementById('modalBody');
 const closeBtn = document.getElementById('closeBtn');
 
-closeBtn.addEventListener('click', () => {
+closeBtn.onclick = () => {
   modal.classList.remove('active');
   modalBody.innerHTML = '';
-});
+};
 
 icons.forEach(icon => {
-  icon.addEventListener('click', () => {
+  icon.onclick = () => {
     const type = icon.dataset.type;
     const src = icon.dataset.src;
     const password = icon.dataset.password;
 
     if (type === 'image' && password) {
-      // 先顯示密碼輸入介面
       modalBody.innerHTML = `
-        <p>請輸入密碼以查看圖片：</p>
+        <p>請輸入密碼：</p>
         <div style="display:flex;gap:8px;justify-content:center;margin:12px 0;">
-          <input type="text" maxlength="1" inputmode="numeric" class="pwd-box" autocomplete="off">
-          <input type="text" maxlength="1" inputmode="numeric" class="pwd-box" autocomplete="off">
-          <input type="text" maxlength="1" inputmode="numeric" class="pwd-box" autocomplete="off">
-          <input type="text" maxlength="1" inputmode="numeric" class="pwd-box" autocomplete="off">
+          <input class="pwd-box" maxlength="1">
+          <input class="pwd-box" maxlength="1">
+          <input class="pwd-box" maxlength="1">
+          <input class="pwd-box" maxlength="1">
         </div>
         <button id="pwdSubmit">確認</button>
         <p id="pwdError" style="color:red;display:none;">密碼錯誤</p>
@@ -185,63 +188,47 @@ icons.forEach(icon => {
       const submitBtn = document.getElementById('pwdSubmit');
       const errorMsg = document.getElementById('pwdError');
 
-      // 自動跳格 & 退格
       inputs.forEach((input, i) => {
-        input.addEventListener('input', () => {
-          input.value = input.value.replace(/[^0-9]/g, "");
-          if (input.value && inputs[i + 1]) {
-            inputs[i + 1].focus();
-          }
-        });
-        input.addEventListener('keydown', e => {
-          if (e.key === "Backspace" && !input.value && inputs[i - 1]) {
-            inputs[i - 1].focus();
-          }
-          if (e.key === "Enter") {
-            e.preventDefault();
-            checkPwd();
-          }
-        });
+        input.oninput = () => {
+          input.value = input.value.replace(/[^0-9]/g,'');
+          if (input.value && inputs[i+1]) inputs[i+1].focus();
+        };
+        input.onkeydown = e => {
+          if (e.key === 'Backspace' && !input.value && inputs[i-1]) inputs[i-1].focus();
+          if (e.key === 'Enter') checkPwd();
+        };
       });
 
       inputs[0].focus();
 
       function checkPwd() {
-        const entered = Array.from(inputs).map(i => i.value).join('');
-        if (entered === password) {
-// 正確密碼 → 顯示圖片
-modalBody.innerHTML = `
-  <img src="${src}" alt="彈窗圖片" 
-       style="
-          max-width: 90vw; 
-          max-height: 90vh; 
-          width: auto; 
-          height: auto; 
-          border-radius: 8px;
-          display: block;
-          margin: 0 auto;
-       ">
-`;
+        const val = [...inputs].map(i=>i.value).join('');
+        if (val === password) {
+          modalBody.innerHTML = `<img src="${src}" style="max-width:90vw;max-height:90vh;border-radius:8px;">`;
         } else {
           errorMsg.style.display = 'block';
-          inputs.forEach(i => i.value = "");
+          inputs.forEach(i=>i.value='');
           inputs[0].focus();
         }
       }
 
-      submitBtn.addEventListener('click', checkPwd);
+      submitBtn.onclick = checkPwd;
+    }
 
-    } else if (type === 'image') {
-      // 沒有密碼直接顯示圖片
-      modalBody.innerHTML = `<img src="${src}" alt="彈窗圖片" style="max-width:100%;height:auto;border-radius:8px;">`;
+    else if (type === 'image') {
+      modalBody.innerHTML = `<img src="${src}" style="max-width:90vw;max-height:90vh;border-radius:8px;">`;
       modal.classList.add('active');
-    } else if (type === 'text') {
+    }
+
+    else if (type === 'text') {
       modalBody.textContent = src;
       modal.classList.add('active');
-    } else if (type === 'url') {
-      window.open(src, '_blank');
     }
-  });
+
+    else if (type === 'url') {
+      window.open(src,'_blank');
+    }
+  };
 });
 </script>
 
