@@ -120,9 +120,9 @@ html,body{
   <div class="icon"
        id="accountBook"
        draggable="true"
-       data-type="image"
+       data-type="pdf"
        data-password="0519"
-       data-src="/monitor0314/images/pic1.jpg">
+       data-src="/monitor0314/another/ledger.pdf">
     <img src="/monitor0314/icons/Notepad.png">帳本
   </div>
 
@@ -182,7 +182,7 @@ icons.forEach(icon=>{
       return;
     }
 
-    if(type==='image' && pwd){
+    if(type==='pdf' && pwd){
       modalBody.innerHTML=`
         <p>請輸入密碼</p>
         <div style="display:flex;gap:8px;justify-content:center;">
@@ -195,15 +195,17 @@ icons.forEach(icon=>{
       modal.classList.add('active');
       const inputs=[...document.querySelectorAll('.pwd-box')];
       inputs[0].focus();
+
       inputs.forEach((i,idx)=>i.oninput=()=>{
         i.value=i.value.replace(/\D/g,'');
         if(i.value && inputs[idx+1]) inputs[idx+1].focus();
       });
+
       document.onkeydown=e=>{
         if(e.key==='Enter'){
           const v = inputs.map(i=>i.value).join('');
           if(v===pwd){
-            modalBody.innerHTML=`<img src="${src}" style="max-width:90vw; max-height:90vh; object-fit:contain; border-radius:8px;">`;
+            modalBody.innerHTML=`<iframe src="${src}" style="width:90vw; height:80vh;" frameborder="0"></iframe>`;
           }else{
             document.getElementById('err').style.display='block';
             inputs.forEach(i=>i.value=''); inputs[0].focus();
