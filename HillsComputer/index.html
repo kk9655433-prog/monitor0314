@@ -47,7 +47,7 @@ html,body{
   opacity:0;
   pointer-events:none;
   transition:.3s;
-  z-index:9999;
+  z-index:9999; /* 確保在所有視窗之上 */
 }
 .modal.active{
   opacity:1;
@@ -210,6 +210,13 @@ const modal=document.getElementById('modal');
 const modalBody=document.getElementById('modalBody');
 document.getElementById('closeBtn').onclick=()=>{modal.classList.remove('active');modalBody.innerHTML='';};
 
+/* 禁止右鍵 */
+document.addEventListener('contextmenu', e=>e.preventDefault());
+
+/* 禁止桌面拖曳時自動吸附區塊 */
+document.body.addEventListener('dragover', e=>e.preventDefault());
+document.body.addEventListener('drop', e=>e.preventDefault());
+
 /* ===== 全部圖片預加載 ===== */
 document.querySelectorAll('.icon img').forEach(img=>{new Image().src=img.src;});
 document.querySelectorAll('.icon[data-type="gallery"]').forEach(icon=>{
@@ -345,7 +352,7 @@ trash.addEventListener('drop',e=>{
   if(e.dataTransfer.getData('x')==='book') book.remove();
 });
 
-/* ===== 資料夾可拖曳，獨立事件，不互相覆蓋 ===== */
+/* ===== 資料夾可拖曳 ===== */
 function makeDraggable(win){
   let drag=false, offsetX=0, offsetY=0;
   const title = win.querySelector('.folder-titlebar');
@@ -354,7 +361,7 @@ function makeDraggable(win){
     drag=true;
     offsetX=e.clientX - win.offsetLeft;
     offsetY=e.clientY - win.offsetTop;
-    win.style.zIndex = 20; // 拖曳時提升層級
+    win.style.zIndex = 20; 
     e.preventDefault();
   });
 
