@@ -47,7 +47,7 @@ html,body{
   opacity:0;
   pointer-events:none;
   transition:.3s;
-  z-index:9999; /* 確保在所有視窗之上 */
+  z-index:9999;
 }
 .modal.active{
   opacity:1;
@@ -179,7 +179,6 @@ html,body{
   </div>
 </div>
 
-<!-- 共用彈窗 -->
 <div class="modal" id="modal">
   <div class="modal-content">
     <button class="close-btn" id="closeBtn">X</button>
@@ -187,7 +186,6 @@ html,body{
   </div>
 </div>
 
-<!-- 資料夾 window -->
 <div class="folder-window" id="sampleFolderWindow">
   <div class="folder-titlebar">
     <span>資料夾</span>
@@ -196,7 +194,6 @@ html,body{
   <div class="folder-content" id="sampleFolderContent"></div>
 </div>
 
-<!-- 監視器 window -->
 <div class="folder-window" id="monitorFolderWindow">
   <div class="folder-titlebar">
     <span>監視器</span>
@@ -210,12 +207,8 @@ const modal=document.getElementById('modal');
 const modalBody=document.getElementById('modalBody');
 document.getElementById('closeBtn').onclick=()=>{modal.classList.remove('active');modalBody.innerHTML='';};
 
-/* 禁止右鍵 */
+// 禁止右鍵
 document.addEventListener('contextmenu', e=>e.preventDefault());
-
-/* 禁止桌面拖曳時自動吸附區塊 */
-document.body.addEventListener('dragover', e=>e.preventDefault());
-document.body.addEventListener('drop', e=>e.preventDefault());
 
 /* ===== 全部圖片預加載 ===== */
 document.querySelectorAll('.icon img').forEach(img=>{new Image().src=img.src;});
@@ -306,31 +299,32 @@ monitorFolder.addEventListener('click',()=>{
 
   folderContent.querySelectorAll('.folder-icon').forEach(icon=>{
     icon.onclick=()=>{
-      modalBody.innerHTML=`<video src="${icon.dataset.video}" controls autoplay></video>`;
+      modalBody.innerHTML=`<video src="${icon.dataset.video}" controls autoplay style="max-width:80vw;max-height:80vh;"></video>`;
       modal.classList.add('active');
     };
   });
 });
 
-folderCloseBtn.addEventListener('click',()=>{folderWin.style.display='none';});
-
-/* ===== 一般資料夾示範 ===== */
+/* ===== 一般資料夾示範 (自訂名稱) ===== */
 const sampleFolder=document.getElementById('sampleFolder');
 const sampleFolderWin=document.getElementById('sampleFolderWindow');
 const sampleFolderContent=document.getElementById('sampleFolderContent');
 const sampleFolderClose=document.getElementById('sampleFolderClose');
 
+// 每個檔案可自訂名稱
 const sampleFiles=[
-  '/monitor0314/images/family.jpg',
-  '/monitor0314/images/PC.png'
+  { src:'/monitor0314/images/family.jpg', name:'快樂的一天' },
+  { src:'/monitor0314/images/PC.png', name:'悲傷的一天' },
+  { src:'/monitor0314/images/family2.jpg', name:'得意的一天' }
 ];
 
 sampleFolder.addEventListener('click',()=>{
-  sampleFolderContent.innerHTML=sampleFiles.map((src,i)=>`
-    <div class="folder-icon" data-type="image" data-src="${src}">
-      <img src="${src}">
-      <div>圖片 ${i+1}</div>
-    </div>`).join('');
+  sampleFolderContent.innerHTML = sampleFiles.map(file=>`
+    <div class="folder-icon" data-type="image" data-src="${file.src}">
+      <img src="${file.src}">
+      <div>${file.name}</div>
+    </div>
+  `).join('');
   sampleFolderWin.style.display='block';
 
   sampleFolderContent.querySelectorAll('.folder-icon').forEach(icon=>{
@@ -354,32 +348,12 @@ trash.addEventListener('drop',e=>{
 
 /* ===== 資料夾可拖曳 ===== */
 function makeDraggable(win){
-  let drag=false, offsetX=0, offsetY=0;
-  const title = win.querySelector('.folder-titlebar');
-
-  title.addEventListener('mousedown', e=>{
-    drag=true;
-    offsetX=e.clientX - win.offsetLeft;
-    offsetY=e.clientY - win.offsetTop;
-    win.style.zIndex = 20; 
-    e.preventDefault();
-  });
-
-  document.addEventListener('mousemove', e=>{
-    if(drag){
-      win.style.left=(e.clientX-offsetX)+'px';
-      win.style.top=(e.clientY-offsetY)+'px';
-    }
-  });
-
-  document.addEventListener('mouseup', e=>{
-    if(drag){
-      drag=false;
-      win.style.zIndex = 10;
-    }
-  });
+  let drag=false,offsetX,offsetY;
+  const title=win.querySelector('.folder-titlebar');
+  title.onmousedown=e=>{drag=true;offsetX=e.clientX-win.offsetLeft;offsetY=e.clientY-win.offsetTop;}
+  document.onmousemove=e=>{if(drag){win.style.left=(e.clientX-offsetX)+'px';win.style.top=(e.clientY-offsetY)+'px';}}
+  document.onmouseup=()=>{drag=false;}
 }
-
 makeDraggable(folderWin);
 makeDraggable(sampleFolderWin);
 </script>
