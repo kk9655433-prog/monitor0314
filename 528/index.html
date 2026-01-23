@@ -209,8 +209,19 @@ icons.forEach(icon => {
       function checkPwd() {
         const entered = Array.from(inputs).map(i => i.value).join('');
         if (entered === password) {
-          // 正確密碼 → 顯示圖片
-          modalBody.innerHTML = `<img src="${src}" alt="彈窗圖片" style="max-width:100%;height:auto;border-radius:8px;">`;
+// 正確密碼 → 顯示圖片
+modalBody.innerHTML = `
+  <img src="${src}" alt="彈窗圖片" 
+       style="
+          max-width: 90vw; 
+          max-height: 90vh; 
+          width: auto; 
+          height: auto; 
+          border-radius: 8px;
+          display: block;
+          margin: 0 auto;
+       ">
+`;
         } else {
           errorMsg.style.display = 'block';
           inputs.forEach(i => i.value = "");
