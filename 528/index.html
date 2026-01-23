@@ -1,167 +1,82 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>手機桌面模擬</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: url('/monitor0314/images/XP.jpg') no-repeat center center;
-      background-size: cover;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>手機桌面模擬</title>
+<style>
+html,body{
+  margin:0;height:100%;overflow:hidden;
+  background:url('/monitor0314/images/XP.jpg') no-repeat center/cover;
+  font-family:system-ui;
+}
+.desktop{
+  height:100%;padding:20px;
+  display:flex;flex-direction:column;gap:16px;align-items:flex-start;
+}
+.icon{
+  width:80px;text-align:center;cursor:pointer;
+  color:white;font-size:14px;
+  text-shadow:0 2px 4px black;
+  user-select:none;
+}
+.icon img{width:48px;height:48px;margin-bottom:6px;}
 
-    .desktop {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 20px;
-      box-sizing: border-box;
-      gap: 16px;
-    }
-
-    .icon {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255,255,255,0.1);
-      border-radius: 20px;
-      cursor: pointer;
-      transition: transform 0.2s;
-      text-align: center;
-      padding: 8px;
-      color: white;
-      font-size: 14px;
-      user-select: none;
-      width: 80px;
-    }
-
-    .icon:hover {
-      transform: scale(1.1);
-      background: rgba(255,255,255,0.2);
-    }
-
-    .icon img {
-      width: 40px;
-      height: 40px;
-      margin-bottom: 6px;
-    }
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .modal.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal-content {
-      background: #1e1e1e;
-      color: white;
-      padding: 20px;
-      border-radius: 12px;
-      max-width: 90%;
-      max-height: 90%;
-      overflow: auto;
-      text-align: center;
-      position: relative;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 8px;
-      right: 12px;
-      background: #ff4c4c;
-      color: white;
-      border: none;
-      padding: 4px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    /* 正方形密碼格 */
-    .pwd-box {
-      width: 56px;
-      height: 56px;
-      font-size: 28px;
-      text-align: center;
-      border-radius: 10px;
-      border: 2px solid #888;
-      outline: none;
-      background: #111;
-      color: #fff;
-      font-family: 'Courier New', monospace;
-    }
-
-    .pwd-box:focus {
-      border-color: #4da3ff;
-      box-shadow: 0 0 0 2px rgba(77,163,255,0.3);
-    }
-  </style>
+.modal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.6);
+  display:flex;justify-content:center;align-items:center;
+  opacity:0;pointer-events:none;transition:.3s;
+}
+.modal.active{opacity:1;pointer-events:auto;}
+.modal-content{
+  background:#1e1e1e;color:white;
+  padding:20px;border-radius:12px;
+  max-width:90vw;max-height:90vh;
+  text-align:center;position:relative;
+}
+.close-btn{
+  position:absolute;top:8px;right:12px;
+  background:#ff4c4c;border:none;color:white;
+  padding:4px 10px;border-radius:6px;cursor:pointer;
+}
+.pwd-box{
+  width:48px;height:48px;
+  font-size:24px;text-align:center;
+  border-radius:8px;border:1px solid #555;
+}
+</style>
 </head>
 <body>
 
 <div class="desktop">
-  <div class="icon" data-type="image" data-src="/monitor0314/images/PC.png">
-    <img src="/monitor0314/icons/Desktop.png">我的電腦
-  </div>
 
-  <div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg">
-    <img src="/monitor0314/icons/Trash.png">資源回收桶
-  </div>
-
-<div class="icon" data-type="gallery"
-     data-images='[
-       "/monitor0314/images/Calendar/01.jpg",
-       "/monitor0314/images/Calendar/02.jpg",
-       "/monitor0314/images/Calendar/03.jpg",
-       "/monitor0314/images/Calendar/04.jpg",
-       "/monitor0314/images/Calendar/05.jpg",
-       "/monitor0314/images/Calendar/06.jpg",
-       "/monitor0314/images/Calendar/07.jpg",
-       "/monitor0314/images/Calendar/08.jpg",
-       "/monitor0314/images/Calendar/09.jpg",
-       "/monitor0314/images/Calendar/10.jpg",
-       "/monitor0314/images/Calendar/11.jpg",
-       "/monitor0314/images/Calendar/12.jpg"
-     ]'>
-  <img src="/monitor0314/icons/Trash.png">日歷
+<div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg">
+  <img src="/monitor0314/icons/Desktop.png">我的電腦
 </div>
 
-  <div class="icon" data-type="text" data-src="此為無關檔案。">
-    <img src="/monitor0314/icons/File.png">資料夾
-  </div>
+<div class="icon" data-type="gallery"
+ data-images='[
+ "/monitor0314/images/Calendar01.jpg",
+ "/monitor0314/images/Calendar02.jpg",
+ "/monitor0314/images/Calendar03.jpg",
+ "/monitor0314/images/Calendar04.jpg",
+ "/monitor0314/images/Calendar05.jpg",
+ "/monitor0314/images/Calendar06.jpg",
+ "/monitor0314/images/Calendar07.jpg",
+ "/monitor0314/images/Calendar08.jpg",
+ "/monitor0314/images/Calendar09.jpg",
+ "/monitor0314/images/Calendar10.jpg",
+ "/monitor0314/images/Calendar11.jpg",
+ "/monitor0314/images/Calendar12.jpg"
+ ]'>
+  <img src="/monitor0314/icons/Trash.png">日曆
+</div>
 
-  <div class="icon" data-type="url" data-src="https://www.google.com/">
-    <img src="/monitor0314/icons/google.png">GOOGOO
-  </div>
+<div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg" data-password="0314">
+  <img src="/monitor0314/icons/Notepad.png">帳本
+</div>
 
-  <div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg" data-password="0314">
-    <img src="/monitor0314/icons/Notepad.png">帳本
-  </div>
-
-  <div class="icon" data-type="image" data-src="/monitor0314/images/family.jpg">
-    <img src="/monitor0314/icons/photo.png">瑪莉亞與喬登
-  </div>
 </div>
 
 <div class="modal" id="modal">
@@ -172,110 +87,77 @@
 </div>
 
 <script>
-const icons = document.querySelectorAll('.icon');
-const modal = document.getElementById('modal');
-const modalBody = document.getElementById('modalBody');
-const closeBtn = document.getElementById('closeBtn');
+const icons=document.querySelectorAll('.icon');
+const modal=document.getElementById('modal');
+const modalBody=document.getElementById('modalBody');
+const closeBtn=document.getElementById('closeBtn');
 
-closeBtn.onclick = () => {
-  modal.classList.remove('active');
-  modalBody.innerHTML = '';
-};
+closeBtn.onclick=()=>{modal.classList.remove('active');modalBody.innerHTML='';};
 
-icons.forEach(icon => {
-  icon.onclick = () => {
-    const type = icon.dataset.type;
-    const src = icon.dataset.src;
-    const password = icon.dataset.password;
+icons.forEach(icon=>{
+icon.onclick=()=>{
+const type=icon.dataset.type;
+const src=icon.dataset.src;
+const pwd=icon.dataset.password;
 
-    if (type === 'image' && password) {
-      modalBody.innerHTML = `
-        <p>請輸入密碼：</p>
-        <div style="display:flex;gap:8px;justify-content:center;margin:12px 0;">
-          <input class="pwd-box" maxlength="1">
-          <input class="pwd-box" maxlength="1">
-          <input class="pwd-box" maxlength="1">
-          <input class="pwd-box" maxlength="1">
-        </div>
-        <button id="pwdSubmit">確認</button>
-        <p id="pwdError" style="color:red;display:none;">密碼錯誤</p>
-      `;
-      modal.classList.add('active');
+if(type==='image'&&pwd){
+modalBody.innerHTML=`
+<p>請輸入密碼</p>
+<div style="display:flex;gap:8px;justify-content:center;margin:12px 0;">
+<input class="pwd-box" maxlength="1">
+<input class="pwd-box" maxlength="1">
+<input class="pwd-box" maxlength="1">
+<input class="pwd-box" maxlength="1">
+</div>
+<p id="err" style="color:red;display:none;">密碼錯誤</p>`;
+modal.classList.add('active');
 
-      const inputs = document.querySelectorAll('.pwd-box');
-      const submitBtn = document.getElementById('pwdSubmit');
-      const errorMsg = document.getElementById('pwdError');
-
-      inputs.forEach((input, i) => {
-        input.oninput = () => {
-          input.value = input.value.replace(/[^0-9]/g,'');
-          if (input.value && inputs[i+1]) inputs[i+1].focus();
-        };
-        } else if (type === 'gallery') {
-  const images = JSON.parse(icon.dataset.images);
-  let index = 0;
-
-  function renderGallery() {
-    modalBody.innerHTML = `
-      <div style="display:flex;align-items:center;gap:12px;">
-        <button id="prevBtn">◀</button>
-        <img src="${images[index]}" 
-             style="max-width:80vw;max-height:80vh;border-radius:8px;">
-        <button id="nextBtn">▶</button>
-      </div>
-      <p style="margin-top:8px;">${index + 1} / ${images.length}</p>
-    `;
-
-    document.getElementById('prevBtn').onclick = () => {
-      index = (index - 1 + images.length) % images.length;
-      renderGallery();
-    };
-
-    document.getElementById('nextBtn').onclick = () => {
-      index = (index + 1) % images.length;
-      renderGallery();
-    };
-  }
-
-  renderGallery();
-  modal.classList.add('active');
+const inputs=[...document.querySelectorAll('.pwd-box')];
+inputs.forEach((i,idx)=>{
+i.oninput=()=>{i.value=i.value.replace(/[^0-9]/g,'');if(i.value&&inputs[idx+1])inputs[idx+1].focus();}
+i.onkeydown=e=>{
+if(e.key==="Backspace"&&!i.value&&inputs[idx-1])inputs[idx-1].focus();
+if(e.key==="Enter")check();
 }
-        input.onkeydown = e => {
-          if (e.key === 'Backspace' && !input.value && inputs[i-1]) inputs[i-1].focus();
-          if (e.key === 'Enter') checkPwd();
-        };
-      });
+});
+inputs[0].focus();
 
-      inputs[0].focus();
+function check(){
+const v=inputs.map(i=>i.value).join('');
+if(v===pwd){
+modalBody.innerHTML=`<img src="${src}" style="max-width:90vw;max-height:90vh;border-radius:8px;">`;
+}else{
+document.getElementById('err').style.display='block';
+inputs.forEach(i=>i.value='');inputs[0].focus();
+}
+}
 
-      function checkPwd() {
-        const val = [...inputs].map(i=>i.value).join('');
-        if (val === password) {
-          modalBody.innerHTML = `<img src="${src}" style="max-width:90vw;max-height:90vh;border-radius:8px;">`;
-        } else {
-          errorMsg.style.display = 'block';
-          inputs.forEach(i=>i.value='');
-          inputs[0].focus();
-        }
-      }
+}else if(type==='gallery'){
+const images=JSON.parse(icon.dataset.images);
+let idx=0;
+function render(){
+modalBody.innerHTML=`
+<div style="display:flex;align-items:center;gap:12px;">
+<button id="prev">◀</button>
+<img src="${images[idx]}" style="max-width:80vw;max-height:80vh;border-radius:8px;">
+<button id="next">▶</button>
+</div>
+<p>${idx+1}/${images.length}</p>`;
+document.getElementById('prev').onclick=()=>{idx=(idx-1+images.length)%images.length;render();}
+document.getElementById('next').onclick=()=>{idx=(idx+1)%images.length;render();}
+}
+render();modal.classList.add('active');
+document.onkeydown=e=>{
+if(!modal.classList.contains('active'))return;
+if(e.key==="ArrowLeft"){idx=(idx-1+images.length)%images.length;render();}
+if(e.key==="ArrowRight"){idx=(idx+1)%images.length;render();}
+}
 
-      submitBtn.onclick = checkPwd;
-    }
-
-    else if (type === 'image') {
-      modalBody.innerHTML = `<img src="${src}" style="max-width:90vw;max-height:90vh;border-radius:8px;">`;
-      modal.classList.add('active');
-    }
-
-    else if (type === 'text') {
-      modalBody.textContent = src;
-      modal.classList.add('active');
-    }
-
-    else if (type === 'url') {
-      window.open(src,'_blank');
-    }
-  };
+}else if(type==='image'){
+modalBody.innerHTML=`<img src="${src}" style="max-width:90vw;max-height:90vh;border-radius:8px;">`;
+modal.classList.add('active');
+}
+};
 });
 </script>
 
