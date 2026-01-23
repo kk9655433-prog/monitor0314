@@ -130,10 +130,10 @@
       GOOGOO
     </div>
 
-    <div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg">
-      <img src="/monitor0314/icons/Notepad.png" alt="圖片">
-     帳本
-    </div>
+<div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg" data-password="0314">
+  <img src="/monitor0314/icons/Notepad.png" alt="圖片">
+  帳本
+</div>
 
     <div class="icon" data-type="image" data-src="/monitor0314/images/pic2.jpg">
       <img src="/monitor0314/icons/photo.png" alt="家人照片">
@@ -141,44 +141,98 @@
     </div>
   </div>
 
-  <!-- 共用彈窗 -->
-  <div class="modal" id="modal">
-    <div class="modal-content" id="modalContent">
-      <button class="close-btn" id="closeBtn">X</button>
-      <div id="modalBody"></div>
-    </div>
+<!-- 共用彈窗 -->
+<div class="modal" id="modal">
+  <div class="modal-content" id="modalContent">
+    <button class="close-btn" id="closeBtn">X</button>
+    <div id="modalBody"></div>
   </div>
+</div>
 
-  <script>
-    const icons = document.querySelectorAll('.icon');
-    const modal = document.getElementById('modal');
-    const modalBody = document.getElementById('modalBody');
-    const closeBtn = document.getElementById('closeBtn');
+<script>
+const icons = document.querySelectorAll('.icon');
+const modal = document.getElementById('modal');
+const modalBody = document.getElementById('modalBody');
+const closeBtn = document.getElementById('closeBtn');
 
-    icons.forEach(icon => {
-      icon.addEventListener('click', () => {
-        const type = icon.dataset.type;
-        const src = icon.dataset.src;
+closeBtn.addEventListener('click', () => {
+  modal.classList.remove('active');
+  modalBody.innerHTML = '';
+});
 
-        if (type === 'image') {
-          modalBody.innerHTML = `<img src="${src}" alt="彈窗圖片">`;
-          modal.classList.add('active');
-        } 
-        else if (type === 'text') {
-          modalBody.textContent = src;
-          modal.classList.add('active');
-        } 
-        else if (type === 'url') {
-          window.open(src, '_blank'); // 跳轉新頁
-        }
+icons.forEach(icon => {
+  icon.addEventListener('click', () => {
+    const type = icon.dataset.type;
+    const src = icon.dataset.src;
+    const password = icon.dataset.password;
+
+    if (type === 'image' && password) {
+      // 先顯示密碼輸入介面
+      modalBody.innerHTML = `
+        <p>請輸入密碼以查看圖片：</p>
+        <div style="display:flex;gap:8px;justify-content:center;margin:12px 0;">
+          <input type="text" maxlength="1" inputmode="numeric" class="pwd-box" autocomplete="off">
+          <input type="text" maxlength="1" inputmode="numeric" class="pwd-box" autocomplete="off">
+          <input type="text" maxlength="1" inputmode="numeric" class="pwd-box" autocomplete="off">
+          <input type="text" maxlength="1" inputmode="numeric" class="pwd-box" autocomplete="off">
+        </div>
+        <button id="pwdSubmit">確認</button>
+        <p id="pwdError" style="color:red;display:none;">密碼錯誤</p>
+      `;
+      modal.classList.add('active');
+
+      const inputs = document.querySelectorAll('.pwd-box');
+      const submitBtn = document.getElementById('pwdSubmit');
+      const errorMsg = document.getElementById('pwdError');
+
+      // 自動跳格 & 退格
+      inputs.forEach((input, i) => {
+        input.addEventListener('input', () => {
+          input.value = input.value.replace(/[^0-9]/g, "");
+          if (input.value && inputs[i + 1]) {
+            inputs[i + 1].focus();
+          }
+        });
+        input.addEventListener('keydown', e => {
+          if (e.key === "Backspace" && !input.value && inputs[i - 1]) {
+            inputs[i - 1].focus();
+          }
+          if (e.key === "Enter") {
+            e.preventDefault();
+            checkPwd();
+          }
+        });
       });
-    });
 
-    closeBtn.addEventListener('click', () => {
-      modal.classList.remove('active');
-      modalBody.innerHTML = '';
-    });
-  </script>
+      inputs[0].focus();
+
+      function checkPwd() {
+        const entered = Array.from(inputs).map(i => i.value).join('');
+        if (entered === password) {
+          // 正確密碼 → 顯示圖片
+          modalBody.innerHTML = `<img src="${src}" alt="彈窗圖片" style="max-width:100%;height:auto;border-radius:8px;">`;
+        } else {
+          errorMsg.style.display = 'block';
+          inputs.forEach(i => i.value = "");
+          inputs[0].focus();
+        }
+      }
+
+      submitBtn.addEventListener('click', checkPwd);
+
+    } else if (type === 'image') {
+      // 沒有密碼直接顯示圖片
+      modalBody.innerHTML = `<img src="${src}" alt="彈窗圖片" style="max-width:100%;height:auto;border-radius:8px;">`;
+      modal.classList.add('active');
+    } else if (type === 'text') {
+      modalBody.textContent = src;
+      modal.classList.add('active');
+    } else if (type === 'url') {
+      window.open(src, '_blank');
+    }
+  });
+});
+</script>
 
 </body>
 </html>
