@@ -7,27 +7,28 @@
   <style>
     body {
       margin: 0;
-      height: 100vh;
+      min-height: 100vh;
       background: url('/monitor0314/images/background.jpg') no-repeat center center;
       background-size: cover;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
+      padding: 40px 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     .video-grid {
       width: 90%;
-      max-width: 1200px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
 
     video {
       width: 100%;
       height: auto;
-      border-radius: 10px;
+      border-radius: 12px;
       background: black;
     }
   </style>
@@ -35,14 +36,21 @@
 <body>
 
   <div class="video-grid">
-    <BR></BR>
-    <video src="/monitor0314/videos/video1.mp4" controls></video>
-    <BR></BR>
-    <video src="/monitor0314/videos/video2.mp4" controls></video>
-    <BR></BR>
-    <video src="/monitor0314/videos/video3.mp4" controls></video>
-    <BR></BR>
-    <video src="/monitor0314/videos/video4.mp4" controls></video>
+    <video controls playsinline>
+      <source src="/monitor0314/videos/video1.mp4" type="video/mp4">
+    </video>
+
+    <video controls playsinline>
+      <source src="/monitor0314/videos/video2.mp4" type="video/mp4">
+    </video>
+
+    <video controls playsinline>
+      <source src="/monitor0314/videos/video3.mp4" type="video/mp4">
+    </video>
+
+    <video controls playsinline>
+      <source src="/monitor0314/videos/video4.mp4" type="video/mp4">
+    </video>
   </div>
 
 </body>
