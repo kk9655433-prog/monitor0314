@@ -20,11 +20,20 @@
       text-align: center;
     }
 
+    /* 半透明黑框 + 白字陰影 */
+    .title-container {
+      display: inline-block;
+      background: rgba(0,0,0,0.45);
+      padding: 12px 24px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+
     .title {
       font-size: 22px;
-      margin-bottom: 24px;
-      color: #000;
+      color: #fff;
       font-weight: 600;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
     }
 
     .inputs {
@@ -99,7 +108,9 @@
 <body>
 
   <div class="box">
-    <div class="title">請輸入驗證碼</div>
+    <div class="title-container">
+      <div class="title">請輸入驗證碼</div>
+    </div>
 
     <div class="inputs">
       <input maxlength="1" inputmode="numeric">
@@ -168,7 +179,11 @@
     function checkCode() {
       const code = inputs.map(i => i.value).join("");
       if (code === "35216097") {
-        window.location.href = "https://kk9655433-prog.github.io/monitor0314/528/";
+        // 成功提示後延遲跳轉
+        submitBtn.textContent = "驗證成功，正在跳轉…";
+        setTimeout(() => {
+          window.location.href = "https://kk9655433-prog.github.io/monitor0314/528/";
+        }, 800);
       } else {
         showError();
       }
