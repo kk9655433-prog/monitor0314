@@ -4,112 +4,133 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>電腦入侵中……</title>
+
 <style>
 html,body{
-  margin:0;height:100%;overflow:hidden;
+  margin:0;
+  height:100%;
+  overflow:hidden;
   background:url('/monitor0314/images/XP.jpg') no-repeat center/cover;
   font-family:system-ui;
 }
+
 .desktop{
-  height:100%;padding:20px;
-  display:flex;flex-direction:column;gap:16px;align-items:flex-start;
-}
-.icon {
-  width: 80px;
-  display: flex;
-  flex-direction: column;      /* 垂直排列 */
-  align-items: center;         /* 水平置中 */
-  justify-content: flex-start;
-  text-align: center;
-  cursor: pointer;
-  color: white;
-  font-size: 14px;
-  text-shadow: 0 2px 4px black;
-  user-select: none;
-  line-height: 1.2;
+  height:100%;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  align-items:flex-start;
 }
 
-.icon img {
-  width: 48px;
-  height: 48px;
-  margin-bottom: 6px;
-  display: block;
+.icon{
+  width:80px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  cursor:pointer;
+  color:white;
+  font-size:14px;
+  text-align:center;
+  text-shadow:0 2px 4px black;
+  user-select:none;
+}
+
+.icon img{
+  width:48px;
+  height:48px;
+  margin-bottom:6px;
 }
 
 .modal{
-  position:fixed;inset:0;
+  position:fixed;
+  inset:0;
   background:rgba(0,0,0,.6);
-  display:flex;justify-content:center;align-items:center;
-  opacity:0;pointer-events:none;transition:.3s;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
 }
-.modal.active{opacity:1;pointer-events:auto;}
+
+.modal.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
 .modal-content{
-  background:#1e1e1e;color:white;
-  padding:20px;border-radius:12px;
-  max-width:90vw;max-height:90vh;
-  text-align:center;position:relative;
+  background:#1e1e1e;
+  color:white;
+  padding:20px;
+  border-radius:12px;
+  max-width:90vw;
+  max-height:90vh;
+  position:relative;
 }
+
 .close-btn{
-  position:absolute;top:8px;right:12px;
-  background:#ff4c4c;border:none;color:white;
-  padding:4px 10px;border-radius:6px;cursor:pointer;
+  position:absolute;
+  top:8px;
+  right:12px;
+  background:#ff4c4c;
+  border:none;
+  color:white;
+  padding:4px 10px;
+  border-radius:6px;
+  cursor:pointer;
 }
+
 .pwd-box{
-  width:48px;height:48px;
-  font-size:24px;text-align:center;
-  border-radius:8px;border:1px solid #555;
+  width:48px;
+  height:48px;
+  font-size:24px;
+  text-align:center;
 }
 </style>
 </head>
+
 <body>
 
 <div class="desktop">
 
-<div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg">
- <img src="/monitor0314/icons/Desktop.png" alt="圖片"> 我的電腦
- </div>
+  <div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg">
+    <img src="/monitor0314/icons/Desktop.png">我的電腦
+  </div>
 
- <div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg">
- <img src="/monitor0314/icons/Trash.png" alt="圖片"> 資源回收桶
- </div>
+  <div class="icon" id="trash">
+    <img src="/monitor0314/icons/Trash.png">資源回收桶
+  </div>
 
-<div class="icon" data-type="gallery"
- data-images='[
- "/monitor0314/images/Calendar01.jpg",
- "/monitor0314/images/Calendar02.jpg",
- "/monitor0314/images/Calendar03.jpg",
- "/monitor0314/images/Calendar04.jpg",
- "/monitor0314/images/Calendar05.jpg",
- "/monitor0314/images/Calendar06.jpg",
- "/monitor0314/images/Calendar07.jpg",
- "/monitor0314/images/Calendar08.jpg",
- "/monitor0314/images/Calendar09.jpg",
- "/monitor0314/images/Calendar10.jpg",
- "/monitor0314/images/Calendar11.jpg",
- "/monitor0314/images/Calendar12.jpg"
- ]'>
-  <img src="/monitor0314/icons/Calendar.png">日曆
-</div>
+  <div class="icon" data-type="gallery"
+    data-images='[
+      "/monitor0314/images/Calendar01.jpg",
+      "/monitor0314/images/Calendar02.jpg",
+      "/monitor0314/images/Calendar03.jpg"
+    ]'>
+    <img src="/monitor0314/icons/Calendar.png">日曆
+  </div>
 
- <div class="icon" data-type="text" data-src="此為無關檔案。"> 
- <img src="/monitor0314/icons/File.png" alt="文字"> 資料夾
- </div>
- 
- <div class="icon" data-type="url" data-src="https://www.google.com/">
- <img src="/monitor0314/icons/google.png" alt="網站"> GOOGOO
- </div>
+  <div class="icon" data-type="text" data-src="此為無關檔案。">
+    <img src="/monitor0314/icons/File.png">資料夾
+  </div>
 
-<div class="icon draggable" draggable="true"
-     data-type="image"
-     data-src="/monitor0314/images/pic1.jpg"
-     data-password="0314"
-     id="accountBook">
- <img src="/monitor0314/icons/Notepad.png" alt="圖片"> 帳本
- </div>
+  <div class="icon" data-type="url" data-src="https://www.google.com/">
+    <img src="/monitor0314/icons/google.png">GOOGOO
+  </div>
 
- <div class="icon" data-type="image" data-src="/monitor0314/images/family.jpg">
- <img src="/monitor0314/icons/photo.png" alt="家人照片"> 瑪莉亞與喬登
- </div>
+  <div class="icon"
+       id="accountBook"
+       draggable="true"
+       data-type="image"
+       data-password="0314"
+       data-src="/monitor0314/images/pic1.jpg">
+    <img src="/monitor0314/icons/Notepad.png">帳本
+  </div>
+
+  <div class="icon" data-type="image" data-src="/monitor0314/images/family.jpg">
+    <img src="/monitor0314/icons/photo.png">瑪莉亞與喬登
+  </div>
 
 </div>
 
@@ -121,106 +142,101 @@ html,body{
 </div>
 
 <script>
-const icons=document.querySelectorAll('.icon');
-const modal=document.getElementById('modal');
-const modalBody=document.getElementById('modalBody');
-const closeBtn=document.getElementById('closeBtn');
+const icons = document.querySelectorAll('.icon');
+const modal = document.getElementById('modal');
+const modalBody = document.getElementById('modalBody');
+const closeBtn = document.getElementById('closeBtn');
 
-closeBtn.onclick=()=>{modal.classList.remove('active');modalBody.innerHTML='';};
+closeBtn.onclick = ()=>{
+  modal.classList.remove('active');
+  modalBody.innerHTML='';
+};
+
+/* ===== 點擊行為 ===== */
 
 icons.forEach(icon=>{
-icon.onclick=()=>{
-const type=icon.dataset.type;
-const src=icon.dataset.src;
-const pwd=icon.dataset.password;
+  icon.onclick = e=>{
+    if(e.target.closest('#accountBook') && e.detail === 0) return;
 
-if(type==='image'&&pwd){
-modalBody.innerHTML=`
-<p>請輸入密碼</p>
-<div style="display:flex;gap:8px;justify-content:center;margin:12px 0;">
-<input class="pwd-box" maxlength="1">
-<input class="pwd-box" maxlength="1">
-<input class="pwd-box" maxlength="1">
-<input class="pwd-box" maxlength="1">
-</div>
-<p id="err" style="color:red;display:none;">密碼錯誤</p>`;
-modal.classList.add('active');
+    const type = icon.dataset.type;
+    const src  = icon.dataset.src;
+    const pwd  = icon.dataset.password;
 
-const inputs=[...document.querySelectorAll('.pwd-box')];
-inputs.forEach((i,idx)=>{
-i.oninput=()=>{i.value=i.value.replace(/[^0-9]/g,'');if(i.value&&inputs[idx+1])inputs[idx+1].focus();}
-i.onkeydown=e=>{
-if(e.key==="Backspace"&&!i.value&&inputs[idx-1])inputs[idx-1].focus();
-if(e.key==="Enter")check();
-}
+    if(type === 'url'){
+      window.open(src,'_blank');
+      return;
+    }
+
+    if(type === 'text'){
+      modalBody.innerHTML = `<p>${src}</p>`;
+      modal.classList.add('active');
+      return;
+    }
+
+    if(type === 'image' && pwd){
+      modalBody.innerHTML = `
+        <p>請輸入密碼</p>
+        <div style="display:flex;gap:8px;justify-content:center">
+          <input class="pwd-box" maxlength="1">
+          <input class="pwd-box" maxlength="1">
+          <input class="pwd-box" maxlength="1">
+          <input class="pwd-box" maxlength="1">
+        </div>
+        <p id="err" style="color:red;display:none;">密碼錯誤</p>
+      `;
+      modal.classList.add('active');
+
+      const inputs = [...document.querySelectorAll('.pwd-box')];
+      inputs[0].focus();
+
+      inputs.forEach((i,idx)=>{
+        i.oninput=()=>{
+          i.value=i.value.replace(/\D/g,'');
+          if(i.value && inputs[idx+1]) inputs[idx+1].focus();
+        };
+      });
+
+      document.onkeydown = e=>{
+        if(e.key==="Enter"){
+          const v = inputs.map(i=>i.value).join('');
+          if(v === pwd){
+            modalBody.innerHTML = `<img src="${src}" style="max-width:80vw">`;
+          }else{
+            document.getElementById('err').style.display='block';
+            inputs.forEach(i=>i.value='');
+            inputs[0].focus();
+          }
+        }
+      };
+      return;
+    }
+
+    if(type === 'image'){
+      modalBody.innerHTML = `<img src="${src}" style="max-width:80vw">`;
+      modal.classList.add('active');
+    }
+  };
 });
 
-/* ====== 新增：拖曳帳本到資源回收桶 ====== */
+/* ===== 拖曳帳本 → 資源回收桶 ===== */
 
-const book = document.getElementById('accountBook');
-const trash = [...icons].find(i => i.textContent.includes('資源回收桶'));
+const book  = document.getElementById('accountBook');
+const trash = document.getElementById('trash');
 
 book.addEventListener('dragstart', e=>{
   e.dataTransfer.setData('text/plain','accountBook');
 });
 
-trash.addEventListener('dragover', e=>e.preventDefault());
+trash.addEventListener('dragover', e=>{
+  e.preventDefault();
+});
 
 trash.addEventListener('drop', e=>{
-  const id = e.dataTransfer.getData('text/plain');
-  if(id === 'accountBook'){
+  e.preventDefault();
+  if(e.dataTransfer.getData('text/plain') === 'accountBook'){
     book.remove();
     alert('帳本已刪除');
   }
-});
-  
-inputs[0].focus();
-
-function check(){
-const v=inputs.map(i=>i.value).join('');
-if(v===pwd){
-modalBody.innerHTML=`<img src="${src}" style="max-width:90vw;max-height:90vh;border-radius:8px;">`;
-}else{
-document.getElementById('err').style.display='block';
-inputs.forEach(i=>i.value='');inputs[0].focus();
-}
-}
-
-}else if(type==='gallery'){
-const images=JSON.parse(icon.dataset.images);
-let idx=0;
-function render(){
-modalBody.innerHTML=`
-<div style="display:flex;align-items:center;gap:12px;">
-<button id="prev">◀</button>
-<img src="${images[idx]}" style="max-width:80vw;max-height:80vh;border-radius:8px;">
-<button id="next">▶</button>
-</div>
-<p>${idx+1}/${images.length}</p>`;
-document.getElementById('prev').onclick=()=>{idx=(idx-1+images.length)%images.length;render();}
-document.getElementById('next').onclick=()=>{idx=(idx+1)%images.length;render();}
-}
-render();modal.classList.add('active');
-document.onkeydown=e=>{
-if(!modal.classList.contains('active'))return;
-if(e.key==="ArrowLeft"){idx=(idx-1+images.length)%images.length;render();}
-if(e.key==="ArrowRight"){idx=(idx+1)%images.length;render();}
-}
-
-}else if(type==='image'){
-modalBody.innerHTML=`<img src="${src}" style="max-width:90vw;max-height:90vh;border-radius:8px;">`;
-modal.classList.add('active');
-
-}else if(type==='text'){
-modalBody.innerHTML=`<p>${src}</p>`;
-modal.classList.add('active');
-}
-  
-}else if(type==='url'){
-  window.open(src,'_blank');
-}
-
-};
 });
 </script>
 
