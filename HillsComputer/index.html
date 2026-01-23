@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>電腦入侵中……</title>
-
 <style>
 html,body{
   margin:0;
@@ -79,13 +78,37 @@ html,body{
   font-size:24px;
   text-align:center;
 }
+.folder-window{
+  display:none;
+  position:fixed;
+  top:50px; left:50px;
+  width:600px; height:400px;
+  background:#c0d6f7;
+  border:1px solid #000;
+  box-shadow:2px 2px 10px rgba(0,0,0,0.5);
+}
+.folder-titlebar{
+  background:#0a64ad; color:white;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:2px 6px;
+  cursor:move;
+}
+.folder-content{
+  padding:10px;
+  display:flex; flex-wrap:wrap; gap:12px;
+  overflow:auto; height:calc(100% - 28px);
+}
+.folder-icon{
+  width:80px; text-align:center; cursor:pointer;
+}
+.folder-icon img{
+  width:48px; height:48px; margin-bottom:6px;
+}
 </style>
 </head>
-
 <body>
 
 <div class="desktop">
-
   <div class="icon" data-type="image" data-src="/monitor0314/images/PC.png">
     <img src="/monitor0314/icons/Desktop.png">我的電腦
   </div>
@@ -133,13 +156,12 @@ html,body{
     <img src="/monitor0314/icons/photo.png">瑪莉亞與喬登
   </div>
 
-  <div class="icon" id="monitorFolder">
+  <div class="icon" data-type="folder" id="monitorFolder">
     <img src="/monitor0314/icons/monitor.png">監視器
   </div>
-
 </div>
 
-<!-- 共用視窗 -->
+<!-- 共用彈窗 -->
 <div class="modal" id="modal">
   <div class="modal-content">
     <button class="close-btn" id="closeBtn">X</button>
@@ -147,63 +169,67 @@ html,body{
   </div>
 </div>
 
-<script>
-const modal = document.getElementById('modal');
-const modalBody = document.getElementById('modalBody');
-document.getElementById('closeBtn').onclick=()=>{
-  modal.classList.remove('active');
-  modalBody.innerHTML='';
-};
+<!-- 監視器資料夾視窗 -->
+<div class="folder-window" id="monitorFolderWindow">
+  <div class="folder-titlebar">
+    <span>監視器</span>
+    <div>
+      <button class="minimize-btn">-</button>
+      <button class="maximize-btn">口</button>
+      <button class="close-btn" id="folderCloseBtn">X</button>
+    </div>
+  </div>
+  <div class="folder-content" id="folderContent"></div>
+</div>
 
-/* ===== 一般 icon 行為（不干涉無 data-type 的） ===== */
+<script>
+const modal=document.getElementById('modal');
+const modalBody=document.getElementById('modalBody');
+document.getElementById('closeBtn').onclick=()=>{modal.classList.remove('active');modalBody.innerHTML='';};
+
+/* ===== 全部圖片預加載 ===== */
+document.querySelectorAll('.icon img').forEach(img=>{
+  const pre=new Image();
+  pre.src=img.src;
+});
+document.querySelectorAll('.icon[data-type="gallery"]').forEach(icon=>{
+  JSON.parse(icon.dataset.images).forEach(src=>{
+    const pre=new Image();
+    pre.src=src;
+  });
+});
+
+/* ===== 一般 icon 點擊事件 ===== */
 document.querySelectorAll('.icon').forEach(icon=>{
   icon.addEventListener('click',()=>{
-    const type = icon.dataset.type;
-    if(!type) return;
+    const type=icon.dataset.type;
+    if(!type || type==='folder') return; // 監視器單獨處理
 
-    const src = icon.dataset.src;
-    const pwd = icon.dataset.password;
+    const src=icon.dataset.src;
+    const pwd=icon.dataset.password;
 
-    if(type==='url'){
-      window.open(src,'_blank'); return;
-    }
-
-    if(type==='text'){
-      modalBody.innerHTML=`<p>${src}</p>`;
-      modal.classList.add('active'); return;
-    }
-
-    if(type==='image'){
-      modalBody.innerHTML=`<img src="${src}" style="max-width:90vw;max-height:90vh;">`;
-      modal.classList.add('active'); return;
-    }
-
+    if(type==='url'){window.open(src,'_blank');return;}
+    if(type==='text'){modalBody.innerHTML=`<p>${src}</p>`;modal.classList.add('active');return;}
+    if(type==='image'){modalBody.innerHTML=`<img src="${src}" style="max-width:90vw;max-height:90vh;">`;modal.classList.add('active');return;}
     if(type==='gallery'){
       const images=JSON.parse(icon.dataset.images);
       let i=0;
       const render=()=>{
-        modalBody.innerHTML=`
-          <button id="p">◀</button>
+        modalBody.innerHTML=`<button id="p">◀</button>
           <img src="${images[i]}" style="max-width:80vw;max-height:80vh;">
           <button id="n">▶</button>
           <p>${i+1}/${images.length}</p>`;
         document.getElementById('p').onclick=()=>{i=(i-1+images.length)%images.length;render();}
         document.getElementById('n').onclick=()=>{i=(i+1)%images.length;render();}
       };
-      render();
-      modal.classList.add('active'); return;
+      render();modal.classList.add('active');return;
     }
-
     if(type==='pdf'){
-      modalBody.innerHTML=`
-        <p>請輸入驗證碼</p>
-        <div style="display:flex;gap:8px;">
-          ${'<input class="pwd-box" maxlength="1">'.repeat(4)}
-        </div>
-        <p id="err" style="color:red;display:none;">錯誤</p>`;
+      modalBody.innerHTML=`<p>請輸入密碼</p>
+        <div style="display:flex;gap:8px;">${'<input class="pwd-box" maxlength="1">'.repeat(4)}</div>
+        <p id="err" style="color:red;display:none;">密碼錯誤</p>`;
       modal.classList.add('active');
-      const ins=[...document.querySelectorAll('.pwd-box')];
-      ins[0].focus();
+      const ins=[...document.querySelectorAll('.pwd-box')]; ins[0].focus();
       document.onkeydown=e=>{
         if(e.key==='Enter'){
           if(ins.map(i=>i.value).join('')===pwd){
@@ -218,26 +244,35 @@ document.querySelectorAll('.icon').forEach(icon=>{
   });
 });
 
-/* ===== 監視器資料夾（獨立視窗） ===== */
-document.getElementById('monitorFolder').addEventListener('click',()=>{
-  const vids=[
-    '/monitor0314/videos/video1.mp4',
-    '/monitor0314/videos/video2.mp4',
-    '/monitor0314/videos/video3.mp4',
-    '/monitor0314/videos/video4.mp4'
-  ];
-  modalBody.innerHTML=vids.map((v,i)=>`
-    <div class="icon" data-v="${v}">
-      <img src="/monitor0314/icons/camera.png">監視器 ${i+1}
-    </div>`).join('');
-  modal.classList.add('active');
+/* ===== 監視器資料夾 ===== */
+const monitorFolder=document.getElementById('monitorFolder');
+const folderWin=document.getElementById('monitorFolderWindow');
+const folderContent=document.getElementById('folderContent');
+const folderCloseBtn=document.getElementById('folderCloseBtn');
 
-  modalBody.querySelectorAll('.icon').forEach(ic=>{
-    ic.onclick=()=>{
-      window.open(ic.dataset.v,'_blank','width=800,height=600');
+const videos=[
+  '/monitor0314/videos/video1.mp4',
+  '/monitor0314/videos/video2.mp4',
+  '/monitor0314/videos/video3.mp4',
+  '/monitor0314/videos/video4.mp4'
+];
+
+monitorFolder.addEventListener('click',()=>{
+  folderContent.innerHTML=videos.map((v,i)=>`
+    <div class="folder-icon" data-video="${v}">
+      <img src="/monitor0314/icons/camera.png">
+      <div>監視器 ${i+1}</div>
+    </div>`).join('');
+  folderWin.style.display='block';
+
+  folderContent.querySelectorAll('.folder-icon').forEach(icon=>{
+    icon.onclick=()=>{
+      window.open(icon.dataset.video,'_blank','width=800,height=600');
     };
   });
 });
+
+folderCloseBtn.addEventListener('click',()=>{folderWin.style.display='none';});
 
 /* ===== 資源回收桶拖曳 ===== */
 const book=document.getElementById('accountBook');
@@ -247,6 +282,13 @@ trash.addEventListener('dragover',e=>e.preventDefault());
 trash.addEventListener('drop',e=>{
   if(e.dataTransfer.getData('x')==='book') book.remove();
 });
+
+/* ===== 資料夾可拖曳 ===== */
+let drag=false,offsetX,offsetY;
+const titleBar=folderWin.querySelector('.folder-titlebar');
+titleBar.onmousedown=e=>{drag=true;offsetX=e.clientX-folderWin.offsetLeft;offsetY=e.clientY-folderWin.offsetTop;}
+document.onmousemove=e=>{if(drag){folderWin.style.left=(e.clientX-offsetX)+'px';folderWin.style.top=(e.clientY-offsetY)+'px';}}
+document.onmouseup=()=>{drag=false;}
 </script>
 
 </body>
