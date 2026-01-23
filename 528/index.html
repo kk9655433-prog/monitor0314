@@ -238,9 +238,9 @@ if(type === 'gallery'){
       document.onkeydown = e=>{
         if(e.key==="Enter"){
           const v = inputs.map(i=>i.value).join('');
-          if(v === pwd){
-            modalBody.innerHTML = `<img src="${src}" style="max-width:80vw">`;
-          }else{
+         if(v===pwd){
+  modalBody.innerHTML = `<img src="${src}" style="max-width:90vw; max-height:90vh; object-fit:contain; border-radius:8px;">`;
+}else{
             document.getElementById('err').style.display='block';
             inputs.forEach(i=>i.value='');
             inputs[0].focus();
@@ -250,9 +250,10 @@ if(type === 'gallery'){
       return;
     }
 
-    if(type === 'image'){
-      modalBody.innerHTML = `<img src="${src}" style="max-width:80vw">`;
-      modal.classList.add('active');
+if(type==='image'){
+  modalBody.innerHTML = `<img src="${src}" style="max-width:90vw; max-height:90vh; object-fit:contain; border-radius:8px;">`;
+  modal.classList.add('active');
+}
     }
   };
 });
