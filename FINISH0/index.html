@@ -25,33 +25,78 @@
       gap: 24px;
     }
 
+    .video-container {
+      position: relative;
+      border: 4px solid #0f0; /* 綠色監視器邊框 */
+      border-radius: 8px;      /* 圓角 */
+      overflow: hidden;
+    }
+
     video {
       width: 100%;
       height: auto;
-      border-radius: 12px;
-      background: black;
+      display: block;
+      border-radius: 4px;
+    }
+
+    .time-overlay {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      color: #0f0;
+      font-family: monospace;
+      font-size: 14px;
+      background: rgba(0,0,0,0.5);
+      padding: 2px 6px;
+      border-radius: 4px;
     }
   </style>
 </head>
 <body>
 
   <div class="video-grid">
-    <video controls playsinline>
-      <source src="/monitor0314/videos/video1.mp4" type="video/mp4">
-    </video>
+    <div class="video-container">
+      <video controls playsinline>
+        <source src="/monitor0314/videos/video1.mp4" type="video/mp4">
+      </video>
+      <div class="time-overlay"></div>
+    </div>
 
-    <video controls playsinline>
-      <source src="/monitor0314/videos/video2.mp4" type="video/mp4">
-    </video>
+    <div class="video-container">
+      <video controls playsinline>
+        <source src="/monitor0314/videos/video2.mp4" type="video/mp4">
+      </video>
+      <div class="time-overlay"></div>
+    </div>
 
-    <video controls playsinline>
-      <source src="/monitor0314/videos/video3.mp4" type="video/mp4">
-    </video>
+    <div class="video-container">
+      <video controls playsinline>
+        <source src="/monitor0314/videos/video3.mp4" type="video/mp4">
+      </video>
+      <div class="time-overlay"></div>
+    </div>
 
-    <video controls playsinline>
-      <source src="/monitor0314/videos/video4.mp4" type="video/mp4">
-    </video>
+    <div class="video-container">
+      <video controls playsinline>
+        <source src="/monitor0314/videos/video4.mp4" type="video/mp4">
+      </video>
+      <div class="time-overlay"></div>
+    </div>
   </div>
+
+  <script>
+    function updateTimes() {
+      const overlays = document.querySelectorAll('.time-overlay');
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('zh-TW', { hour12: false });
+      overlays.forEach(o => o.textContent = timeStr);
+    }
+
+    // 每秒更新一次時間
+    setInterval(updateTimes, 1000);
+    // 頁面載入立即更新
+    updateTimes();
+  </script>
 
 </body>
 </html>
