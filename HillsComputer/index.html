@@ -37,6 +37,8 @@ html,body{
   height:48px;
   margin-bottom:6px;
 }
+
+/* Modal 用於其他檔案 */
 .modal{
   position:fixed;
   inset:0;
@@ -77,6 +79,47 @@ html,body{
   height:48px;
   font-size:24px;
   text-align:center;
+}
+
+/* 資料夾視窗 */
+.folder-window{
+  display:none;
+  position:fixed;
+  top:50px;
+  left:50px;
+  width:600px;
+  height:400px;
+  background:#c0d6f7;
+  border:1px solid #000;
+  box-shadow:2px 2px 10px rgba(0,0,0,0.5);
+  z-index:1000;
+}
+.folder-titlebar{
+  background:#0a64ad;
+  color:white;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:2px 6px;
+  cursor:move;
+}
+.folder-content{
+  padding:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  overflow:auto;
+  height:calc(100% - 28px);
+  background:#c0d6f7;
+}
+.folder-content .folder-icon{
+  width:80px;
+  text-align:center;
+  cursor:pointer;
+}
+.folder-content .folder-icon img{
+  width:48px;
+  height:48px;
 }
 </style>
 </head>
@@ -136,10 +179,41 @@ html,body{
   
 </div>
 
+<!-- 其他檔案 modal -->
 <div class="modal" id="modal">
   <div class="modal-content">
     <button class="close-btn" id="closeBtn">X</button>
     <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- 監視器資料夾視窗 -->
+<div class="folder-window" id="folderWindow">
+  <div class="folder-titlebar" id="folderTitlebar">
+    <span>監視器</span>
+    <div>
+      <button class="minimize-btn">-</button>
+      <button class="maximize-btn">口</button>
+      <button class="close-btn" id="folderCloseBtn">X</button>
+    </div>
+  </div>
+  <div class="folder-content" id="folderContent">
+    <div class="folder-icon" data-video="/monitor0314/videos/video1.mp4">
+      <img src="/monitor0314/icons/camera.png">
+      <div>監視器 1</div>
+    </div>
+    <div class="folder-icon" data-video="/monitor0314/videos/video2.mp4">
+      <img src="/monitor0314/icons/camera.png">
+      <div>監視器 2</div>
+    </div>
+    <div class="folder-icon" data-video="/monitor0314/videos/video3.mp4">
+      <img src="/monitor0314/icons/camera.png">
+      <div>監視器 3</div>
+    </div>
+    <div class="folder-icon" data-video="/monitor0314/videos/video4.mp4">
+      <img src="/monitor0314/icons/camera.png">
+      <div>監視器 4</div>
+    </div>
   </div>
 </div>
 
@@ -150,75 +224,31 @@ const modalBody = document.getElementById('modalBody');
 const closeBtn = document.getElementById('closeBtn');
 closeBtn.onclick = ()=>{ modal.classList.remove('active'); modalBody.innerHTML=''; };
 
-/* ===== 預先加載所有日曆圖片 ===== */
+// 預先加載日曆圖片
 icons.forEach(icon => {
-  if (icon.dataset.type === 'gallery') {
-    const images = JSON.parse(icon.dataset.images);
-    images.forEach(src => {
-      const img = new Image();
-      img.src = src;
+  if (icon.dataset.type==='gallery'){
+    JSON.parse(icon.dataset.images).forEach(src=>{
+      const img = new Image(); img.src = src;
     });
   }
 });
 
-/* ===== 監視器資料夾功能 ===== */
-
-<div class="folder-window" id="folderWindow" style="display:none; position:fixed; top:50px; left:50px; width:600px; height:400px; background:#c0d6f7; border:1px solid #000; box-shadow:2px 2px 10px rgba(0,0,0,0.5);">
-  <div class="folder-titlebar" style="background:#0a64ad; color:white; display:flex; justify-content:space-between; align-items:center; padding:2px 6px; cursor:move;">
-    <span>監視器</span>
-    <div>
-      <button class="minimize-btn">-</button>
-      <button class="maximize-btn">口</button>
-      <button class="close-btn">X</button>
-    </div>
-  </div>
-  <div class="folder-content" style="padding:10px; display:flex; flex-wrap:wrap; gap:12px; overflow:auto; height:calc(100% - 28px); background:#c0d6f7;">
-    <!-- 監視器影片 Icon -->
-    <div class="folder-icon" data-video="/monitor0314/videos/video1.mp4" style="width:80px; text-align:center; cursor:pointer;">
-      <img src="/monitor0314/icons/camera.png" style="width:48px; height:48px;">
-      <div>監視器 1</div>
-    </div>
-    <div class="folder-icon" data-video="/monitor0314/videos/video2.mp4" style="width:80px; text-align:center; cursor:pointer;">
-      <img src="/monitor0314/icons/camera.png" style="width:48px; height:48px;">
-      <div>監視器 2</div>
-    </div>
-    <div class="folder-icon" data-video="/monitor0314/videos/video3.mp4" style="width:80px; text-align:center; cursor:pointer;">
-      <img src="/monitor0314/icons/camera.png" style="width:48px; height:48px;">
-      <div>監視器 3</div>
-    </div>
-    <div class="folder-icon" data-video="/monitor0314/videos/video4.mp4" style="width:80px; text-align:center; cursor:pointer;">
-      <img src="/monitor0314/icons/camera.png" style="width:48px; height:48px;">
-      <div>監視器 4</div>
-    </div>
-  </div>
-</div>
-
-<script>
+// 監視器資料夾功能
 const monitorFolder = document.getElementById('monitorFolder');
 const folderWindow = document.getElementById('folderWindow');
-const folderClose = folderWindow.querySelector('.close-btn');
-const folderContent = folderWindow.querySelector('.folder-content');
+const folderCloseBtn = document.getElementById('folderCloseBtn');
+const folderContent = document.getElementById('folderContent');
 
-// 打開資料夾
 monitorFolder.onclick = ()=>{
   folderWindow.style.display = 'block';
-}
+};
 
 // 關閉資料夾
-folderClose.onclick = ()=>{ folderWindow.style.display='none'; }
+folderCloseBtn.onclick = ()=>{ folderWindow.style.display='none'; };
 
-// 點擊資料夾內 Icon 播放影片
-const folderIcons = folderContent.querySelectorAll('.folder-icon');
-folderIcons.forEach(icon=>{
-  icon.onclick = ()=>{
-    const videoSrc = icon.dataset.video;
-    folderContent.innerHTML = `<video src="${videoSrc}" controls autoplay style="width:100%; height:100%; object-fit:contain;"></video>`;
-  }
-});
-
-// 可選：拖曳標題欄移動視窗
-let isDragging = false, offsetX, offsetY;
-const titleBar = folderWindow.querySelector('.folder-titlebar');
+// 拖曳資料夾視窗
+let isDragging=false, offsetX, offsetY;
+const titleBar = document.getElementById('folderTitlebar');
 titleBar.onmousedown = e=>{
   isDragging = true;
   offsetX = e.clientX - folderWindow.offsetLeft;
@@ -230,31 +260,30 @@ document.onmousemove = e=>{
     folderWindow.style.top = (e.clientY - offsetY) + 'px';
   }
 };
-document.onmouseup = ()=>{ isDragging=false; }
-</script>
-/* ===== 點擊行為 ===== */
+document.onmouseup = ()=>{ isDragging=false; };
+
+// 點擊資料夾內影片
+folderContent.querySelectorAll('.folder-icon').forEach(icon=>{
+  icon.onclick = ()=>{
+    const src = icon.dataset.video;
+    folderContent.innerHTML = `<video src="${src}" controls autoplay style="width:100%; height:100%; object-fit:contain;"></video>`;
+  }
+});
+
+// 其他檔案點擊行為
 icons.forEach(icon=>{
   icon.onclick = ()=>{
     const type = icon.dataset.type;
-    const src  = icon.dataset.src;
-    const pwd  = icon.dataset.password;
+    const src = icon.dataset.src;
+    const pwd = icon.dataset.password;
 
-    if(type==='url'){
-      window.open(src,'_blank');
-      return;
-    }
-
-    if(type==='text'){
-      modalBody.innerHTML = `<p>${src}</p>`;
-      modal.classList.add('active');
-      return;
-    }
-
+    if(type==='url'){ window.open(src,'_blank'); return; }
+    if(type==='text'){ modalBody.innerHTML=`<p>${src}</p>`; modal.classList.add('active'); return; }
     if(type==='gallery'){
       const images = JSON.parse(icon.dataset.images);
       let idx=0;
-      function render(){
-        modalBody.innerHTML=`
+      const render = ()=>{
+        modalBody.innerHTML = `
         <div style="display:flex;align-items:center;gap:12px;">
           <button id="prev">◀</button>
           <img src="${images[idx]}" style="max-width:80vw; max-height:80vh; object-fit:contain; border-radius:8px;">
@@ -263,12 +292,9 @@ icons.forEach(icon=>{
         <p>${idx+1}/${images.length}</p>`;
         document.getElementById('prev').onclick=()=>{ idx=(idx-1+images.length)%images.length; render(); }
         document.getElementById('next').onclick=()=>{ idx=(idx+1)%images.length; render(); }
-      }
-      render();
-      modal.classList.add('active');
-      return;
+      };
+      render(); modal.classList.add('active'); return;
     }
-
     if(type==='pdf' && pwd){
       modalBody.innerHTML=`
         <p>請輸入密碼</p>
@@ -282,12 +308,10 @@ icons.forEach(icon=>{
       modal.classList.add('active');
       const inputs=[...document.querySelectorAll('.pwd-box')];
       inputs[0].focus();
-
       inputs.forEach((i,idx)=>i.oninput=()=>{
         i.value=i.value.replace(/\D/g,'');
         if(i.value && inputs[idx+1]) inputs[idx+1].focus();
       });
-
       document.onkeydown=e=>{
         if(e.key==='Enter'){
           const v = inputs.map(i=>i.value).join('');
@@ -298,31 +322,22 @@ icons.forEach(icon=>{
             inputs.forEach(i=>i.value=''); inputs[0].focus();
           }
         }
-      }
+      };
       return;
     }
-
-    if(type==='image'){
-      modalBody.innerHTML=`<img src="${src}" style="max-width:90vw; max-height:90vh; object-fit:contain; border-radius:8px;">`;
-      modal.classList.add('active');
-    }
-  }
+    if(type==='image'){ modalBody.innerHTML=`<img src="${src}" style="max-width:90vw; max-height:90vh; object-fit:contain; border-radius:8px;">`; modal.classList.add('active'); }
+  };
 });
 
-/* ===== 拖曳帳本 → 資源回收桶 ===== */
+// 拖曳帳本 → 資源回收桶
 const book  = document.getElementById('accountBook');
 const trash = document.getElementById('trash');
-
 book.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain','accountBook'); });
 trash.addEventListener('dragover', e=>e.preventDefault());
 trash.addEventListener('drop', e=>{
   e.preventDefault();
-  if(e.dataTransfer.getData('text/plain')==='accountBook'){
-    book.remove();
-    alert('帳本已刪除');
-  }
+  if(e.dataTransfer.getData('text/plain')==='accountBook'){ book.remove(); alert('帳本已刪除'); }
 });
 </script>
-
 </body>
 </html>
