@@ -129,6 +129,24 @@
     <img src="/monitor0314/icons/Trash.png">資源回收桶
   </div>
 
+<div class="icon" data-type="gallery"
+     data-images='[
+       "/monitor0314/images/Calendar/01.jpg",
+       "/monitor0314/images/Calendar/02.jpg",
+       "/monitor0314/images/Calendar/03.jpg",
+       "/monitor0314/images/Calendar/04.jpg",
+       "/monitor0314/images/Calendar/05.jpg",
+       "/monitor0314/images/Calendar/06.jpg",
+       "/monitor0314/images/Calendar/07.jpg",
+       "/monitor0314/images/Calendar/08.jpg",
+       "/monitor0314/images/Calendar/09.jpg",
+       "/monitor0314/images/Calendar/10.jpg",
+       "/monitor0314/images/Calendar/11.jpg",
+       "/monitor0314/images/Calendar/12.jpg"
+     ]'>
+  <img src="/monitor0314/icons/Trash.png">日歷
+</div>
+
   <div class="icon" data-type="text" data-src="此為無關檔案。">
     <img src="/monitor0314/icons/File.png">資料夾
   </div>
@@ -193,6 +211,35 @@ icons.forEach(icon => {
           input.value = input.value.replace(/[^0-9]/g,'');
           if (input.value && inputs[i+1]) inputs[i+1].focus();
         };
+        } else if (type === 'gallery') {
+  const images = JSON.parse(icon.dataset.images);
+  let index = 0;
+
+  function renderGallery() {
+    modalBody.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button id="prevBtn">◀</button>
+        <img src="${images[index]}" 
+             style="max-width:80vw;max-height:80vh;border-radius:8px;">
+        <button id="nextBtn">▶</button>
+      </div>
+      <p style="margin-top:8px;">${index + 1} / ${images.length}</p>
+    `;
+
+    document.getElementById('prevBtn').onclick = () => {
+      index = (index - 1 + images.length) % images.length;
+      renderGallery();
+    };
+
+    document.getElementById('nextBtn').onclick = () => {
+      index = (index + 1) % images.length;
+      renderGallery();
+    };
+  }
+
+  renderGallery();
+  modal.classList.add('active');
+}
         input.onkeydown = e => {
           if (e.key === 'Backspace' && !input.value && inputs[i-1]) inputs[i-1].focus();
           if (e.key === 'Enter') checkPwd();
