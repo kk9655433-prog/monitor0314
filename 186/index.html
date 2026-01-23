@@ -162,10 +162,16 @@
       const pwd = inputs.map(i => i.value).join("");
       if (pwd === "174") {
         window.location.href = "/monitor0314/174/";
-      } else {
-        showError(); // 顯示自製彈窗
-      }
-    }
+  } 
+  else if (pwd === "000") {
+    // 隱藏分支路線
+    window.location.href = "/monitor0314/000/";
+  } 
+  else {
+    // 其他全部錯誤
+    showError();
+  }
+}
 
     // 頁面載入時自動 focus 第一格
     window.addEventListener("load", () => {
