@@ -94,7 +94,7 @@ html,body{
 
 <div class="desktop">
 
-  <div class="icon" data-type="image" data-src="/monitor0314/images/pic1.jpg">
+  <div class="icon" data-type="image" data-src="/monitor0314/images/PC.png">
     <img src="/monitor0314/icons/Desktop.png">我的電腦
   </div>
 
@@ -173,6 +173,36 @@ icons.forEach(icon=>{
       return;
     }
 
+if(type === 'gallery'){
+  const images = JSON.parse(icon.dataset.images);
+  let idx = 0;
+
+  function render(){
+    modalBody.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button id="prev">◀</button>
+        <img src="${images[idx]}" style="max-width:80vw;max-height:80vh;border-radius:8px;">
+        <button id="next">▶</button>
+      </div>
+      <p>${idx+1}/${images.length}</p>
+    `;
+
+    document.getElementById('prev').onclick = ()=>{
+      idx = (idx - 1 + images.length) % images.length;
+      render();
+    };
+
+    document.getElementById('next').onclick = ()=>{
+      idx = (idx + 1) % images.length;
+      render();
+    };
+  }
+
+  render();
+  modal.classList.add('active');
+  return;
+}
+    
     if(type === 'image' && pwd){
       modalBody.innerHTML = `
         <p>請輸入密碼</p>
