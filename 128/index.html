@@ -8,7 +8,7 @@
     body {
       margin: 0;
       height: 100vh;
-      background: url('images/background.jpg') no-repeat center center;
+      background: url('/monitor0314/images/background.jpg') no-repeat center center;
       background-size: cover;
       display: flex;
       justify-content: center;
@@ -94,7 +94,7 @@
 </head>
 <body>
   <div class="box">
-    <img src="images/3-2-OK.png" alt="謎題3-2" class="top-img">
+    <img src="/monitor0314/images/3-2-OK.png" alt="謎題3-2" class="top-img">
     <br><br>
     <div class="inputs">
       <input type="text" inputmode="numeric" maxlength="1" id="d1" autocomplete="off">
@@ -161,7 +161,7 @@
     function checkPassword() {
       const pwd = inputs.map(i => i.value).join("");
       if (pwd === "249") {
-        window.location.href = "https://kk9655433-prog.github.io/249/";
+        window.location.href = "https://kk9655433-prog.github.io/monitor0314/249/";
       } else {
         showError(); // 顯示自製彈窗
       }
