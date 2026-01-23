@@ -109,4 +109,75 @@
       <input maxlength="1" inputmode="numeric">
       <input maxlength="1" inputmode="numeric">
       <input maxlength="1" inputmode="numeric">
-      <input
+      <input maxlength="1" inputmode="numeric">
+    </div>
+
+    <button id="submitBtn">確定</button>
+  </div>
+
+  <!-- 錯誤彈窗 -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-box">
+      驗證失敗，請重新輸入
+      <br><br>
+      <button id="modalBtn">確定</button>
+    </div>
+  </div>
+
+  <script>
+    const inputs = Array.from(document.querySelectorAll(".inputs input"));
+    const submitBtn = document.getElementById("submitBtn");
+    const modal = document.getElementById("modal");
+    const modalBtn = document.getElementById("modalBtn");
+
+    function resetInputs() {
+      inputs.forEach(i => i.value = "");
+      inputs[0].focus();
+    }
+
+    modalBtn.addEventListener("click", () => {
+      modal.classList.add("hidden");
+      resetInputs();
+    });
+
+    function showError() {
+      modal.classList.remove("hidden");
+    }
+
+    inputs.forEach((input, i) => {
+      input.addEventListener("input", () => {
+        input.value = input.value.replace(/[^0-9]/g, "");
+        if (input.value && inputs[i + 1]) {
+          inputs[i + 1].focus();
+        }
+      });
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !input.value && inputs[i - 1]) {
+          inputs[i - 1].focus();
+        }
+        if (e.key === "Enter") {
+          e.preventDefault();
+          checkCode();
+        }
+      });
+    });
+
+    submitBtn.addEventListener("click", checkCode);
+
+    function checkCode() {
+      const code = inputs.map(i => i.value).join("");
+      if (code === "35216097") {
+        window.location.href = "https://kk9655433-prog.github.io/monitor0314/528/";
+      } else {
+        showError();
+      }
+    }
+
+    window.addEventListener("load", () => {
+      inputs[0].focus();
+    });
+  </script>
+
+</body>
+</html>
