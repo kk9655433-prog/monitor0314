@@ -129,6 +129,11 @@ html,body{
   <div class="icon" data-type="image" data-src="/monitor0314/images/family.jpg">
     <img src="/monitor0314/icons/photo.png">瑪莉亞與喬登
   </div>
+
+  <div class="icon" data-type="folder" id="monitorFolder">
+  <img src="/monitor0314/icons/monitor.png">監視器
+  </div>
+  
 </div>
 
 <div class="modal" id="modal">
@@ -155,6 +160,45 @@ icons.forEach(icon => {
     });
   }
 });
+
+/* ===== 監視器資料夾功能 ===== */
+const monitorFolder = document.getElementById('monitorFolder');
+
+monitorFolder.onclick = ()=>{
+  // 監視器畫面影片陣列
+  const videos = [
+    '/monitor0314/videos/video1.mp4',
+    '/monitor0314/videos/video2.mp4',
+    '/monitor0314/videos/video3.mp4',
+    '/monitor0314/videos/video4.mp4'
+  ];
+
+  // 先顯示資料夾四個監視器圖示
+  modalBody.innerHTML=`
+    <p>監視器畫面</p>
+    <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center;">
+      ${videos.map((v,i)=>`
+        <div class="icon" style="width:80px; cursor:pointer;">
+          <img src="/monitor0314/icons/camera.png" style="width:48px; height:48px; margin-bottom:6px;">
+          <div style="color:white; font-size:14px; text-align:center; text-shadow:0 2px 4px black;">監視器 ${i+1}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  // 監控點擊每個監視器播放影片
+  const monitorIcons = modalBody.querySelectorAll('.icon');
+  monitorIcons.forEach((icon,i)=>{
+    icon.onclick = ()=>{
+      modalBody.innerHTML=`
+        <video src="${videos[i]}" controls autoplay style="max-width:90vw; max-height:80vh;"></video>
+      `;
+    }
+  });
+
+  modal.classList.add('active');
+};
+
   
 /* ===== 點擊行為 ===== */
 icons.forEach(icon=>{
