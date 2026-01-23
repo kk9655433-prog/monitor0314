@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>驗證中……</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: url('/monitor0314/images/background.jpg') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .box {
+      text-align: center;
+    }
+
+    .title {
+      font-size: 22px;
+      margin-bottom: 24px;
+      color: #000;
+      font-weight: 600;
+    }
+
+    .inputs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .inputs input {
+      width: 52px;
+      height: 64px;
+      font-size: 30px;
+      text-align: center;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      font-size: 22px;
+      padding: 14px 40px;
+      border: none;
+      border-radius: 12px;
+      background: #2ecc71;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    /* 自製彈窗 */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .modal-box {
+      background: #1e1e1e;
+      color: #fff;
+      padding: 28px 32px;
+      border-radius: 14px;
+      width: 300px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .modal-box button {
+      margin-top: 20px;
+      font-size: 16px;
+      padding: 10px 32px;
+      border-radius: 10px;
+      border: none;
+      background: #2ecc71;
+      color: black;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <div class="title">請輸入驗證碼</div>
+
+    <div class="inputs">
+      <input maxlength="1" inputmode="numeric">
+      <input maxlength="1" inputmode="numeric">
+      <input maxlength="1" inputmode="numeric">
+      <input maxlength="1" inputmode="numeric">
+      <input maxlength="1" inputmode="numeric">
+      <input maxlength="1" inputmode="numeric">
+      <input maxlength="1" inputmode="numeric">
+      <input
