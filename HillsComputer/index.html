@@ -145,6 +145,17 @@ const modalBody = document.getElementById('modalBody');
 const closeBtn = document.getElementById('closeBtn');
 closeBtn.onclick = ()=>{ modal.classList.remove('active'); modalBody.innerHTML=''; };
 
+/* ===== 預先加載所有日曆圖片 ===== */
+icons.forEach(icon => {
+  if (icon.dataset.type === 'gallery') {
+    const images = JSON.parse(icon.dataset.images);
+    images.forEach(src => {
+      const img = new Image();
+      img.src = src; // 這樣瀏覽器會先下載圖片到快取
+    });
+  }
+});
+  
 /* ===== 點擊行為 ===== */
 icons.forEach(icon=>{
   icon.onclick = ()=>{
