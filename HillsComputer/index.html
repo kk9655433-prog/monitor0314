@@ -47,6 +47,7 @@ html,body{
   opacity:0;
   pointer-events:none;
   transition:.3s;
+  z-index:999;
 }
 .modal.active{
   opacity:1;
@@ -86,6 +87,7 @@ html,body{
   background:#c0d6f7;
   border:1px solid #000;
   box-shadow:2px 2px 10px rgba(0,0,0,0.5);
+  z-index:1;
 }
 .folder-titlebar{
   background:#0a64ad; color:white;
@@ -135,7 +137,7 @@ html,body{
     <img src="/monitor0314/icons/Calendar.png">日曆
   </div>
 
-  <div class="icon" data-type="text" data-src="此為無關檔案。">
+  <div class="icon" data-type="folder" id="genericFolder">
     <img src="/monitor0314/icons/File.png">資料夾
   </div>
 
@@ -169,10 +171,10 @@ html,body{
   </div>
 </div>
 
-<!-- 監視器資料夾視窗 -->
-<div class="folder-window" id="monitorFolderWindow">
+<!-- 資料夾視窗 -->
+<div class="folder-window" id="folderWindow">
   <div class="folder-titlebar">
-    <span>監視器</span>
+    <span id="folderTitle">資料夾</span>
     <button class="close-btn" id="folderCloseBtn">X</button>
   </div>
   <div class="folder-content" id="folderContent"></div>
@@ -189,15 +191,36 @@ document.querySelectorAll('.icon[data-type="gallery"]').forEach(icon=>{
   JSON.parse(icon.dataset.images).forEach(src=>new Image().src=src);
 });
 
-/* ===== 桌面一般 icon 點擊 ===== */
+/* ===== 一般 icon 點擊 ===== */
 document.querySelectorAll('.desktop .icon').forEach(icon=>{
   icon.addEventListener('click',()=>{
     const type=icon.dataset.type, src=icon.dataset.src, pwd=icon.dataset.password;
-    if(!type || type==='folder') return;
+    if(!type) return;
 
+    // 資料夾
+    if(type==='folder' && (icon.id==='genericFolder')){
+      const folderWin=document.getElementById('folderWindow');
+      const folderContent=document.getElementById('folderContent');
+      document.getElementById('folderTitle').innerText=icon.innerText;
+      folderContent.innerHTML=`<div class="folder-icon"><img src="/monitor0314/images/PC.png"><div>示例圖片</div></div>`; // 可自訂內容
+      folderWin.style.display='block';
+
+      folderContent.querySelectorAll('.folder-icon').forEach(fi=>{
+        fi.onclick=()=>{
+          modalBody.innerHTML=`<img src="${fi.querySelector('img').src}" style="max-width:90vw;max-height:90vh;">`;
+          modal.classList.add('active');
+        };
+      });
+      return;
+    }
+
+    // URL
     if(type==='url'){window.open(src,'_blank'); return;}
+    // Text
     if(type==='text'){modalBody.innerHTML=`<p>${src}</p>`; modal.classList.add('active'); return;}
+    // Image
     if(type==='image'){modalBody.innerHTML=`<img src="${src}" style="max-width:90vw;max-height:90vh;">`; modal.classList.add('active'); return;}
+    // Gallery
     if(type==='gallery'){
       const images=JSON.parse(icon.dataset.images); let i=0;
       const render=()=>{modalBody.innerHTML=`
@@ -210,31 +233,44 @@ document.querySelectorAll('.desktop .icon').forEach(icon=>{
       };
       render(); modal.classList.add('active'); return;
     }
+    // PDF 帳本
     if(type==='pdf'){
       modalBody.innerHTML=`<p>請輸入密碼</p>
         <div style="display:flex;gap:8px;">${'<input class="pwd-box" maxlength="1">'.repeat(4)}</div>
-        <p id="err" style="color:red;display:none;">密碼錯誤</p>`;
+        <p id="err" style="color:red;display:none;">密碼錯誤</p>
+        <button id="pwdConfirm" style="margin-top:10px;">確定</button>`;
       modal.classList.add('active');
+
       const ins=[...document.querySelectorAll('.pwd-box')]; ins[0].focus();
-      document.onkeydown=e=>{
-        if(e.key==='Enter'){
-          if(ins.map(i=>i.value).join('')===pwd){
-            modalBody.innerHTML=`<iframe src="${src}" style="width:90vw;height:80vh;"></iframe>`;
-          }else{
-            document.getElementById('err').style.display='block';
-            ins.forEach(i=>i.value=''); ins[0].focus();
-          }
+
+      function checkPwd(){
+        if(ins.map(i=>i.value).join('')===pwd){
+          modalBody.innerHTML=`<iframe src="${src}" style="width:90vw;height:80vh;"></iframe>`;
+        } else {
+          document.getElementById('err').style.display='block';
+          ins.forEach(i=>i.value=''); ins[0].focus();
         }
-      };
+      }
+
+      document.getElementById('pwdConfirm').onclick=checkPwd;
+
+      ins.forEach((input,i)=>{
+        input.addEventListener('input',()=>{
+          if(input.value.length===1 && i<ins.length-1) ins[i+1].focus();
+        });
+        input.addEventListener('keydown',e=>{
+          if(e.key==='Backspace' && input.value==='') {if(i>0) ins[i-1].focus();}
+          if(e.key==='Enter') checkPwd();
+        });
+      });
     }
   });
 });
 
 /* ===== 監視器資料夾 ===== */
 const monitorFolder=document.getElementById('monitorFolder');
-const folderWin=document.getElementById('monitorFolderWindow');
+const folderWin=document.getElementById('folderWindow');
 const folderContent=document.getElementById('folderContent');
-const folderCloseBtn=document.getElementById('folderCloseBtn');
 
 const videos=[
   '/monitor0314/videos/video1.mp4',
@@ -244,14 +280,14 @@ const videos=[
 ];
 
 monitorFolder.addEventListener('click',()=>{
+  document.getElementById('folderTitle').innerText='監視器';
   folderContent.innerHTML=videos.map((v,i)=>`
     <div class="folder-icon" data-video="${v}">
-      <img src="/monitor0314/icons/camera.png">
+      <img src="/monitor0314/icons/monitor.png">
       <div>監視器 ${i+1}</div>
     </div>`).join('');
   folderWin.style.display='block';
 
-  // 點開影片顯示第二層自定義彈窗
   folderContent.querySelectorAll('.folder-icon').forEach(icon=>{
     icon.onclick=()=>{
       modalBody.innerHTML=`<video src="${icon.dataset.video}" controls autoplay style="max-width:100%;max-height:100%;"></video>`;
@@ -260,7 +296,7 @@ monitorFolder.addEventListener('click',()=>{
   });
 });
 
-folderCloseBtn.addEventListener('click',()=>{folderWin.style.display='none';});
+document.getElementById('folderCloseBtn').addEventListener('click',()=>{folderWin.style.display='none';});
 
 /* ===== 資源回收桶拖曳 ===== */
 const book=document.getElementById('accountBook');
