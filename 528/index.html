@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>電腦入侵中……</title>
+<style>
+html,body{
+  margin:0;
+  height:100%;
+  overflow:hidden;
+  background:url('/monitor0314/images/XP.jpg') no-repeat center/cover;
+  font-family:system-ui;
+}
+.desktop{
+  height:100%;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  align-items:flex-start;
+}
+.icon{
+  width:80px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  cursor:pointer;
+  color:white;
+  font-size:14px;
+  text-align:center;
+  text-shadow:0 2px 4px black;
+  user-select:none;
+}
+.icon img{
+  width:48px;
+  height:48px;
+  margin-bottom:6px;
+}
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+}
+.modal.active{
+  opacity:1;
+  pointer-events:auto;
+}
+.modal-content{
+  background:#1e1e1e;
+  color:white;
+  padding:20px;
+  border-radius:12px;
+  max-width:90vw;
+  max-height:90vh;
+  position:relative;
+}
+.close-btn{
+  position:absolute;
+  top:8px;
+  right:12px;
+  background:#ff4c4c;
+  border:none;
+  color:white;
+  padding:4px 10px;
+  border-radius:6px;
+  cursor:pointer;
+}
+.pwd-box{
+  width:48px;
+  height:48px;
+  font-size:24px;
+  text-align:center;
+}
+</style>
+</head>
+<body>
+
+<div class="desktop">
+  <div class="icon" data-type="image" data-src="/monitor0314/images/PC.png">
+    <img src="/monitor0314/icons/Desktop.png">我的電腦
+  </div>
+
+  <div class="icon" id="trash">
+    <img src="/monitor0314/icons/Trash.png">資源回收桶
+  </div>
+
+  <div class="icon" data-type="gallery"
+    data-images='[
+      "/monitor0314/images/Calendar01.jpg",
+      "/monitor0314/images/Calendar02.jpg",
+      "/monitor0314/images/Calendar03.jpg",
+      "/monitor0314/images/Calendar04.jpg"
+    ]'>
+    <img src="/monitor0314/icons/Calendar.png">日曆
+  </div>
+
+  <div class="icon" data-type="text" data-src="此為無關檔案。">
+    <img src="/monitor0314/icons/File.png">資料夾
+  </div>
+
+  <div class="icon" data-type="url" data-src="https://www.google.com/">
+    <img src="/monitor0314/icons/google.png">GOOGOO
+  </div>
+
+  <div class="icon"
+       id="accountBook"
+       draggable="true"
+       data-type="image"
+       data-password="0519"
+       data-src="/monitor0314/images/pic1.jpg">
+    <img src="/monitor0314/icons/Notepad.png">帳本
+  </div>
+
+  <div class="icon" data-type="image" data-src="/monitor0314/images/family.jpg">
+    <img src="/monitor0314/icons/photo.png">瑪莉亞與喬登
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <button class="close-btn" id="closeBtn">X</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const icons = document.querySelectorAll('.icon');
+const modal = document.getElementById('modal');
+const modalBody = document.getElementById('modalBody');
+const closeBtn = document.getElementById('closeBtn');
+closeBtn.onclick = ()=>{ modal.classList.remove('active'); modalBody.innerHTML=''; };
+
+/* ===== 點擊行為 ===== */
+icons.forEach(icon=>{
+  icon.onclick = ()=>{
+    const type = icon.dataset.type;
+    const src  = icon.dataset.src;
+    const pwd  = icon.dataset.password;
+
+    if(type==='url'){
+      window.open(src,'_blank');
+      return;
+    }
+
+    if(type==='text'){
+      modalBody.innerHTML = `<p>${src}</p>`;
+      modal.classList.add('active');
+      return;
+    }
+
+    if(type==='gallery'){
+      const images = JSON.parse(icon.dataset.images);
+      let idx=0;
+      function render(){
+        modalBody.innerHTML=`
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button id="prev">◀</button>
+          <img src="${images[idx]}" style="max-width:80vw; max-height:80vh; object-fit:contain; border-radius:8px;">
+          <button id="next">▶</button>
+        </div>
+        <p>${idx+1}/${images.length}</p>`;
+        document.getElementById('prev').onclick=()=>{ idx=(idx-1+images.length)%images.length; render(); }
+        document.getElementById('next').onclick=()=>{ idx=(idx+1)%images.length; render(); }
+      }
+      render();
+      modal.classList.add('active');
+      return;
+    }
+
+    if(type==='image' && pwd){
+      modalBody.innerHTML=`
+        <p>請輸入密碼</p>
+        <div style="display:flex;gap:8px;justify-content:center;">
+          <input class="pwd-box" maxlength="1">
+          <input class="pwd-box" maxlength="1">
+          <input class="pwd-box" maxlength="1">
+          <input class="pwd-box" maxlength="1">
+        </div>
+        <p id="err" style="color:red;display:none;">密碼錯誤</p>`;
+      modal.classList.add('active');
+      const inputs=[...document.querySelectorAll('.pwd-box')];
+      inputs[0].focus();
+      inputs.forEach((i,idx)=>i.oninput=()=>{
+        i.value=i.value.replace(/\D/g,'');
+        if(i.value && inputs[idx+1]) inputs[idx+1].focus();
+      });
+      document.onkeydown=e=>{
+        if(e.key==='Enter'){
+          const v = inputs.map(i=>i.value).join('');
+          if(v===pwd){
+            modalBody.innerHTML=`<img src="${src}" style="max-width:90vw; max-height:90vh; object-fit:contain; border-radius:8px;">`;
+          }else{
+            document.getElementById('err').style.display='block';
+            inputs.forEach(i=>i.value=''); inputs[0].focus();
+          }
+        }
+      }
+      return;
+    }
+
+    if(type==='image'){
+      modalBody.innerHTML=`<img src="${src}" style="max-width:90vw; max-height:90vh; object-fit:contain; border-radius:8px;">`;
+      modal.classList.add('active');
+    }
+  }
+});
+
+/* ===== 拖曳帳本 → 資源回收桶 ===== */
+const book  = document.getElementById('accountBook');
+const trash = document.getElementById('trash');
+
+book.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain','accountBook'); });
+trash.addEventListener('dragover', e=>e.preventDefault());
+trash.addEventListener('drop', e=>{
+  e.preventDefault();
+  if(e.dataTransfer.getData('text/plain')==='accountBook'){
+    book.remove();
+    alert('帳本已刪除');
+  }
+});
+</script>
+
+</body>
+</html>
