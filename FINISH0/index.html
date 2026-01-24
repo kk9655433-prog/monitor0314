@@ -3,99 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>監控畫面</title>
+  <title>入侵完成</title>
   <style>
     body {
       margin: 0;
-      min-height: 100vh;
-      background: url('/monitor0314/images/background.jpg') no-repeat center center;
+      height: 100vh;
+
+      /* 黑色預設背景，圖片載入前不閃白 */
+      background-color: #000;
+      background-image: url('/monitor0314/images/background.jpg');
+      background-repeat: no-repeat;
+      background-position: center center;
       background-size: cover;
+
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      padding: 40px 0;
+      align-items: center;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #eaeaea;
+      text-align: center;
     }
 
-    .video-grid {
-      width: 90%;
-      max-width: 900px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
+    .container {
+      max-width: 720px;
+      background: rgba(0, 0, 0, 0.55);
+      padding: 36px 40px;
+      border-radius: 14px;
+      line-height: 1.8;
     }
 
-    .video-container {
-      position: relative;
-      border-radius: 8px; /* 可保留圓角 */
-      overflow: hidden;
+    .title {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 24px;
     }
 
-    video {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 4px;
+    .content {
+      font-size: 18px;
+      margin-bottom: 32px;
     }
 
-    .time-overlay {
-      position: absolute;
-      top: 8px;
-      right: 12px;
-      color: #fff; /* 白色文字 */
-      font-family: 'Courier New', Courier, monospace; /* 像素體效果 */
-      font-size: 14px;
-      background: rgba(0,0,0,0.5); /* 半透明背景 */
-      padding: 2px 6px;
-      border-radius: 4px;
+    .code {
+      font-size: 48px; /* 驗證碼字號加大 */
+      font-weight: 700;
+      margin-top: 24px;
+      color: #2ecc71;
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <div class="title">已駭客此 IP 位置成功</div>
 
-  <div class="video-grid">
-    <div class="video-container">
-      <video controls playsinline>
-        <source src="/monitor0314/videos/video1.mp4" type="video/mp4">
-      </video>
-      <div class="time-overlay"></div>
+    <div class="content">
+      已將進度與您最近的平板/電腦連線，請注意查看。<br><br>
+      以下是驗證碼
     </div>
 
-    <div class="video-container">
-      <video controls playsinline>
-        <source src="/monitor0314/videos/video2.mp4" type="video/mp4">
-      </video>
-      <div class="time-overlay"></div>
-    </div>
+    <div class="code">35216097</div>
 
-    <div class="video-container">
-      <video controls playsinline>
-        <source src="/monitor0314/videos/video3.mp4" type="video/mp4">
-      </video>
-      <div class="time-overlay"></div>
-    </div>
-
-    <div class="video-container">
-      <video controls playsinline>
-        <source src="/monitor0314/videos/video4.mp4" type="video/mp4">
-      </video>
-      <div class="time-overlay"></div>
+    <div class="content">
+      請將驗證碼輸入進裝置後查看入侵資料。
     </div>
   </div>
-
-  <script>
-    function updateTimes() {
-      const overlays = document.querySelectorAll('.time-overlay');
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString('zh-TW', { hour12: false });
-      overlays.forEach(o => o.textContent = timeStr);
-    }
-
-    // 每秒更新一次時間
-    setInterval(updateTimes, 1000);
-    // 頁面載入立即更新
-    updateTimes();
-  </script>
-
 </body>
 </html>
