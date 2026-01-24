@@ -1,74 +1,109 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>目標選擇</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>目標選擇</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background-color: #000;
+    background-image: url('/monitor0314/images/background.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
 
-      /* 黑色預設背景，避免圖片載入前閃白 */
-      background-color: #000;
-      background-image: url('/monitor0314/images/background.jpg');
-      background-repeat: no-repeat;
-      background-position: center center;
-      background-size: cover;
+  .container {
+    background: rgba(0,0,0,0.65);
+    padding: 40px 60px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    text-align: center;
+  }
 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      color: #eaeaea;
-    }
+  .title {
+    font-size: 24px;
+    color: #fff;
+  }
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 18px;
-      width: 100%;
-    }
+  .ip-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
 
-    .title {
-      font-size: 22px;
-      font-weight: 500;
-      text-align: center;
-    }
+  .ip {
+    font-size: 22px;
+    font-weight: 600;
+    color: #2ecc71;
+    letter-spacing: 1px;
+    cursor: pointer;
+    user-select: none;
+  }
 
-    .ip-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      text-align: center;
-    }
-
-    .ip-list a {
-      font-size: 20px;
-      font-weight: 600;
-      color: #eaeaea;
-      text-decoration: none;
-      letter-spacing: 0.5px;
-    }
-
-    .ip-list a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  .ip:hover {
+    text-decoration: underline;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <div class="title">請選擇要入侵的手機地址：</div>
 
-    <div class="ip-list">
-      <a href="/monitor0314/FINISH249/100">192.168.001.100</a>
-      <a href="/monitor0314/FINISH249/185">192.168.001.185</a>
-      <a href="/monitor0314/FINISH249/123">192.168.001.123</a>
-      <a href="/monitor0314/FINISH249/205">192.168.001.205</a>
-      <a href="/monitor0314/FINISH249/058">192.168.001.058</a>
-      <a href="/monitor0314/FINISH249/244">192.168.001.244</a>
-    </div>
+<div class="container">
+  <div class="title">請選擇要入侵的手機地址：</div>
+
+  <div class="ip-list">
+    <div class="ip" data-final="192.168.001.100" data-link="/monitor0314/FINISH249/100"></div>
+    <div class="ip" data-final="192.168.001.185" data-link="/monitor0314/FINISH249/185"></div>
+    <div class="ip" data-final="192.168.001.123" data-link="/monitor0314/FINISH249/123"></div>
+    <div class="ip" data-final="192.168.001.205" data-link="/monitor0314/FINISH249/205"></div>
+    <div class="ip" data-final="192.168.001.058" data-link="/monitor0314/FINISH249/058"></div>
+    <div class="ip" data-final="192.168.001.244" data-link="/monitor0314/FINISH249/244"></div>
   </div>
+</div>
+
+<script>
+const chars = "0123456789.";
+const INITIAL_DELAY = 600;
+const STEP_DELAY = 600;
+
+document.querySelectorAll(".ip").forEach(el => {
+  const finalCode = el.dataset.final;
+  const link = el.dataset.link;
+  const length = finalCode.length;
+
+  const current = Array(length).fill("0");
+  el.textContent = current.join("");
+
+  setTimeout(() => {
+    for (let i = 0; i < length; i++) {
+      const interval = setInterval(() => {
+        current[i] = chars[Math.floor(Math.random() * chars.length)];
+        el.textContent = current.join("");
+      }, 50);
+
+      setTimeout(() => {
+        clearInterval(interval);
+        current[i] = finalCode[i];
+        el.textContent = current.join("");
+      }, STEP_DELAY * (i + 1));
+    }
+  }, INITIAL_DELAY);
+
+  el.addEventListener("click", () => {
+    window.location.href = link;
+  });
+});
+</script>
+
 </body>
 </html>
