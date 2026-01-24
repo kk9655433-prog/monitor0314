@@ -101,9 +101,17 @@ function drawEnemy(e){
   ctx.closePath();ctx.fill();ctx.restore();
 }
 function drawBoss(){
+  if(!boss) return;
   ctx.save();ctx.translate(boss.x,boss.y);
-  ctx.fillStyle="#aa0033";
-  ctx.fillRect(-50,-25,100,50);
+  ctx.fillStyle="#ff4444";
+  ctx.beginPath();
+  ctx.moveTo(0,-60);
+  ctx.lineTo(40,60);
+  ctx.lineTo(15,20);
+  ctx.lineTo(-15,20);
+  ctx.lineTo(-40,60);
+  ctx.closePath();
+  ctx.fill();
   ctx.restore();
 }
 
@@ -121,7 +129,7 @@ function spawnEnemies(){
   }
 }
 function spawnBoss(){
-  boss={x:W/2,y:140,hp:10,cooldown:0};
+  boss={x:W/2,y:140,hp:500,cooldown:0};
   document.getElementById("bossHP").style.display="block";
 }
 
@@ -141,22 +149,15 @@ function explode(x,y){
 function showStageText(text,after){
   const el=document.getElementById("stageText");
   el.textContent=text;el.style.display="flex";
-  setTimeout(()=>{
-    el.style.display="none";
-    startCountdown(after);
-  },1000);
+  setTimeout(()=>{el.style.display="none";startCountdown(after)},1000);
 }
 function startCountdown(after){
   const el=document.getElementById("countdown");
   let n=3;el.style.display="flex";el.textContent=n;
   const i=setInterval(()=>{
     n--;
-    if(n===0){
-      clearInterval(i);
-      el.style.display="none";
-      running=true;inputEnabled=true;
-      after();
-    }else el.textContent=n;
+    if(n===0){clearInterval(i);el.style.display="none";running=true;inputEnabled=true;after();}
+    else el.textContent=n;
   },1000);
 }
 
@@ -192,25 +193,17 @@ function update(){
     e.x+=e.vx;
     if(e.x<30||e.x>W-30)e.vx*=-1;
     if(frame%(50-level*5)===0){
-      enemyBullets.push({
-        x:e.x,y:e.y,
-        vx:(player.x-e.x)/90,
-        vy:4+level
-      });
+      enemyBullets.push({x:e.x,y:e.y,vx:(player.x-e.x)/90,vy:4+level});
     }
   });
 
   if(boss){
     boss.x+=(player.x-boss.x)*0.02;
     boss.cooldown++;
-    if(boss.cooldown>=60){
+    if(boss.cooldown>=30){ // 每0.1秒發一次扇形彈幕（60fps -> 6幀）
       boss.cooldown=0;
       for(let a=-0.6;a<=0.6;a+=0.2){
-        enemyBullets.push({
-          x:boss.x,y:boss.y,
-          vx:Math.sin(a)*4,
-          vy:Math.cos(a)*4+2
-        });
+        enemyBullets.push({x:boss.x,y:boss.y,vx:Math.sin(a)*4,vy:Math.cos(a)*4+2});
       }
     }
     bossHP.textContent="BOSS HP : "+boss.hp;
@@ -226,7 +219,7 @@ function update(){
         if(e.hp<=0)explode(e.x,e.y);
       }
     });
-    if(boss && Math.abs(b.x-boss.x)<50 && Math.abs(b.y-boss.y)<25){
+    if(boss && Math.abs(b.x-boss.x)<50 && Math.abs(b.y-boss.y)<60){
       boss.hp--;b.y=-999;explode(boss.x,boss.y);
       if(boss.hp<=0){
         running=false;inputEnabled=false;
@@ -277,9 +270,7 @@ function draw(){
   particles.forEach(p=>ctx.fillRect(p.x,p.y,2,2));
 }
 
-(function loop(){
-  update();draw();requestAnimationFrame(loop);
-})();
+(function loop(){update();draw();requestAnimationFrame(loop);})();
 </script>
 </body>
 </html>
