@@ -8,8 +8,14 @@
     body {
       margin: 0;
       height: 100vh;
-      background: url('/monitor0314/images/background.jpg') no-repeat center center;
+
+      /* 關鍵調整：預設背景為黑色，避免圖片載入前白屏 */
+      background-color: #000;
+      background-image: url('/monitor0314/images/background.jpg');
+      background-repeat: no-repeat;
+      background-position: center center;
       background-size: cover;
+
       display: flex;
       justify-content: center;
       align-items: center;
@@ -23,7 +29,7 @@
       padding: 36px 40px;
       border-radius: 14px;
       line-height: 1.8;
-      text-align: center; /* 關鍵：文字全部置中 */
+      text-align: center;
     }
 
     .title {
