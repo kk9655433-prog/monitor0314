@@ -5,13 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
 <title>侵入模組</title>
 <style>
-html,body{
-  margin:0;
-  background:black;
-  overflow:hidden;
-  touch-action:none;
-}
-canvas{display:block;margin:auto;}
+html,body{margin:0;background:black;overflow:hidden;touch-action:none}
+canvas{display:block;margin:auto}
 .overlay{
   position:fixed;inset:0;
   background:rgba(0,0,0,.85);
@@ -21,9 +16,9 @@ canvas{display:block;margin:auto;}
   justify-content:center;
   flex-direction:column;
   font-family:system-ui;
-  z-index:10;
+  z-index:10
 }
-button{margin-top:16px;padding:8px 24px;font-size:16px;}
+button{margin-top:16px;padding:8px 24px;font-size:16px}
 .centerText{
   position:fixed;inset:0;
   display:flex;
@@ -31,16 +26,14 @@ button{margin-top:16px;padding:8px 24px;font-size:16px;}
   justify-content:center;
   font-size:48px;
   color:white;
-  z-index:9;
+  z-index:9
 }
 #bossHP{
   position:fixed;
-  top:10px;
-  right:10px;
+  top:10px;right:10px;
   color:#00ff66;
-  font-family:system-ui;
   font-size:16px;
-  display:none;
+  display:none
 }
 </style>
 </head>
@@ -73,12 +66,13 @@ const canvas=document.getElementById("game");
 const ctx=canvas.getContext("2d");
 canvas.width=W;canvas.height=H;
 
-let bullets,enemies,enemyBullets,particles;
-let level,frame,running,alive,inputEnabled;
+let bullets=[],enemyBullets=[],enemies=[],particles=[];
+let level=1,frame=0,running=false,alive=true,inputEnabled=false;
 let boss=null;
 
 const player={x:195,y:650,r:10};
 
+/* ===== 輸入 ===== */
 let dragging=false;
 function setPos(x,y){
   if(!inputEnabled)return;
@@ -88,37 +82,32 @@ function setPos(x,y){
 canvas.addEventListener("mousedown",e=>{dragging=true;setPos(e.offsetX,e.offsetY)});
 canvas.addEventListener("mousemove",e=>dragging&&setPos(e.offsetX,e.offsetY));
 window.addEventListener("mouseup",()=>dragging=false);
-canvas.addEventListener("touchstart",e=>{const t=e.touches[0];setPos(t.clientX,t.clientY)},{passive:false});
-canvas.addEventListener("touchmove",e=>{const t=e.touches[0];setPos(t.clientX,t.clientY)},{passive:false});
+canvas.addEventListener("touchstart",e=>setPos(e.touches[0].clientX,e.touches[0].clientY),{passive:false});
+canvas.addEventListener("touchmove",e=>setPos(e.touches[0].clientX,e.touches[0].clientY),{passive:false});
 
+/* ===== 繪製 ===== */
 function drawPlayer(){
   ctx.save();ctx.translate(player.x,player.y);
   ctx.fillStyle="#00ff66";
   ctx.beginPath();
-  ctx.moveTo(0,-22);
-  ctx.lineTo(14,18);
-  ctx.lineTo(0,8);
-  ctx.lineTo(-14,18);
-  ctx.closePath();ctx.fill();
-  ctx.restore();
+  ctx.moveTo(0,-22);ctx.lineTo(14,18);ctx.lineTo(0,8);ctx.lineTo(-14,18);
+  ctx.closePath();ctx.fill();ctx.restore();
 }
 function drawEnemy(e){
   ctx.save();ctx.translate(e.x,e.y);
   ctx.fillStyle="#ff3344";
   ctx.beginPath();
-  ctx.moveTo(0,20);
-  ctx.lineTo(16,-8);
-  ctx.lineTo(0,-20);
-  ctx.lineTo(-16,-8);
-  ctx.closePath();ctx.fill();
-  ctx.restore();
+  ctx.moveTo(0,20);ctx.lineTo(16,-8);ctx.lineTo(0,-20);ctx.lineTo(-16,-8);
+  ctx.closePath();ctx.fill();ctx.restore();
 }
 function drawBoss(){
   ctx.save();ctx.translate(boss.x,boss.y);
   ctx.fillStyle="#aa0033";
-  ctx.fillRect(-40,-20,80,40);
+  ctx.fillRect(-50,-25,100,50);
   ctx.restore();
 }
+
+/* ===== 生成 ===== */
 function spawnEnemies(){
   enemies=[];
   const c=level+2;
@@ -132,21 +121,13 @@ function spawnEnemies(){
   }
 }
 function spawnBoss(){
-  boss={x:W/2,y:120,hp:10,cooldown:0};
+  boss={x:W/2,y:140,hp:10,cooldown:0};
   document.getElementById("bossHP").style.display="block";
 }
 
-function resetGame(){
-  bullets=[];enemyBullets=[];particles=[];
-  level=1;frame=0;
-  alive=true;running=false;inputEnabled=false;
-  boss=null;
-  document.getElementById("bossHP").style.display="none";
-  spawnEnemies();
-}
-
+/* ===== 特效 ===== */
 function explode(x,y){
-  for(let i=0;i<12;i++){
+  for(let i=0;i<14;i++){
     particles.push({
       x,y,
       vx:(Math.random()-0.5)*4,
@@ -156,12 +137,16 @@ function explode(x,y){
   }
 }
 
-function showStageText(t,cb){
+/* ===== 流程 ===== */
+function showStageText(text,after){
   const el=document.getElementById("stageText");
-  el.textContent=t;el.style.display="flex";
-  setTimeout(()=>{el.style.display="none";startCountdown(cb)},1000);
+  el.textContent=text;el.style.display="flex";
+  setTimeout(()=>{
+    el.style.display="none";
+    startCountdown(after);
+  },1000);
 }
-function startCountdown(cb){
+function startCountdown(after){
   const el=document.getElementById("countdown");
   let n=3;el.style.display="flex";el.textContent=n;
   const i=setInterval(()=>{
@@ -169,21 +154,34 @@ function startCountdown(cb){
     if(n===0){
       clearInterval(i);
       el.style.display="none";
-      running=true;inputEnabled=true;cb();
+      running=true;inputEnabled=true;
+      after();
     }else el.textContent=n;
   },1000);
 }
 
-document.getElementById("introBtn").onclick=()=>{
-  document.getElementById("intro").style.display="none";
-  resetGame();showStageText("第一關",()=>{});
-};
-document.getElementById("restartBtn").onclick=()=>{
-  document.getElementById("fail").style.display="none";
-  resetGame();showStageText("第一關",()=>{});
-};
-document.getElementById("successBtn").onclick=()=>location.href="https://www.google.com/";
+function resetGame(){
+  bullets=[];enemyBullets=[];particles=[];
+  enemies=[];boss=null;
+  level=1;frame=0;
+  alive=true;running=false;inputEnabled=false;
+  document.getElementById("bossHP").style.display="none";
+}
 
+/* ===== UI ===== */
+introBtn.onclick=()=>{
+  intro.style.display="none";
+  resetGame();
+  showStageText("第一關",spawnEnemies);
+};
+restartBtn.onclick=()=>{
+  fail.style.display="none";
+  resetGame();
+  showStageText("第一關",spawnEnemies);
+};
+successBtn.onclick=()=>location.href="https://www.google.com/";
+
+/* ===== 主邏輯 ===== */
 function update(){
   if(!running||!alive)return;
   frame++;
@@ -203,7 +201,7 @@ function update(){
   });
 
   if(boss){
-    boss.x+= (player.x-boss.x)*0.02;
+    boss.x+=(player.x-boss.x)*0.02;
     boss.cooldown++;
     if(boss.cooldown>=60){
       boss.cooldown=0;
@@ -215,7 +213,7 @@ function update(){
         });
       }
     }
-    document.getElementById("bossHP").textContent="BOSS HP : "+boss.hp;
+    bossHP.textContent="BOSS HP : "+boss.hp;
   }
 
   bullets.forEach(b=>b.y+=b.vy);
@@ -228,13 +226,12 @@ function update(){
         if(e.hp<=0)explode(e.x,e.y);
       }
     });
-    if(boss && Math.abs(b.x-boss.x)<40 && Math.abs(b.y-boss.y)<20){
-      boss.hp--;b.y=-999;
-      explode(boss.x,boss.y);
+    if(boss && Math.abs(b.x-boss.x)<50 && Math.abs(b.y-boss.y)<25){
+      boss.hp--;b.y=-999;explode(boss.x,boss.y);
       if(boss.hp<=0){
         running=false;inputEnabled=false;
-        document.getElementById("bossHP").style.display="none";
-        document.getElementById("success").style.display="flex";
+        bossHP.style.display="none";
+        success.style.display="flex";
       }
     }
   });
@@ -244,7 +241,7 @@ function update(){
   enemyBullets.forEach(b=>{
     if(Math.hypot(b.x-player.x,b.y-player.y)<player.r){
       alive=false;running=false;inputEnabled=false;
-      document.getElementById("fail").style.display="flex";
+      fail.style.display="flex";
     }
   });
 
@@ -252,17 +249,13 @@ function update(){
     running=false;inputEnabled=false;
     level++;
     if(level===4){
-      spawnBoss();
-      showStageText("第四關",()=>{});
+      showStageText("第四關",spawnBoss);
     }else{
-      spawnEnemies();
-      showStageText(level===2?"第二關":level===3?"第三關":"",()=>{});
+      showStageText(level===2?"第二關":"第三關",spawnEnemies);
     }
   }
 
-  particles.forEach(p=>{
-    p.x+=p.vx;p.y+=p.vy;p.life--;
-  });
+  particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life--});
   particles=particles.filter(p=>p.life>0);
 }
 
@@ -274,10 +267,12 @@ function draw(){
 
   ctx.fillStyle="#00ff66";
   bullets.forEach(b=>ctx.fillRect(b.x-2,b.y-10,4,10));
+
   ctx.fillStyle="red";
   enemyBullets.forEach(b=>{
     ctx.beginPath();ctx.arc(b.x,b.y,4,0,Math.PI*2);ctx.fill();
   });
+
   ctx.fillStyle="#ffaa00";
   particles.forEach(p=>ctx.fillRect(p.x,p.y,2,2));
 }
