@@ -72,29 +72,26 @@
     const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const codeEl = document.getElementById("code");
 
-    let current = Array(finalCode.length).fill("0");
-    codeEl.textContent = current.join("");
+    const length = finalCode.length;
+    const current = Array(length).fill("0");
+    const intervals = [];
 
-    function spinDigit(index) {
-      let count = 0;
-      const spin = setInterval(() => {
-        current[index] = chars[Math.floor(Math.random() * chars.length)];
+    // 全部同時開始亂碼
+    for (let i = 0; i < length; i++) {
+      intervals[i] = setInterval(() => {
+        current[i] = chars[Math.floor(Math.random() * chars.length)];
         codeEl.textContent = current.join("");
-        count++;
-
-        if (count > 18) {
-          clearInterval(spin);
-          current[index] = finalCode[index];
-          codeEl.textContent = current.join("");
-
-          if (index + 1 < finalCode.length) {
-            setTimeout(() => spinDigit(index + 1), 120);
-          }
-        }
-      }, 60);
+      }, 50);
     }
 
-    spinDigit(0);
+    // 依序停止（左 → 右，每位間隔 2 秒）
+    for (let i = 0; i < length; i++) {
+      setTimeout(() => {
+        clearInterval(intervals[i]);
+        current[i] = finalCode[i];
+        codeEl.textContent = current.join("");
+      }, i * 2000);
+    }
   </script>
 </body>
 </html>
