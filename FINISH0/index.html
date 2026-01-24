@@ -61,7 +61,7 @@
     </div>
 
     <div id="code" class="code">00000000</div>
-<BR></BR>
+
     <div class="content">
       請將驗證碼輸入進裝置後查看入侵資料。
     </div>
@@ -75,20 +75,26 @@
     let current = Array(finalCode.length).fill("0");
     codeEl.textContent = current.join("");
 
-    finalCode.split("").forEach((char, index) => {
-      let iterations = 0;
-      const interval = setInterval(() => {
+    function spinDigit(index) {
+      let count = 0;
+      const spin = setInterval(() => {
         current[index] = chars[Math.floor(Math.random() * chars.length)];
         codeEl.textContent = current.join("");
-        iterations++;
+        count++;
 
-        if (iterations > 15) {
-          clearInterval(interval);
-          current[index] = char;
+        if (count > 18) {
+          clearInterval(spin);
+          current[index] = finalCode[index];
           codeEl.textContent = current.join("");
+
+          if (index + 1 < finalCode.length) {
+            setTimeout(() => spinDigit(index + 1), 120);
+          }
         }
       }, 60);
-    });
+    }
+
+    spinDigit(0);
   </script>
 </body>
 </html>
