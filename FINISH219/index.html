@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>目標選擇</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+
+      /* 黑色預設背景，避免圖片載入前閃白 */
+      background-color: #000;
+      background-image: url('/monitor0314/images/background.jpg');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #eaeaea;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      width: 100%;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .ip-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .ip-list a {
+      font-size: 20px;
+      font-weight: 600;
+      color: #eaeaea;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+
+    .ip-list a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">請選擇要入侵的手機地址：</div>
+
+    <div class="ip-list">
+      <a href="/monitor0314/FINISH249/100">192.168.001.100</a>
+      <a href="/monitor0314/FINISH249/185">192.168.001.185</a>
+      <a href="/monitor0314/FINISH249/123">192.168.001.123</a>
+      <a href="/monitor0314/FINISH249/205">192.168.001.205</a>
+      <a href="/monitor0314/FINISH249/058">192.168.001.058</a>
+      <a href="/monitor0314/FINISH249/244">192.168.001.244</a>
+    </div>
+  </div>
+</body>
+</html>
