@@ -15,7 +15,8 @@ body {
   align-items: center;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
-
+/* 禁止右鍵 */
+document.addEventListener('contextmenu', e=>e.preventDefault());
 /* 整個區塊 */
 .container {
   background: rgba(0,0,0,0.6); /* 半透明黑底 */
