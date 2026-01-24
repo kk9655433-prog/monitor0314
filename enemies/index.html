@@ -129,7 +129,7 @@ function spawnEnemies(){
   }
 }
 function spawnBoss(){
-  boss={x:W/2,y:140,hp:250,cooldown:0};
+  boss={x:W/2,y:140,hp:200,cooldown:0};
   document.getElementById("bossHP").style.display="block";
 }
 
@@ -200,7 +200,7 @@ function update(){
   if(boss){
     boss.x+=(player.x-boss.x)*0.02;
     boss.cooldown++;
-    if(boss.cooldown>=30){ // 每0.1秒發一次扇形彈幕（60fps -> 6幀）
+    if(boss.cooldown>=40){ // 每0.1秒發一次扇形彈幕（60fps -> 6幀）
       boss.cooldown=0;
       for(let a=-0.6;a<=0.6;a+=0.2){
         enemyBullets.push({x:boss.x,y:boss.y,vx:Math.sin(a)*4,vy:Math.cos(a)*4+2});
