@@ -5,28 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>驗證中……</title>
   <style>
-    body {
+    html, body {
       margin: 0;
-      height: 100vh;
-      background: url('/monitor0314/images/background.jpg') no-repeat center center;
-      background-size: cover;
+      height: 100%;
+      background-color: black; /* 默認黑色背景 */
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+    }
+
+    body {
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      position: relative;
     }
 
+    /* 背景圖片 */
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('/monitor0314/images/background.jpg') no-repeat center center;
+      background-size: cover;
+      z-index: 0;
+    }
+
+    /* 半透明黑框包住全部內容 */
     .box {
-      text-align: center;
-    }
-
-    /* 半透明黑框 + 白字陰影 */
-    .title-container {
-      display: inline-block;
-      background: rgba(0,0,0,0.45);
-      padding: 12px 24px;
+      position: relative;
+      z-index: 1;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 24px 32px;
       border-radius: 12px;
-      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
     }
 
     .title {
@@ -40,7 +54,6 @@
       display: flex;
       gap: 10px;
       justify-content: center;
-      margin-bottom: 20px;
     }
 
     .inputs input {
@@ -51,6 +64,8 @@
       border-radius: 10px;
       border: none;
       outline: none;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
     }
 
     button {
@@ -108,9 +123,7 @@
 <body>
 
   <div class="box">
-    <div class="title-container">
-      <div class="title">請輸入驗證碼</div>
-    </div>
+    <div class="title">請輸入驗證碼</div>
 
     <div class="inputs">
       <input maxlength="1" inputmode="numeric">
@@ -136,6 +149,11 @@
   </div>
 
   <script>
+    // 禁用右鍵
+    window.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+
     const inputs = Array.from(document.querySelectorAll(".inputs input"));
     const submitBtn = document.getElementById("submitBtn");
     const modal = document.getElementById("modal");
@@ -179,7 +197,6 @@
     function checkCode() {
       const code = inputs.map(i => i.value).join("");
       if (code === "35216097") {
-        // 成功提示後延遲跳轉
         submitBtn.textContent = "驗證成功，正在跳轉…";
         setTimeout(() => {
           window.location.href = "/monitor0314/HillsComputer/";
