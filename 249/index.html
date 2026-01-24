@@ -134,8 +134,7 @@
     function showError() {
       modal.classList.remove("hidden");
     }
-/* 禁止右鍵 */
-document.addEventListener('contextmenu', e=>e.preventDefault());
+
     // 自動跳格 & 退格跳回
     inputs.forEach((input, i) => {
       input.addEventListener("input", () => {
@@ -155,7 +154,8 @@ document.addEventListener('contextmenu', e=>e.preventDefault());
         }
       });
     });
-    
+    /* 禁止右鍵 */
+document.addEventListener('contextmenu', e=>e.preventDefault());
     // 點按送出按鈕
     submitBtn.addEventListener("click", checkPassword);
 
