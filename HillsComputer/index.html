@@ -336,7 +336,7 @@ const sampleFiles=[
 sampleFolder.addEventListener('click',()=>{
   sampleFolderContent.innerHTML = sampleFiles.map(file=>`
     <div class="folder-icon" data-type="image" data-src="${file.src}">
-      <img src="${file.src}">
+      <img src="${file.icon}">
       <div>${file.name}</div>
     </div>
   `).join('');
@@ -354,7 +354,7 @@ book.addEventListener('dragstart',e=>e.dataTransfer.setData('x','book'));
 trash.addEventListener('dragover',e=>e.preventDefault());
 trash.addEventListener('drop',e=>{if(e.dataTransfer.getData('x')==='book') book.remove();});
 
-/* 資料夾可拖曳（獨立監聽） */
+/* 資料夾可拖曳 */
 function makeDraggable(win){
   let drag=false,offsetX,offsetY;
   const title=win.querySelector('.folder-titlebar');
