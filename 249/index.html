@@ -54,8 +54,7 @@
     button:active {
       transform: scale(0.97);
     }
-/* 禁止右鍵 */
-document.addEventListener('contextmenu', e=>e.preventDefault());
+
     /* 自製彈窗樣式 */
     .modal {
       position: fixed;
@@ -135,7 +134,8 @@ document.addEventListener('contextmenu', e=>e.preventDefault());
     function showError() {
       modal.classList.remove("hidden");
     }
-
+/* 禁止右鍵 */
+document.addEventListener('contextmenu', e=>e.preventDefault());
     // 自動跳格 & 退格跳回
     inputs.forEach((input, i) => {
       input.addEventListener("input", () => {
