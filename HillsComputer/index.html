@@ -400,26 +400,52 @@ const sampleFolderWin=document.getElementById('sampleFolderWindow');
 const sampleFolderContent=document.getElementById('sampleFolderContent');
 const sampleFolderClose=document.getElementById('sampleFolderClose');
 
-const sampleFiles=[
-  { src:'/monitor0314/images/family.jpg', name:'快樂的一天', icon:'/monitor0314/icons/Doc.png' },
-  { src:'/monitor0314/images/PC.png', name:'悲傷的一天', icon:'/monitor0314/icons/Doc.png' },
-  { src:'/monitor0314/images/family2.jpg', name:'得意的一天', icon:'/monitor0314/icons/Doc.png' }
+const sampleFiles = [
+  {
+    name: '快樂的一天',
+    text: '不快樂的一天',
+    icon: '/monitor0314/icons/Doc.png'
+  },
+  {
+    name: '悲傷的一天',
+    text: '不悲傷的一天',
+    icon: '/monitor0314/icons/Doc.png'
+  },
+  {
+    name: '得意的一天',
+    text: '不得意的一天',
+    icon: '/monitor0314/icons/Doc.png'
+  }
 ];
 
-sampleFolder.onclick=()=>{
-  sampleFolderContent.innerHTML=sampleFiles.map(f=>`
-    <div class="folder-icon" data-src="${f.src}">
+sampleFolder.onclick = () => {
+  sampleFolderContent.innerHTML = sampleFiles.map(f => `
+    <div class="folder-icon" data-text="${f.text}">
       <img src="${f.icon}">
       <div>${f.name}</div>
-    </div>`).join('');
-  sampleFolderWin.style.display='block';
-  sampleFolderContent.querySelectorAll('.folder-icon').forEach(icon=>{
-    icon.onclick=()=>openModal(
-      `<img src="${icon.dataset.src}" style="max-width:80vw;max-height:80vh;">`
-    );
+    </div>
+  `).join('');
+
+  sampleFolderWin.style.display = 'block';
+
+  sampleFolderContent.querySelectorAll('.folder-icon').forEach(icon => {
+    icon.onclick = () => openModal(`
+      <p style="
+        max-width:60vw;
+        font-size:18px;
+        line-height:1.8;
+        text-align:center;
+      ">
+        ${icon.dataset.text}
+      </p>
+    `);
   });
 };
-sampleFolderClose.onclick=()=>sampleFolderWin.style.display='none';
+
+sampleFolderClose.onclick = () => {
+  sampleFolderWin.style.display = 'none';
+};
+
 
 /* ========= 拖曳 ========= */
 const book=document.getElementById('accountBook');
