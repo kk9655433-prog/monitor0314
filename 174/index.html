@@ -8,8 +8,14 @@
     body {
       margin: 0;
       height: 100vh;
-      background: url('/monitor0314/images/background.jpg') no-repeat center center;
+
+      /* 黑色預設背景，圖片載入前不閃白 */
+      background-color: #000;
+      background-image: url('/monitor0314/images/background.jpg');
+      background-repeat: no-repeat;
+      background-position: center center;
       background-size: cover;
+
       display: flex;
       justify-content: center;
       align-items: center;
@@ -57,11 +63,11 @@
 <body>
   <div class="container">
     <div class="text">是否入侵</div>
-    <BR></BR>
+    <br>
     <div class="text ip">128.249.186.174</div>
-    <BR></BR>
+    <br>
     <div class="text">IP定位為 哥譚</div>
-    <BR></BR>
+    <br>
     <button onclick="window.location.href='/monitor0314/FINISH0/';">確定</button>
   </div>
 </body>
