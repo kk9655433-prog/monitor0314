@@ -395,10 +395,10 @@ monitorFolder.onclick=()=>{
 folderCloseBtn.onclick=()=>folderWin.style.display='none';
 
 /* ========= 一般資料夾 ========= */
-const sampleFolder=document.getElementById('sampleFolder');
-const sampleFolderWin=document.getElementById('sampleFolderWindow');
-const sampleFolderContent=document.getElementById('sampleFolderContent');
-const sampleFolderClose=document.getElementById('sampleFolderClose');
+const sampleFolder = document.getElementById('sampleFolder');
+const sampleFolderWin = document.getElementById('sampleFolderWindow');
+const sampleFolderContent = document.getElementById('sampleFolderContent');
+const sampleFolderClose = document.getElementById('sampleFolderClose');
 
 const sampleFiles = [
   {
@@ -420,7 +420,9 @@ const sampleFiles = [
 
 sampleFolder.onclick = () => {
   sampleFolderContent.innerHTML = sampleFiles.map(f => `
-    <div class="folder-icon" data-text="${f.text}">
+    <div class="folder-icon" 
+         data-name="${f.name}" 
+         data-text="${f.text}">
       <img src="${f.icon}">
       <div>${f.name}</div>
     </div>
@@ -429,16 +431,43 @@ sampleFolder.onclick = () => {
   sampleFolderWin.style.display = 'block';
 
   sampleFolderContent.querySelectorAll('.folder-icon').forEach(icon => {
-    icon.onclick = () => openModal(`
-      <p style="
-        max-width:60vw;
-        font-size:18px;
-        line-height:1.8;
-        text-align:center;
-      ">
-        ${icon.dataset.text}
-      </p>
-    `);
+    icon.onclick = () => {
+      const fileName = icon.dataset.name + '.doc';
+
+      openModal(`
+        <div style="
+          width:70vw;
+          max-height:80vh;
+          background:#f5f5f5;
+          border:1px solid #888;
+          box-shadow:0 0 20px rgba(0,0,0,.5);
+        ">
+          <!-- 標題列 -->
+          <div style="
+            background:#dcdcdc;
+            padding:8px 12px;
+            font-weight:bold;
+            border-bottom:1px solid #999;
+            font-size:16px;
+          ">
+            ${fileName}
+          </div>
+
+          <!-- 文件內容 -->
+          <div style="
+            padding:20px;
+            background:white;
+            font-size:18px;
+            line-height:1.8;
+            color:#000;
+            overflow:auto;
+            max-height:65vh;
+          ">
+            ${icon.dataset.text}
+          </div>
+        </div>
+      `);
+    };
   });
 };
 
