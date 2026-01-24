@@ -94,7 +94,7 @@
 </head>
 <body>
   <div class="box">
-    <img src="/monitor0314/images/3-1-OK.png" alt="謎題3-1" class="top-img">
+    <img src="/monitor0314/images/3-2-OK.png" alt="謎題3-2" class="top-img">
     <br><br>
     <div class="inputs">
       <input type="text" inputmode="numeric" maxlength="1" id="d1" autocomplete="off">
@@ -159,16 +159,20 @@ document.addEventListener('contextmenu', e=>e.preventDefault());
     // 點按送出按鈕
     submitBtn.addEventListener("click", checkPassword);
 
-  function checkPassword() {
-    const pwd = inputs.map(i => i.value).join("");
-    if (pwd === "128") {
-      window.location.href = "/monitor0314/128/";
-    } else if (pwd === "032") {
-      window.location.href = "/monitor0314/032/";
-    } else {
-      showError(); // 顯示自製彈窗
+    function checkPassword() {
+      const pwd = inputs.map(i => i.value).join("");
+      if (pwd === "128") {
+        window.location.href = "/monitor0314/128/";
+      } else {
+        showError(); // 顯示自製彈窗
+      }
+      const pwd = inputs.map(i => i.value).join("");
+      if (pwd === "032") {
+        window.location.href = "/monitor0314/032/";
+      } else {
+        showError(); // 顯示自製彈窗
+      }
     }
-  }
 
     // 頁面載入時自動 focus 第一格
     window.addEventListener("load", () => {
