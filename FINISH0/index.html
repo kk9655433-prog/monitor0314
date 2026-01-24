@@ -8,8 +8,6 @@
     body {
       margin: 0;
       height: 100vh;
-
-      /* 黑色預設背景，圖片載入前不閃白 */
       background-color: #000;
       background-image: url('/monitor0314/images/background.jpg');
       background-repeat: no-repeat;
@@ -40,14 +38,16 @@
 
     .content {
       font-size: 18px;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
     }
 
     .code {
-      font-size: 48px; /* 驗證碼字號加大 */
-      font-weight: 700;
-      margin-top: 24px;
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: 6px;
       color: #2ecc71;
+      font-family: "Courier New", monospace;
+      margin: 20px 0 28px;
     }
   </style>
 </head>
@@ -56,15 +56,39 @@
     <div class="title">已駭客此 IP 位置成功</div>
 
     <div class="content">
-      已將進度與您最近的平板/電腦連線，請注意查看。<br><br>
+      已將進度與您最近的平板／電腦連線，請注意查看。<br><br>
       以下是驗證碼
     </div>
 
-    <div class="code">35216097</div>
+    <div id="code" class="code">00000000</div>
 
     <div class="content">
       請將驗證碼輸入進裝置後查看入侵資料。
     </div>
   </div>
+
+  <script>
+    const finalCode = "35216097";
+    const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const codeEl = document.getElementById("code");
+
+    let current = Array(finalCode.length).fill("0");
+    codeEl.textContent = current.join("");
+
+    finalCode.split("").forEach((char, index) => {
+      let iterations = 0;
+      const interval = setInterval(() => {
+        current[index] = chars[Math.floor(Math.random() * chars.length)];
+        codeEl.textContent = current.join("");
+        iterations++;
+
+        if (iterations > 15) {
+          clearInterval(interval);
+          current[index] = char;
+          codeEl.textContent = current.join("");
+        }
+      }, 60);
+    });
+  </script>
 </body>
 </html>
