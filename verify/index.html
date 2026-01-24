@@ -8,7 +8,7 @@
     html, body {
       margin: 0;
       height: 100%;
-      background-color: black; /* 默認黑色背景 */
+      background-color: black;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       overflow: hidden;
     }
@@ -20,7 +20,6 @@
       position: relative;
     }
 
-    /* 背景圖片 */
     body::before {
       content: "";
       position: absolute;
@@ -41,7 +40,7 @@
       flex-direction: column;
       align-items: center;
       gap: 24px;
-      max-width: 100%; /* 避免超出螢幕 */
+      max-width: 100%;
       box-sizing: border-box;
     }
 
@@ -51,20 +50,21 @@
       font-weight: 600;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
       text-align: center;
-      word-break: break-word;
     }
 
     .inputs {
       display: flex;
       gap: 10px;
       justify-content: center;
-      flex-wrap: wrap; /* 螢幕太小自動換行 */
+      flex-wrap: wrap;
       max-width: 100%;
+      z-index: 2;
+      position: relative;
     }
 
     .inputs input {
-      flex: 1 1 40px; /* 自適應縮放，最小40px */
-      max-width: 52px; /* 最大維持原尺寸 */
+      flex: 1 1 40px;
+      max-width: 52px;
       min-width: 30px;
       height: 64px;
       font-size: 30px;
@@ -72,9 +72,11 @@
       border-radius: 10px;
       border: none;
       outline: none;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.15); /* 半透明白背景讓字可見 */
       color: #fff;
       box-sizing: border-box;
+      z-index: 2;
+      position: relative;
     }
 
     button {
@@ -88,6 +90,8 @@
       cursor: pointer;
       max-width: 100%;
       box-sizing: border-box;
+      z-index: 2;
+      position: relative;
     }
 
     button:active {
@@ -150,7 +154,6 @@
     <button id="submitBtn">確定</button>
   </div>
 
-  <!-- 錯誤彈窗 -->
   <div id="modal" class="modal hidden">
     <div class="modal-box">
       驗證失敗，請重新輸入
@@ -160,10 +163,7 @@
   </div>
 
   <script>
-    // 禁用右鍵
-    window.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
+    window.addEventListener('contextmenu', function(e) { e.preventDefault(); });
 
     const inputs = Array.from(document.querySelectorAll(".inputs input"));
     const submitBtn = document.getElementById("submitBtn");
@@ -187,15 +187,11 @@
     inputs.forEach((input, i) => {
       input.addEventListener("input", () => {
         input.value = input.value.replace(/[^0-9]/g, "");
-        if (input.value && inputs[i + 1]) {
-          inputs[i + 1].focus();
-        }
+        if (input.value && inputs[i + 1]) inputs[i + 1].focus();
       });
 
       input.addEventListener("keydown", (e) => {
-        if (e.key === "Backspace" && !input.value && inputs[i - 1]) {
-          inputs[i - 1].focus();
-        }
+        if (e.key === "Backspace" && !input.value && inputs[i - 1]) inputs[i - 1].focus();
         if (e.key === "Enter") {
           e.preventDefault();
           checkCode();
@@ -209,17 +205,11 @@
       const code = inputs.map(i => i.value).join("");
       if (code === "35216097") {
         submitBtn.textContent = "驗證成功，正在跳轉…";
-        setTimeout(() => {
-          window.location.href = "/monitor0314/HillsComputer/";
-        }, 800);
-      } else {
-        showError();
-      }
+        setTimeout(() => { window.location.href = "/monitor0314/HillsComputer/"; }, 800);
+      } else showError();
     }
 
-    window.addEventListener("load", () => {
-      inputs[0].focus();
-    });
+    window.addEventListener("load", () => { inputs[0].focus(); });
   </script>
 
 </body>
