@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>假手機首頁</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: system-ui, sans-serif;
+    background-color: black;
+    background-image: url('/monitor0314/images/background058.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    overflow: hidden;
+  }
+  .status-bar {
+    width: 100%;
+    padding: 4px 10px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  .weather-date {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 16px;
+  }
+  .weather-date div {
+    margin: 4px 0;
+  }
+  .main-icons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
+    margin-top: 60px;
+  }
+  .main-icons img, .bottom-bar img {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+  }
+  .bottom-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    background: rgba(0,0,0,0.6);
+  }
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  .modal {
+    background: black;
+    padding: 15px;
+    border-radius: 8px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: auto;
+    position: relative;
+    text-align: center;
+  }
+  .modal .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+  }
+  .modal img {
+    max-width: 100%;
+    margin: 5px 0;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <div class="time" id="time">12:00</div>
+  <div class="battery">🔋 100%</div>
+</div>
+
+<div class="weather-date">
+  <div>天氣: 晴天 🌞</div>
+  <div>溫度: 23°C</div>
+  <div>濕度: 15%</div>
+  <div id="current-date">1/25</div>
+</div>
+
+<div class="main-icons">
+  <img src="/monitor0314/icons/map.png" id="map" alt="地圖">
+  <img src="/monitor0314/icons/plurk.png" id="plurk" alt="噗浪">
+  <img src="/monitor0314/icons/photo.png" id="photo" alt="相簿">
+  <img src="/monitor0314/icons/tinder.png" id="tinder" alt="社交">
+</div>
+
+<div class="bottom-bar">
+  <img src="/monitor0314/icons/phone.png" id="phone" alt="電話">
+  <img src="/monitor0314/icons/messege.png" id="message" alt="訊息">
+  <img src="/monitor0314/icons/google.png" id="google" alt="GOOGOO">
+  <img src="/monitor0314/icons/camere.png" id="camera" alt="相機">
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent">
+    <span class="close-btn" id="closeModal">✖</span>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+  // 更新時間
+  function updateTime() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2,'0');
+    const minutes = String(now.getMinutes()).padStart(2,'0');
+    document.getElementById('time').textContent = `${hours}:${minutes}`;
+  }
+  setInterval(updateTime, 1000);
+  updateTime();
+
+  // 更新日期
+  function updateDate() {
+    const now = new Date();
+    document.getElementById('current-date').textContent = `${now.getMonth()+1}/${now.getDate()}`;
+  }
+  updateDate();
+
+  // Modal 控制
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalBody = document.getElementById('modalBody');
+  const closeModal = document.getElementById('closeModal');
+  closeModal.onclick = () => { modalOverlay.style.display='none'; modalBody.innerHTML=''; };
+
+  // 點擊事件
+  document.getElementById('phone').onclick = () => {
+    modalBody.innerHTML = '<p>暫無新通話</p>';
+    modalOverlay.style.display = 'flex';
+  };
+
+  const messages = ['訊息1內容','訊息2內容','訊息3內容'];
+  let msgIndex = 0;
+  document.getElementById('message').onclick = () => {
+    modalBody.innerHTML = `<p>${messages[msgIndex]}</p><button id="nextMsg">下一封</button>`;
+    modalOverlay.style.display = 'flex';
+    document.getElementById('nextMsg').onclick = () => {
+      msgIndex = (msgIndex + 1) % messages.length;
+      modalBody.innerHTML = `<p>${messages[msgIndex]}</p><button id="nextMsg">下一封</button>`;
+      document.getElementById('nextMsg').onclick = arguments.callee;
+    };
+  };
+
+  document.getElementById('google').onclick = () => {
+    window.location.href = 'https://www.google.com';
+  };
+
+  document.getElementById('camera').onclick = () => {
+    modalBody.innerHTML = '<p>你無法操作這項功能</p>';
+    modalOverlay.style.display = 'flex';
+  };
+
+  const mapImages = ['/monitor0314/images/map1.jpg','/monitor0314/images/map2.jpg','/monitor0314/images/map3.jpg'];
+  document.getElementById('map').onclick = () => {
+    modalBody.innerHTML = mapImages.map(src=>`<img src="${src}">`).join('');
+    modalOverlay.style.display = 'flex';
+  };
+
+  document.getElementById('plurk').onclick = () => {
+    window.location.href = 'https://www.plurk.com/p/3i8qk281r6';
+  };
+
+  const photoImages = ['/monitor0314/images/photo1.jpg','/monitor0314/images/photo2.jpg','/monitor0314/images/photo3.jpg'];
+  document.getElementById('photo').onclick = () => {
+    modalBody.innerHTML = photoImages.map(src=>`<img src="${src}">`).join('');
+    modalOverlay.style.display = 'flex';
+  };
+
+  document.getElementById('tinder').onclick = () => {
+    modalBody.innerHTML = '<img src="/monitor0314/images/tinder_display.jpg">';
+    modalOverlay.style.display = 'flex';
+  };
+
+  // 預載圖片
+  const preloadImages = [
+    '/monitor0314/icons/phone.png',
+    '/monitor0314/icons/messege.png',
+    '/monitor0314/icons/google.png',
+    '/monitor0314/icons/camere.png',
+    '/monitor0314/icons/map.png',
+    '/monitor0314/icons/plurk.png',
+    '/monitor0314/icons/photo.png',
+    '/monitor0314/icons/tinder.png',
+    '/monitor0314/images/background058.jpg',
+    ...mapImages,
+    ...photoImages,
+    '/monitor0314/images/tinder_display.jpg'
+  ];
+  preloadImages.forEach(src=>{
+    const img = new Image();
+    img.src = src;
+  });
+</script>
+
+</body>
+</html>
