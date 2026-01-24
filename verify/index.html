@@ -55,7 +55,7 @@
       display: flex;
       gap: 10px;
       justify-content: center;
-      flex-wrap: wrap;
+      flex-wrap: wrap; /* 可換行 */
       max-width: 100%;
       z-index: 2;
       position: relative;
@@ -72,7 +72,7 @@
       border: none;
       outline: none;
       background: #fff; /* 純白實心背景 */
-      color: #000; /* 黑字 */
+      color: #000;
       box-sizing: border-box;
       z-index: 2;
       position: relative;
@@ -130,6 +130,14 @@
       background: #2ecc71;
       color: black;
       cursor: pointer;
+    }
+
+    /* Media query：螢幕窄於 400px 時，分兩行，每行 4 個輸入框 */
+    @media screen and (max-width: 400px) {
+      .inputs input {
+        flex: 1 1 20%; /* 每行4個輸入框，約占20% */
+        max-width: 40px; /* 適度縮小 */
+      }
     }
   </style>
 </head>
