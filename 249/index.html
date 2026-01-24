@@ -54,7 +54,8 @@
     button:active {
       transform: scale(0.97);
     }
-
+/* 禁止右鍵 */
+document.addEventListener('contextmenu', e=>e.preventDefault());
     /* 自製彈窗樣式 */
     .modal {
       position: fixed;
