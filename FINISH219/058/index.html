@@ -118,13 +118,13 @@ function drawBoss(){
 /* ===== 生成 ===== */
 function spawnEnemies(){
   enemies=[];
-  const c=level+2; // 每關敵人數量增加
+  const c=level+3; // 每關敵人數量增加
   for(let i=0;i<c;i++){
     enemies.push({
       x:(i+1)*W/(c+1),
       y:120,
       vx:(1.5+level*0.4)*(Math.random()>0.5?1:-1),
-      hp:3+level
+      hp:8+level
     });
   }
 }
@@ -200,7 +200,7 @@ function update(){
   if(boss){
     boss.x+=(player.x-boss.x)*0.02;
     boss.cooldown++;
-    if(boss.cooldown>=36){ // 每0.6秒發扇形彈
+    if(boss.cooldown>=30){ // 每0.6秒發扇形彈
       boss.cooldown=0;
       for(let a=-0.6;a<=0.6;a+=0.2){
         enemyBullets.push({x:boss.x,y:boss.y,vx:Math.sin(a)*4,vy:Math.cos(a)*4+2});
@@ -242,7 +242,7 @@ function update(){
     running=false;inputEnabled=false;
     level++;
     if(level===6){
-      showStageText("第六關 - BOSS",spawnBoss);
+      showStageText("最終關",spawnBoss);
     }else{
       showStageText("第"+level+"關",spawnEnemies);
     }
