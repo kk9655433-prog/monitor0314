@@ -41,6 +41,8 @@
       flex-direction: column;
       align-items: center;
       gap: 24px;
+      max-width: 100%; /* 避免超出螢幕 */
+      box-sizing: border-box;
     }
 
     .title {
@@ -48,16 +50,22 @@
       color: #fff;
       font-weight: 600;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+      text-align: center;
+      word-break: break-word;
     }
 
     .inputs {
       display: flex;
       gap: 10px;
       justify-content: center;
+      flex-wrap: wrap; /* 螢幕太小自動換行 */
+      max-width: 100%;
     }
 
     .inputs input {
-      width: 52px;
+      flex: 1 1 40px; /* 自適應縮放，最小40px */
+      max-width: 52px; /* 最大維持原尺寸 */
+      min-width: 30px;
       height: 64px;
       font-size: 30px;
       text-align: center;
@@ -66,6 +74,7 @@
       outline: none;
       background: rgba(255,255,255,0.1);
       color: #fff;
+      box-sizing: border-box;
     }
 
     button {
@@ -77,6 +86,8 @@
       color: black;
       font-weight: bold;
       cursor: pointer;
+      max-width: 100%;
+      box-sizing: border-box;
     }
 
     button:active {
