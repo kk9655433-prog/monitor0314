@@ -53,7 +53,7 @@ body::before {
 
 .inputs {
   display: grid;
-  grid-template-columns: repeat(8, 52px); /* 桌機一行 8 個 */
+  grid-template-columns: repeat(8, 52px);
   gap: 10px;
   justify-content: center;
 }
@@ -121,7 +121,6 @@ button:active {
   cursor: pointer;
 }
 
-/* 手機窄螢幕(<400px)強制兩行4個 */
 @media screen and (max-width: 400px) {
   .inputs {
     grid-template-columns: repeat(4, 52px);
@@ -169,19 +168,44 @@ function resetInputs() {
   inputs[0].focus();
 }
 
-modalBtn.addEventListener("click", () => {
+// 關閉 modal
+function closeModal() {
   modal.classList.add("hidden");
   resetInputs();
+}
+
+// modal 按鈕點擊
+modalBtn.addEventListener("click", closeModal);
+
+// modal 可以用 Enter 關閉
+modal.addEventListener("keydown", e => {
+  if(e.key === "Enter") closeModal();
 });
 
 function showError() {
   modal.classList.remove("hidden");
+  modal.focus(); // 讓 modal 可以接收鍵盤事件
 }
 
+// 輸入框事件
 inputs.forEach((input, i) => {
   input.addEventListener("input", () => {
+    // 過濾非數字
     input.value = input.value.replace(/[^0-9]/g, "");
+    // 自動跳下一格
     if(input.value && inputs[i+1]) inputs[i+1].focus();
+  });
+
+  // 貼上事件
+  input.addEventListener("paste", e => {
+    e.preventDefault();
+    const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'');
+    for(let j=0; j<inputs.length; j++){
+      inputs[j].value = paste[j] || '';
+    }
+    // 自動聚焦到最後填入的
+    const lastFilled = Math.min(paste.length, inputs.length) - 1;
+    if(lastFilled >= 0) inputs[lastFilled].focus();
   });
 
   input.addEventListener("keydown", e => {
@@ -200,6 +224,7 @@ function checkCode() {
   } else showError();
 }
 
+// 初始聚焦
 window.addEventListener("load", () => { inputs[0].focus(); });
 </script>
 
