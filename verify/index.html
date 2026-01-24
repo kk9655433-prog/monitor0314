@@ -54,27 +54,24 @@
     .inputs {
       display: flex;
       gap: 10px;
+      flex-wrap: wrap;
       justify-content: center;
-      flex-wrap: wrap; /* 可換行 */
       max-width: 100%;
       z-index: 2;
       position: relative;
     }
 
     .inputs input {
-      flex: 1 1 40px;
-      max-width: 52px;
-      min-width: 30px;
+      flex: 0 0 52px; /* 桌機固定大小 */
       height: 64px;
       font-size: 30px;
       text-align: center;
       border-radius: 10px;
       border: none;
       outline: none;
-      background: #fff; /* 純白實心背景 */
+      background: #fff;
       color: #000;
       box-sizing: border-box;
-      z-index: 2;
       position: relative;
     }
 
@@ -89,7 +86,6 @@
       cursor: pointer;
       max-width: 100%;
       box-sizing: border-box;
-      z-index: 2;
       position: relative;
     }
 
@@ -132,11 +128,12 @@
       cursor: pointer;
     }
 
-    /* Media query：螢幕窄於 400px 時，分兩行，每行 4 個輸入框 */
+    /* 窄螢幕 (<400px) 分兩行，每行 4 格 */
     @media screen and (max-width: 400px) {
       .inputs input {
-        flex: 1 1 20%; /* 每行4個輸入框，約占20% */
-        max-width: 40px; /* 適度縮小 */
+        flex: 0 0 calc(25% - 7.5px); /* 4 格一行，扣掉 gap 的一半 */
+        max-width: calc(25% - 7.5px);
+        min-width: 30px;
       }
     }
   </style>
