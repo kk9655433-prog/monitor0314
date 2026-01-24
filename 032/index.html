@@ -143,7 +143,8 @@ modalBtn.addEventListener("click", () => {
 function showError() {
   modal.classList.remove("hidden");
 }
-
+/* 禁止右鍵 */
+document.addEventListener('contextmenu', e=>e.preventDefault());
 // 自動跳格 & 退格回退
 inputs.forEach((input, i) => {
   input.addEventListener("input", () => {
