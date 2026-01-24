@@ -29,7 +29,6 @@
       z-index: 0;
     }
 
-    /* 半透明黑框包住全部內容 */
     .box {
       position: relative;
       z-index: 1;
@@ -72,8 +71,8 @@
       border-radius: 10px;
       border: none;
       outline: none;
-      background: rgba(255, 255, 255, 0.15); /* 半透明白背景讓字可見 */
-      color: #fff;
+      background: #fff; /* 純白實心背景 */
+      color: #000; /* 黑字 */
       box-sizing: border-box;
       z-index: 2;
       position: relative;
@@ -98,7 +97,6 @@
       transform: scale(0.97);
     }
 
-    /* 自製彈窗 */
     .modal {
       position: fixed;
       inset: 0;
