@@ -1,219 +1,219 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>驗證中……</title>
-  <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      background-color: black;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      overflow: hidden;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>驗證中……</title>
+<style>
+html, body {
+  margin: 0;
+  height: 100%;
+  background-color: black;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow: hidden;
+}
 
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
 
-    body::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: url('/monitor0314/images/background.jpg') no-repeat center center;
-      background-size: cover;
-      z-index: 0;
-    }
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url('/monitor0314/images/background.jpg') no-repeat center center;
+  background-size: cover;
+  z-index: 0;
+}
 
-    .box {
-      position: relative;
-      z-index: 1;
-      background: rgba(0, 0, 0, 0.45);
-      padding: 24px 32px;
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 24px;
-      max-width: 100%;
-      box-sizing: border-box;
-    }
+.box {
+  position: relative;
+  z-index: 1;
+  background: rgba(0,0,0,0.45);
+  padding: 24px 32px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
 
-    .title {
-      font-size: 22px;
-      color: #fff;
-      font-weight: 600;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
-      text-align: center;
-    }
+.title {
+  font-size: 22px;
+  color: #fff;
+  font-weight: 600;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+  text-align: center;
+}
 
-    .inputs {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      max-width: 100%;
-      z-index: 2;
-      position: relative;
-    }
+.inputs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 100%;
+  z-index: 2;
+  position: relative;
+}
 
-    .inputs input {
-      flex: 0 0 52px; /* 桌機固定大小 */
-      height: 64px;
-      font-size: 30px;
-      text-align: center;
-      border-radius: 10px;
-      border: none;
-      outline: none;
-      background: #fff;
-      color: #000;
-      box-sizing: border-box;
-      position: relative;
-    }
+.inputs input {
+  width: 52px;       /* 桌機固定尺寸 */
+  height: 52px;
+  font-size: 30px;
+  text-align: center;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: #fff;
+  color: #000;
+  box-sizing: border-box;
+  position: relative;
+}
 
-    button {
-      font-size: 22px;
-      padding: 14px 40px;
-      border: none;
-      border-radius: 12px;
-      background: #2ecc71;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-      max-width: 100%;
-      box-sizing: border-box;
-      position: relative;
-    }
+button {
+  font-size: 22px;
+  padding: 14px 40px;
+  border: none;
+  border-radius: 12px;
+  background: #2ecc71;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
 
-    button:active {
-      transform: scale(0.97);
-    }
+button:active {
+  transform: scale(0.97);
+}
 
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.55);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
 
-    .hidden {
-      display: none;
-    }
+.hidden {
+  display: none;
+}
 
-    .modal-box {
-      background: #1e1e1e;
-      color: #fff;
-      padding: 28px 32px;
-      border-radius: 14px;
-      width: 300px;
-      text-align: center;
-      font-size: 18px;
-    }
+.modal-box {
+  background: #1e1e1e;
+  color: #fff;
+  padding: 28px 32px;
+  border-radius: 14px;
+  width: 300px;
+  text-align: center;
+  font-size: 18px;
+}
 
-    .modal-box button {
-      margin-top: 20px;
-      font-size: 16px;
-      padding: 10px 32px;
-      border-radius: 10px;
-      border: none;
-      background: #2ecc71;
-      color: black;
-      cursor: pointer;
-    }
+.modal-box button {
+  margin-top: 20px;
+  font-size: 16px;
+  padding: 10px 32px;
+  border-radius: 10px;
+  border: none;
+  background: #2ecc71;
+  color: black;
+  cursor: pointer;
+}
 
-    /* 窄螢幕 (<400px) 分兩行，每行 4 格 */
-    @media screen and (max-width: 400px) {
-      .inputs input {
-        flex: 0 0 calc(25% - 7.5px); /* 4 格一行，扣掉 gap 的一半 */
-        max-width: calc(25% - 7.5px);
-        min-width: 30px;
-      }
-    }
-  </style>
+/* 手機窄螢幕 (<400px) */
+@media screen and (max-width: 400px) {
+  .inputs {
+    justify-content: space-between; /* 保持間距 */
+  }
+  .inputs input {
+    width: 52px;       /* 保持原始尺寸正方形 */
+    height: 52px;
+    margin-bottom: 10px; /* 換行間距 */
+  }
+}
+</style>
 </head>
 <body>
 
-  <div class="box">
-    <div class="title">請輸入驗證碼</div>
+<div class="box">
+  <div class="title">請輸入驗證碼</div>
 
-    <div class="inputs">
-      <input maxlength="1" inputmode="numeric">
-      <input maxlength="1" inputmode="numeric">
-      <input maxlength="1" inputmode="numeric">
-      <input maxlength="1" inputmode="numeric">
-      <input maxlength="1" inputmode="numeric">
-      <input maxlength="1" inputmode="numeric">
-      <input maxlength="1" inputmode="numeric">
-      <input maxlength="1" inputmode="numeric">
-    </div>
-
-    <button id="submitBtn">確定</button>
+  <div class="inputs">
+    <input maxlength="1" inputmode="numeric">
+    <input maxlength="1" inputmode="numeric">
+    <input maxlength="1" inputmode="numeric">
+    <input maxlength="1" inputmode="numeric">
+    <input maxlength="1" inputmode="numeric">
+    <input maxlength="1" inputmode="numeric">
+    <input maxlength="1" inputmode="numeric">
+    <input maxlength="1" inputmode="numeric">
   </div>
 
-  <div id="modal" class="modal hidden">
-    <div class="modal-box">
-      驗證失敗，請重新輸入
-      <br><br>
-      <button id="modalBtn">確定</button>
-    </div>
+  <button id="submitBtn">確定</button>
+</div>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-box">
+    驗證失敗，請重新輸入
+    <br><br>
+    <button id="modalBtn">確定</button>
   </div>
+</div>
 
-  <script>
-    window.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+<script>
+window.addEventListener('contextmenu', e => e.preventDefault());
 
-    const inputs = Array.from(document.querySelectorAll(".inputs input"));
-    const submitBtn = document.getElementById("submitBtn");
-    const modal = document.getElementById("modal");
-    const modalBtn = document.getElementById("modalBtn");
+const inputs = Array.from(document.querySelectorAll(".inputs input"));
+const submitBtn = document.getElementById("submitBtn");
+const modal = document.getElementById("modal");
+const modalBtn = document.getElementById("modalBtn");
 
-    function resetInputs() {
-      inputs.forEach(i => i.value = "");
-      inputs[0].focus();
-    }
+function resetInputs() {
+  inputs.forEach(i => i.value = "");
+  inputs[0].focus();
+}
 
-    modalBtn.addEventListener("click", () => {
-      modal.classList.add("hidden");
-      resetInputs();
-    });
+modalBtn.addEventListener("click", () => {
+  modal.classList.add("hidden");
+  resetInputs();
+});
 
-    function showError() {
-      modal.classList.remove("hidden");
-    }
+function showError() {
+  modal.classList.remove("hidden");
+}
 
-    inputs.forEach((input, i) => {
-      input.addEventListener("input", () => {
-        input.value = input.value.replace(/[^0-9]/g, "");
-        if (input.value && inputs[i + 1]) inputs[i + 1].focus();
-      });
+inputs.forEach((input, i) => {
+  input.addEventListener("input", () => {
+    input.value = input.value.replace(/[^0-9]/g, "");
+    if(input.value && inputs[i+1]) inputs[i+1].focus();
+  });
 
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Backspace" && !input.value && inputs[i - 1]) inputs[i - 1].focus();
-        if (e.key === "Enter") {
-          e.preventDefault();
-          checkCode();
-        }
-      });
-    });
+  input.addEventListener("keydown", e => {
+    if(e.key === "Backspace" && !input.value && inputs[i-1]) inputs[i-1].focus();
+    if(e.key === "Enter") { e.preventDefault(); checkCode(); }
+  });
+});
 
-    submitBtn.addEventListener("click", checkCode);
+submitBtn.addEventListener("click", checkCode);
 
-    function checkCode() {
-      const code = inputs.map(i => i.value).join("");
-      if (code === "35216097") {
-        submitBtn.textContent = "驗證成功，正在跳轉…";
-        setTimeout(() => { window.location.href = "/monitor0314/HillsComputer/"; }, 800);
-      } else showError();
-    }
+function checkCode() {
+  const code = inputs.map(i => i.value).join("");
+  if(code === "35216097") {
+    submitBtn.textContent = "驗證成功，正在跳轉…";
+    setTimeout(() => { window.location.href = "/monitor0314/HillsComputer/"; }, 800);
+  } else showError();
+}
 
-    window.addEventListener("load", () => { inputs[0].focus(); });
-  </script>
+window.addEventListener("load", () => { inputs[0].focus(); });
+</script>
 
 </body>
 </html>
