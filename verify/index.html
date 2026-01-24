@@ -52,17 +52,14 @@ body::before {
 }
 
 .inputs {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(8, 52px); /* 桌機一行 8 個 */
   gap: 10px;
-  flex-wrap: wrap;
   justify-content: center;
-  max-width: 100%;
-  z-index: 2;
-  position: relative;
 }
 
 .inputs input {
-  width: 52px;       /* 桌機固定尺寸 */
+  width: 52px;
   height: 52px;
   font-size: 30px;
   text-align: center;
@@ -72,7 +69,6 @@ body::before {
   background: #fff;
   color: #000;
   box-sizing: border-box;
-  position: relative;
 }
 
 button {
@@ -86,7 +82,6 @@ button {
   cursor: pointer;
   max-width: 100%;
   box-sizing: border-box;
-  position: relative;
 }
 
 button:active {
@@ -103,9 +98,7 @@ button:active {
   z-index: 9999;
 }
 
-.hidden {
-  display: none;
-}
+.hidden { display: none; }
 
 .modal-box {
   background: #1e1e1e;
@@ -128,15 +121,10 @@ button:active {
   cursor: pointer;
 }
 
-/* 手機窄螢幕 (<400px) */
+/* 手機窄螢幕(<400px)強制兩行4個 */
 @media screen and (max-width: 400px) {
   .inputs {
-    justify-content: space-between; /* 保持間距 */
-  }
-  .inputs input {
-    width: 52px;       /* 保持原始尺寸正方形 */
-    height: 52px;
-    margin-bottom: 10px; /* 換行間距 */
+    grid-template-columns: repeat(4, 52px);
   }
 }
 </style>
