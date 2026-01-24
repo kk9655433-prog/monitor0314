@@ -158,9 +158,10 @@ html,body{
     <img src="/monitor0314/icons/Trash.png">資源回收桶
   </div>
 
-  <div class="icon"
+<div class="icon"
      data-type="mail"
      data-password="528"
+     data-hint="監視器最近有點故障"
      data-images='[
        "/monitor0314/images/mail01.jpg",
        "/monitor0314/images/mail02.jpg",
@@ -208,6 +209,7 @@ html,body{
        draggable="true"
        data-type="pdf"
        data-password="0519"
+       data-hint="紀念日"
        data-src="/monitor0314/another/ledger.pdf"
        data-title="帳本PDF">
     <img src="/monitor0314/icons/Notepad.png">帳本
@@ -293,9 +295,10 @@ function openGallery(images){
 }
 
 /* ========= 通用：密碼閘 ========= */
-function passwordGate({length,password,onSuccess}){
+function passwordGate({length,password,onSuccess,hint}) {
   openModal(`
     <p>請輸入密碼</p>
+    ${hint ? `<p style="text-align:center;color:#ccc;font-size:14px;">提示：${hint}</p>` : ''}
     <div style="display:flex;gap:8px;justify-content:center;">
       ${'<input class="pwd-box" maxlength="1">'.repeat(length)}
     </div>
@@ -323,7 +326,7 @@ function passwordGate({length,password,onSuccess}){
     if(val === password){
       document.onkeydown = null;
       onSuccess();
-    }else{
+    } else {
       document.getElementById('err').style.display='block';
       inputs.forEach(i=>i.value='');
       inputs[0].focus();
@@ -343,12 +346,14 @@ const handlers = {
   mail: icon => passwordGate({
     length:3,
     password:icon.dataset.password,
+    hint: icon.dataset.hint,
     onSuccess:()=>openGallery(JSON.parse(icon.dataset.images))
   }),
 
   pdf: icon => passwordGate({
     length:4,
     password:icon.dataset.password,
+    hint: icon.dataset.hint,
     onSuccess:()=>openModal(
       `<iframe src="${icon.dataset.src}" style="width:90vw;height:80vh;" title="${icon.dataset.title||'PDF'}"></iframe>`
     )
