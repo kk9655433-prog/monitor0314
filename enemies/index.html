@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>侵入模組</title>
+<style>
+html,body{
+  margin:0;
+  background:black;
+  overflow:hidden;
+  touch-action:none;
+}
+canvas{
+  display:block;
+  margin:auto;
+}
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  font-family:system-ui;
+  z-index:10;
+}
+button{
+  margin-top:16px;
+  padding:8px 24px;
+  font-size:16px;
+}
+.centerText{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+  color:white;
+  z-index:9;
+}
+</style>
+</head>
+<body>
+
+<canvas id="game"></canvas>
+
+<div id="intro" class="overlay">
+  <div>即將入侵手機，請破解對方防火牆。</div>
+  <button id="introBtn">確定</button>
+</div>
+
+<div id="fail" class="overlay" style="display:none">
+  <div>CONNECTION LOST</div>
+  <button id="restartBtn">重新開始</button>
+</div>
+
+<div id="success" class="overlay" style="display:none">
+  <div>入侵成功</div>
+  <button id="successBtn">確定</button>
+</div>
+
+<div id="stageText" class="centerText" style="display:none"></div>
+<div id="countdown" class="centerText" style="display:none"></div>
+
+<script>
+/* ===== 基本設定 ===== */
+const GAME_WIDTH = 390;
+const GAME_HEIGHT = 844;
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+canvas.width = GAME_WIDTH;
+canvas.height = GAME_HEIGHT;
+
+/* ===== 狀態 ===== */
+let bullets = [];
+let enemyBullets = [];
+let enemies = [];
+let level = 1;
+let frame = 0;
+let running = false;
+let alive = true;
+let inputEnabled = false;
+
+/* ===== 玩家 ===== */
+const player = { x: GAME_WIDTH/2, y: GAME_HEIGHT*0.75, r: 10 };
+
+/* ===== 滑鼠 / 觸控輸入（強制啟用） ===== */
+let dragging = false;
+
+function setPos(x,y){
+  if(!inputEnabled) return;
+  const rect = canvas.getBoundingClientRect();
+  const cx = x - rect.left;
+  const cy = y - rect.top;
+  player.x = Math.max(20,Math.min(GAME_WIDTH-20,cx));
+  player.y = Math.max(20,Math.min(GAME_HEIGHT-20,cy));
+}
+
+canvas.addEventListener("mousedown",e=>{
+  dragging = true;
+  setPos(e.clientX,e.clientY);
+});
+canvas.addEventListener("mousemove",e=>{
+  if(dragging) setPos(e.clientX,e.clientY);
+});
+window.addEventListener("mouseup",()=>dragging=false);
+
+canvas.addEventListener("touchstart",e=>{
+  dragging = true;
+  setPos(e.touches[0].clientX,e.touches[0].clientY);
+},{passive:false});
+canvas.addEventListener("touchmove",e=>{
+  setPos(e.touches[0].clientX,e.touches[0].clientY);
+},{passive:false});
+window.addEventListener("touchend",()=>dragging=false);
+
+/* ===== 繪製 ===== */
+function drawPlayer(x,y){
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.fillStyle="#00eaff";
+  ctx.beginPath();
+  ctx.moveTo(0,-22);
+  ctx.lineTo(14,18);
+  ctx.lineTo(0,8);
+  ctx.lineTo(-14,18);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+function drawEnemy(x,y){
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.fillStyle="#ff3344";
+  ctx.beginPath();
+  ctx.moveTo(0,20);
+  ctx.lineTo(16,-8);
+  ctx.lineTo(0,-20);
+  ctx.lineTo(-16,-8);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+/* ===== 敵機 ===== */
+function spawnEnemies(){
+  enemies=[];
+  const count = level + 2;
+  for(let i=0;i<count;i++){
+    enemies.push({
+      x:(i+1)*GAME_WIDTH/(count+1),
+      y:120,
+      vx:(1.5+level*0.4)*(Math.random()>0.5?1:-1),
+      hp:3+level
+    });
+  }
+}
+
+/* ===== 流程 ===== */
+function resetGame(){
+  bullets=[];
+  enemyBullets=[];
+  level=1;
+  frame=0;
+  alive=true;
+  running=false;
+  inputEnabled=false;
+  spawnEnemies();
+}
+
+function showStage(text){
+  const el=document.getElementById("stageText");
+  el.textContent=text;
+  el.style.display="flex";
+  setTimeout(()=>{
+    el.style.display="none";
+    startCountdown();
+  },1000);
+}
+
+function startCountdown(){
+  const el=document.getElementById("countdown");
+  let n=3;
+  el.textContent=n;
+  el.style.display="flex";
+  const timer=setInterval(()=>{
+    n--;
+    if(n===0){
+      clearInterval(timer);
+      el.style.display="none";
+      running=true;
+      inputEnabled=true;
+    }else{
+      el.textContent=n;
+    }
+  },1000);
+}
+
+/* ===== UI ===== */
+introBtn.onclick=()=>{
+  intro.style.display="none";
+  resetGame();
+  showStage("第一關");
+};
+restartBtn.onclick=()=>{
+  fail.style.display="none";
+  resetGame();
+  showStage("第一關");
+};
+successBtn.onclick=()=>{
+  location.href="https://www.google.com/";
+};
+
+/* ===== 主邏輯 ===== */
+function update(){
+  if(!running || !alive) return;
+  frame++;
+
+  if(frame%6===0){
+    bullets.push({x:player.x,y:player.y,vy:-9});
+  }
+
+  enemies.forEach(e=>{
+    e.x+=e.vx;
+    if(e.x<30||e.x>GAME_WIDTH-30) e.vx*=-1;
+    if(frame%(40-level*4)===0){
+      enemyBullets.push({
+        x:e.x,y:e.y,
+        vx:(player.x-e.x)/80,
+        vy:4+level
+      });
+    }
+  });
+
+  bullets.forEach(b=>b.y+=b.vy);
+  enemyBullets.forEach(b=>{b.x+=b.vx;b.y+=b.vy});
+
+  bullets.forEach(b=>{
+    enemies.forEach(e=>{
+      if(Math.abs(b.x-e.x)<18 && Math.abs(b.y-e.y)<18){
+        e.hp--;
+        b.y=-999;
+      }
+    });
+  });
+
+  enemies=enemies.filter(e=>e.hp>0);
+
+  enemyBullets.forEach(b=>{
+    if(Math.hypot(b.x-player.x,b.y-player.y)<player.r){
+      alive=false;
+      running=false;
+      inputEnabled=false;
+      fail.style.display="flex";
+    }
+  });
+
+  if(enemies.length===0){
+    running=false;
+    inputEnabled=false;
+    level++;
+    if(level>3){
+      success.style.display="flex";
+    }else{
+      spawnEnemies();
+      showStage(level===2?"第二關":"最終關");
+    }
+  }
+}
+
+/* ===== 繪製 ===== */
+function draw(){
+  ctx.clearRect(0,0,GAME_WIDTH,GAME_HEIGHT);
+  drawPlayer(player.x,player.y);
+  enemies.forEach(e=>drawEnemy(e.x,e.y));
+  ctx.fillStyle="cyan";
+  bullets.forEach(b=>ctx.fillRect(b.x-2,b.y-10,4,10));
+  ctx.fillStyle="red";
+  enemyBullets.forEach(b=>{
+    ctx.beginPath();
+    ctx.arc(b.x,b.y,4,0,Math.PI*2);
+    ctx.fill();
+  });
+}
+
+/* ===== Loop ===== */
+(function loop(){
+  update();
+  draw();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
