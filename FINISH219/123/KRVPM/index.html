@@ -239,13 +239,14 @@ function renderImage(){
   imgIndex.textContent=`${idx+1} / ${imgs.length}`;
 }
 
-function openViewer(list){
-  imgs=list;
-  idx=0;
+function openViewer(list, reverse=false){
+  imgs = list;
+  idx = 0;
   modalBox.classList.add('image-mode');
   imgIndex.style.display='block';
   renderImage();
   modal.style.display='flex';
+  modalContent.dataset.reverse = reverse ? '1' : '0';
 }
 
 /* swipe */
@@ -253,23 +254,27 @@ modalContent.addEventListener('touchstart',e=>{
   startX=e.touches[0].clientX;
 });
 
-modalContent.addEventListener('touchend',e=>{
-  const dx=e.changedTouches[0].clientX-startX;
-  if(Math.abs(dx)>50){
-    idx = dx<0 ? (idx+1)%imgs.length : (idx-1+imgs.length)%imgs.length;
+modalContent.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - startX;
+  if(Math.abs(dx) > 50){
+    const rev = modalContent.dataset.reverse === '1';
+    if(dx < 0) idx = rev ? (idx-1+imgs.length)%imgs.length : (idx+1)%imgs.length;
+    else idx = rev ? (idx+1)%imgs.length : (idx-1+imgs.length)%imgs.length;
     renderImage();
   }
 });
 
-modalContent.addEventListener('mousedown',e=>{
-  startX=e.clientX;
-  modalContent.onmouseup=ev=>{
-    const dx=ev.clientX-startX;
-    if(Math.abs(dx)>50){
-      idx = dx<0 ? (idx+1)%imgs.length : (idx-1+imgs.length)%imgs.length;
+modalContent.addEventListener('mousedown', e => {
+  startX = e.clientX;
+  modalContent.onmouseup = ev => {
+    const dx = ev.clientX - startX;
+    const rev = modalContent.dataset.reverse === '1';
+    if(Math.abs(dx) > 50){
+      if(dx < 0) idx = rev ? (idx-1+imgs.length)%imgs.length : (idx+1)%imgs.length;
+      else idx = rev ? (idx+1)%imgs.length : (idx-1+imgs.length)%imgs.length;
       renderImage();
     }
-    modalContent.onmouseup=null;
+    modalContent.onmouseup = null;
   };
 });
 
@@ -311,23 +316,23 @@ document.getElementById('camera').onclick=()=>openText('<p>你無法操作這項
 document.getElementById('calculator').onclick=()=>openText('<p>你無法操作這項功能</p>');
 document.getElementById('message').onclick=openMessageList;
 
-document.getElementById('map').onclick=()=>openViewer([
+document.getElementById('map').onclick = () => openViewer([
   '/monitor0314/images/map123-1.png',
   '/monitor0314/images/map123-2.png',
   '/monitor0314/images/map123-3.png'
-]);
+], true); // true → 反向滑動
 
-document.getElementById('photo').onclick=()=>openViewer([
-  '/monitor0314/images/photo123-1.jpg',
-  '/monitor0314/images/photo123-2.jpg',
-  '/monitor0314/images/photo123-3.jpg'
-]);
-
-document.getElementById('calendar').onclick=()=>openViewer([
+document.getElementById('calendar').onclick = () => openViewer([
   '/monitor0314/images/calendar123-1.jpg',
   '/monitor0314/images/calendar123-2.jpg',
   '/monitor0314/images/calendar123-3.jpg'
-]);
+], true);
+
+document.getElementById('photo').onclick = () => openViewer([
+  '/monitor0314/images/photo123-1.jpg',
+  '/monitor0314/images/photo123-2.jpg',
+  '/monitor0314/images/photo123-3.jpg'
+]); // 默認正向滑動
 
 document.getElementById('google').onclick=()=>location.href='https://www.google.com';
 
