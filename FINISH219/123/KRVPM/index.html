@@ -126,7 +126,16 @@ html,body{
   display:flex;
   justify-content:space-between;
   font-size:14px;
+  white-space:nowrap;
 }
+.msg-line1 div:first-child{
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.msg-line1 div:last-child{
+  flex-shrink:0; /* 日期固定不被壓縮 */
+}
+
 
 .msg-preview{
   font-size:14px; /* 稍大文字 */
@@ -145,15 +154,15 @@ html,body{
 
 /* image index */
 .image-index{
-  position:relative; /* 改成相對定位，不壓住圖片 */
-  display:block;
-  text-align:center;
-  margin:8px auto 0 auto; /* 圖片下方置中 */
+  position:absolute; /* 改絕對定位 */
+  bottom:12px;       /* 距離 modal 底部 */
+  left:50%;
+  transform:translateX(-50%);
   font-size:16px;
   background:rgba(0,0,0,.5);
   padding:4px 12px;
   border-radius:12px;
-  z-index:5;
+  z-index:20;        /* 提高 z-index 確保在圖片上方 */
 }
 
 /* exit tab */
