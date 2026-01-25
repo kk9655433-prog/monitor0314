@@ -131,14 +131,14 @@ html,body{
 
 .msg-line1 div:first-child{
   display: inline-block;
-  width: 56px;          /* 8個字大約寬度 */
+  width: 356px;          /* 8個字大約寬度 */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .msg-line1 div:last-child{
-  width: 36px;          /* 日期固定寬度 */
+  width: 136px;          /* 日期固定寬度 */
   flex-shrink: 0;
   text-align:right;
 }
@@ -284,7 +284,7 @@ const messages=[
 
 /* 生成第一層預覽文字，超過第8個字加… */
 messages.forEach(m=>{
-  m.preview8 = m.text.length > 8 ? m.text.slice(0,8)+'…' : m.text;
+  m.preview8 = m.text.length > 8 ? m.text.slice(0,15)+'…' : m.text;
 });
 
 function openMessageList(){
