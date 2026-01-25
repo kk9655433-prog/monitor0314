@@ -122,34 +122,30 @@ html,body{
   margin-bottom:16px; /* 增加格子間距 */
 }
 
-.msg-line1{
+.msg-line1 {
   display: flex;
+  justify-content: space-between; /* 兩端對齊 */
   align-items: center;
   font-size: 14px;
-  width:100%;
+  width: 100%;
 }
 
-.msg-line1 div:first-child{
-  min-width: 0; 
+.msg-line1 div:first-child {
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 70%; 
 }
 
-.msg-line1 div:last-child{
-  margin-left: auto; 
-  white-space: nowrap;  
-  flex-shrink: 0;
+.msg-line1 div:last-child {
+  white-space: nowrap;
+  flex-shrink: 0;  
   text-align: right;
 }
 
-
-
-
-
 .msg-preview{
-  font-size:14px; /* 稍大文字 */
-  line-height:1.6; /* 增加閱讀間距 */
+  font-size:14px; 
+  line-height:2.6; 
   opacity:.8;
   white-space:nowrap;
   overflow:hidden;
