@@ -235,9 +235,17 @@ function openText(html){
 }
 
 function renderImage(){
-  modalContent.innerHTML=`<img src="${imgs[idx]}">`;
-  imgIndex.textContent=`${idx+1} / ${imgs.length}`;
+  modalContent.innerHTML = `<img src="${imgs[idx]}">`;
+
+  const rev = modalContent.dataset.reverse === '1';
+  if(rev){
+    // 顯示反向索引
+    imgIndex.textContent = `${imgs.length - idx} / ${imgs.length}`;
+  } else {
+    imgIndex.textContent = `${idx + 1} / ${imgs.length}`;
+  }
 }
+
 
 function openViewer(list, reverse=false){
   imgs = list;
@@ -258,8 +266,19 @@ modalContent.addEventListener('touchend', e => {
   const dx = e.changedTouches[0].clientX - startX;
   if(Math.abs(dx) > 50){
     const rev = modalContent.dataset.reverse === '1';
-    if(dx < 0) idx = rev ? (idx-1+imgs.length)%imgs.length : (idx+1)%imgs.length;
-    else idx = rev ? (idx+1)%imgs.length : (idx-1+imgs.length)%imgs.length;
+    if(dx < 0){ // 往左滑
+      if(rev){
+        if(idx > 0) idx--; // 反向模式，左滑→idx--
+      } else {
+        if(idx < imgs.length - 1) idx++; // 正向模式，左滑→idx++
+      }
+    } else { // 往右滑
+      if(rev){
+        if(idx < imgs.length - 1) idx++; // 反向模式，右滑→idx++
+      } else {
+        if(idx > 0) idx--; // 正向模式，右滑→idx--
+      }
+    }
     renderImage();
   }
 });
@@ -268,15 +287,27 @@ modalContent.addEventListener('mousedown', e => {
   startX = e.clientX;
   modalContent.onmouseup = ev => {
     const dx = ev.clientX - startX;
-    const rev = modalContent.dataset.reverse === '1';
     if(Math.abs(dx) > 50){
-      if(dx < 0) idx = rev ? (idx-1+imgs.length)%imgs.length : (idx+1)%imgs.length;
-      else idx = rev ? (idx+1)%imgs.length : (idx-1+imgs.length)%imgs.length;
+      const rev = modalContent.dataset.reverse === '1';
+      if(dx < 0){
+        if(rev){
+          if(idx > 0) idx--;
+        } else {
+          if(idx < imgs.length - 1) idx++;
+        }
+      } else {
+        if(rev){
+          if(idx < imgs.length - 1) idx++;
+        } else {
+          if(idx > 0) idx--;
+        }
+      }
       renderImage();
     }
     modalContent.onmouseup = null;
   };
 });
+
 
 /* messages */
 const messages=[
