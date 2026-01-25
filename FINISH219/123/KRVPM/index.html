@@ -191,6 +191,21 @@ html,body{
 </div>
 
 <script>
+  // 預載所有圖片
+const preloadImages = [
+  '/monitor0314/images/photo123-1.jpg',
+  '/monitor0314/images/photo123-2.jpg',
+  '/monitor0314/images/photo123-3.jpg',
+  '/monitor0314/images/map123-1.png',
+  '/monitor0314/images/map123-2.png',
+  '/monitor0314/images/map123-3.png',
+  '/monitor0314/images/calendar123.jpg'
+];
+
+preloadImages.forEach(src=>{
+  const img = new Image();
+  img.src = src;
+});
 /* time/date */
 const timeEl=document.getElementById('time');
 const dateEl=document.getElementById('current-date');
