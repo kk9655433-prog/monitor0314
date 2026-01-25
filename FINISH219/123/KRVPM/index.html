@@ -54,7 +54,7 @@ html,body{
   background:rgba(0,0,0,.6);
 }
 
-/* modal overlay */
+/* modal */
 .modal-overlay{
   position:fixed;
   inset:0;
@@ -65,65 +65,45 @@ html,body{
   z-index:999;
 }
 
-/* modal base */
 .modal{
   position:relative;
   width:90%;
   height:90%;
+  background:black;
   border-radius:8px;
   overflow:hidden;
-  background:black;
 }
 
-/* image modal variant */
 .modal.image-mode{
   background:rgba(0,0,0,.45);
 }
 
-/* close button */
 .close-btn{
   position:absolute;
   top:6px;
   right:10px;
   font-size:18px;
   cursor:pointer;
-  z-index:5;
   background:black;
-  color:white;
   padding:4px 8px;
   border-radius:4px;
+  z-index:5;
 }
 
-/* modal content */
 .modal-content{
   width:100%;
   height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:left;
-  padding:20px;
+  padding:16px;
   box-sizing:border-box;
+  overflow-y:auto;
 }
 
+/* image viewer */
 .modal-content img{
   max-width:100%;
   max-height:100%;
 }
 
-/* message list */
-.message-list{
-  width:100%;
-  font-size:15px;
-  line-height:1.6;
-}
-
-.message-item{
-  padding:10px 0;
-  border-bottom:1px solid rgba(255,255,255,.2);
-}
-
-/* image viewer nav */
 .nav-zone{
   position:absolute;
   top:0;
@@ -140,6 +120,49 @@ html,body{
 
 .nav-left{ left:0; }
 .nav-right{ right:0; }
+
+/* message UI */
+.msg-header{
+  font-size:16px;
+  margin-bottom:12px;
+}
+
+.msg-item{
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,.25);
+  cursor:pointer;
+}
+
+.msg-line1{
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
+}
+
+.msg-preview{
+  font-size:13px;
+  opacity:.8;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.msg-back{
+  margin-bottom:12px;
+  cursor:pointer;
+  opacity:.8;
+}
+
+.msg-detail-date{
+  font-size:14px;
+  margin-bottom:4px;
+}
+
+.msg-detail-meta{
+  font-size:14px;
+  margin-bottom:16px;
+  opacity:.8;
+}
 
 /* exit IP tab */
 .exit-tab{
@@ -172,7 +195,7 @@ html,body{
 
 <div class="status-bar">
   <div id="time"></div>
-  <div>🪫 28%</div>
+  <div>🔋 100%</div>
 </div>
 
 <div class="weather-date">
@@ -217,13 +240,15 @@ setInterval(()=>{
 },1000);
 dateEl.textContent=`${new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}`;
 
-/* modal */
+/* modal base */
 const modal=document.getElementById('modal');
 const modalBox=document.getElementById('modalBox');
 const modalContent=document.getElementById('modalContent');
 const prev=document.getElementById('prev');
 const next=document.getElementById('next');
 let imgs=[],idx=0;
+
+document.getElementById('close').onclick=()=>modal.style.display='none';
 
 function openText(html){
   modalBox.classList.remove('image-mode');
@@ -240,22 +265,46 @@ function openViewer(list){
   modal.style.display='flex';
 }
 
-document.getElementById('close').onclick=()=>modal.style.display='none';
 prev.onclick=()=>{idx=(idx-1+imgs.length)%imgs.length;modalContent.innerHTML=`<img src="${imgs[idx]}">`;};
 next.onclick=()=>{idx=(idx+1)%imgs.length;modalContent.innerHTML=`<img src="${imgs[idx]}">`;};
+
+/* message data */
+const messages=[
+  {dir:'↗',num:'+123XXX789',date:'1/26',full:'2026/01/26',text:'這是訊息1這是訊息1這是訊息1這是完整內容'},
+  {dir:'↙',num:'+123XXX798',date:'2/20',full:'2026/02/20',text:'這是訊息2這是訊息2這是訊息2這是完整內容'},
+  {dir:'↗',num:'+123XXX897',date:'3/06',full:'2026/03/06',text:'這是訊息3這是訊息3這是訊息3這是完整內容'}
+];
+
+function openMessageList(){
+  openText(`
+    <div class="msg-header">訊息</div>
+    ${messages.map((m,i)=>`
+      <div class="msg-item" onclick="openMessageDetail(${i})">
+        <div class="msg-line1">
+          <div>${m.dir}${m.num}</div>
+          <div>${m.date}</div>
+        </div>
+        <div class="msg-preview">${m.text}</div>
+      </div>
+    `).join('')}
+  `);
+}
+
+window.openMessageDetail=function(i){
+  const m=messages[i];
+  openText(`
+    <div class="msg-back" onclick="openMessageList()">← 訊息</div>
+    <div class="msg-detail-date">${m.full}</div>
+    <div class="msg-detail-meta">${m.num}　已讀取</div>
+    <div>${m.text}</div>
+  `);
+};
 
 /* icons */
 document.getElementById('phone').onclick=()=>openText('<p>暫無新通話</p>');
 document.getElementById('camera').onclick=()=>openText('<p>你無法操作這項功能</p>');
 document.getElementById('calculator').onclick=()=>openText('<p>你無法操作這項功能</p>');
-
-document.getElementById('message').onclick=()=>openText(`
-<div class="message-list">
-  <div class="message-item">2026年01月26日 +123XXX789 這是訊息1</div>
-  <div class="message-item">2026年01月26日 +123XXX987 這是訊息2</div>
-  <div class="message-item">2026年01月26日 +123XXX987 這是訊息3</div>
-</div>
-`);
+document.getElementById('message').onclick=openMessageList;
 
 document.getElementById('map').onclick=()=>openViewer([
   '/monitor0314/images/map1.jpg',
@@ -275,7 +324,7 @@ document.getElementById('calendar').onclick=()=>openViewer([
 
 document.getElementById('google').onclick=()=>location.href='https://www.google.com';
 
-/* exit tab logic */
+/* exit tab */
 const exitTab=document.getElementById('exitTab');
 let armed=false;
 
