@@ -54,7 +54,7 @@ html,body{
   background:rgba(0,0,0,.6);
 }
 
-/* modal */
+/* modal overlay */
 .modal-overlay{
   position:fixed;
   inset:0;
@@ -65,31 +65,45 @@ html,body{
   z-index:999;
 }
 
+/* modal base */
 .modal{
   position:relative;
   width:90%;
   height:90%;
-  background:black;
   border-radius:8px;
   overflow:hidden;
+  background:black;
 }
 
+/* image modal variant */
+.modal.image-mode{
+  background:rgba(0,0,0,.45);
+}
+
+/* close button */
 .close-btn{
   position:absolute;
   top:6px;
   right:10px;
-  font-size:20px;
+  font-size:18px;
   cursor:pointer;
   z-index:5;
+  background:black;
+  color:white;
+  padding:4px 8px;
+  border-radius:4px;
 }
 
+/* modal content */
 .modal-content{
   width:100%;
   height:100%;
   display:flex;
   align-items:center;
   justify-content:center;
-  text-align:center;
+  text-align:left;
+  padding:20px;
+  box-sizing:border-box;
 }
 
 .modal-content img{
@@ -97,7 +111,19 @@ html,body{
   max-height:100%;
 }
 
-/* image viewer */
+/* message list */
+.message-list{
+  width:100%;
+  font-size:15px;
+  line-height:1.6;
+}
+
+.message-item{
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,.2);
+}
+
+/* image viewer nav */
 .nav-zone{
   position:absolute;
   top:0;
@@ -132,11 +158,8 @@ html,body{
   cursor:pointer;
   transition:.25s;
   z-index:10;
-
   border-top-left-radius:21px;
   border-bottom-left-radius:21px;
-  border-top-right-radius:0;
-  border-bottom-right-radius:0;
 }
 
 .exit-tab.open{
@@ -176,7 +199,7 @@ html,body{
 <div class="exit-tab" id="exitTab">退出IP</div>
 
 <div class="modal-overlay" id="modal">
-  <div class="modal">
+  <div class="modal" id="modalBox">
     <div class="close-btn" id="close">✖</div>
     <div class="modal-content" id="modalContent"></div>
     <div class="nav-zone nav-left" id="prev">&lt;</div>
@@ -192,23 +215,26 @@ setInterval(()=>{
   const d=new Date();
   timeEl.textContent=d.toTimeString().slice(0,5);
 },1000);
-dateEl.textContent=`${new Date().getMonth()+1}/${new Date().getDate()}`;
+dateEl.textContent=`${new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}`;
 
 /* modal */
 const modal=document.getElementById('modal');
+const modalBox=document.getElementById('modalBox');
 const modalContent=document.getElementById('modalContent');
 const prev=document.getElementById('prev');
 const next=document.getElementById('next');
 let imgs=[],idx=0;
 
-function openText(text){
+function openText(html){
+  modalBox.classList.remove('image-mode');
   prev.style.display=next.style.display='none';
-  modalContent.innerHTML=`<p>${text}</p>`;
+  modalContent.innerHTML=html;
   modal.style.display='flex';
 }
 
 function openViewer(list){
   imgs=list; idx=0;
+  modalBox.classList.add('image-mode');
   modalContent.innerHTML=`<img src="${imgs[idx]}">`;
   prev.style.display=next.style.display='flex';
   modal.style.display='flex';
@@ -219,20 +245,34 @@ prev.onclick=()=>{idx=(idx-1+imgs.length)%imgs.length;modalContent.innerHTML=`<i
 next.onclick=()=>{idx=(idx+1)%imgs.length;modalContent.innerHTML=`<img src="${imgs[idx]}">`;};
 
 /* icons */
-document.getElementById('phone').onclick=()=>openText('暫無新通話');
-document.getElementById('camera').onclick=()=>openText('你無法操作這項功能');
-document.getElementById('calculator').onclick=()=>openText('你無法操作這項功能');
+document.getElementById('phone').onclick=()=>openText('<p>暫無新通話</p>');
+document.getElementById('camera').onclick=()=>openText('<p>你無法操作這項功能</p>');
+document.getElementById('calculator').onclick=()=>openText('<p>你無法操作這項功能</p>');
+
+document.getElementById('message').onclick=()=>openText(`
+<div class="message-list">
+  <div class="message-item">2026年01月26日 +123XXX789 這是訊息1</div>
+  <div class="message-item">2026年01月26日 +123XXX987 這是訊息2</div>
+  <div class="message-item">2026年01月26日 +123XXX987 這是訊息3</div>
+</div>
+`);
+
 document.getElementById('map').onclick=()=>openViewer([
   '/monitor0314/images/map1.jpg',
   '/monitor0314/images/map2.jpg',
   '/monitor0314/images/map3.jpg'
 ]);
+
 document.getElementById('photo').onclick=()=>openViewer([
   '/monitor0314/images/photo1.jpg',
   '/monitor0314/images/photo2.jpg',
   '/monitor0314/images/photo3.jpg'
 ]);
-document.getElementById('calendar').onclick=()=>openViewer(['/monitor0314/images/calendar123.jpg']);
+
+document.getElementById('calendar').onclick=()=>openViewer([
+  '/monitor0314/images/calendar123.jpg'
+]);
+
 document.getElementById('google').onclick=()=>location.href='https://www.google.com';
 
 /* exit tab logic */
