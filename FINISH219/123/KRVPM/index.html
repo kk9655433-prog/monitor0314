@@ -154,15 +154,14 @@ html,body{
 
 /* image index */
 .image-index{
-  position:absolute; /* 改絕對定位 */
-  bottom:12px;       /* 距離 modal 底部 */
-  left:50%;
-  transform:translateX(-50%);
+  position:static; /* 不用絕對定位 */
+  display:block;
+  text-align:center;
+  margin:8px auto 12px auto; /* 圖片下面 */
   font-size:16px;
   background:rgba(0,0,0,.5);
   padding:4px 12px;
   border-radius:12px;
-  z-index:20;        /* 提高 z-index 確保在圖片上方 */
 }
 
 /* exit tab */
@@ -223,7 +222,8 @@ html,body{
   <div class="modal" id="modalBox">
     <div class="close-btn" id="close">✖</div>
     <div class="modal-content" id="modalContent"></div>
-    <div class="image-index" id="imgIndex"></div>
+    <div class="image-index" id="imgIndex" style="position:static; text-align:center; margin:8px auto 12px auto; display:block;"></div>
+
   </div>
 </div>
 
