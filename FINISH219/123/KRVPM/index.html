@@ -75,7 +75,7 @@ html,body{
 }
 
 .modal.image-mode{
-  background:rgba(0,0,0,.45);
+  background:black;
 }
 
 .close-btn{
@@ -93,78 +93,42 @@ html,body{
 .modal-content{
   width:100%;
   height:100%;
-  padding:16px;
-  box-sizing:border-box;
-  overflow-y:auto;
-}
-
-/* image viewer */
-.modal-content img{
-  max-width:100%;
-  max-height:100%;
-}
-
-.nav-zone{
-  position:absolute;
-  top:0;
-  width:25%;
-  height:100%;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:36px;
-  background:rgba(0,0,0,.35);
-  cursor:pointer;
-  user-select:none;
-}
-
-.nav-left{ left:0; }
-.nav-right{ right:0; }
-
-/* message UI */
-.msg-header{
-  font-size:16px;
-  margin-bottom:12px;
-}
-
-.msg-item{
-  padding:10px 0;
-  border-bottom:1px solid rgba(255,255,255,.25);
-  cursor:pointer;
-}
-
-.msg-line1{
-  display:flex;
-  justify-content:space-between;
-  font-size:14px;
-}
-
-.msg-preview{
-  font-size:13px;
-  opacity:.8;
-  white-space:nowrap;
   overflow:hidden;
-  text-overflow:ellipsis;
 }
 
-.msg-back{
-  margin-bottom:12px;
-  cursor:pointer;
-  opacity:.8;
+.modal-content img{
+  max-width:100%;
+  max-height:100%;
+  user-select:none;
+  pointer-events:none;
 }
 
-.msg-detail-date{
+/* image index */
+.image-index{
+  position:absolute;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
   font-size:14px;
-  margin-bottom:4px;
+  background:rgba(0,0,0,.6);
+  padding:4px 10px;
+  border-radius:12px;
+  z-index:6;
 }
 
-.msg-detail-meta{
-  font-size:14px;
-  margin-bottom:16px;
-  opacity:.8;
-}
+/* message UI（原樣保留） */
+.msg-header{font-size:16px;margin-bottom:12px}
+.msg-item{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.25);cursor:pointer}
+.msg-line1{display:flex;justify-content:space-between;font-size:14px}
+.msg-preview{font-size:13px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msg-back{margin-bottom:12px;cursor:pointer;opacity:.8}
+.msg-detail-date{font-size:14px;margin-bottom:4px}
+.msg-detail-meta{font-size:14px;margin-bottom:16px;opacity:.8}
 
-/* exit IP tab */
+/* exit tab */
 .exit-tab{
   position:fixed;
   right:-78px;
@@ -184,10 +148,7 @@ html,body{
   border-top-left-radius:21px;
   border-bottom-left-radius:21px;
 }
-
-.exit-tab.open{
-  right:-12px;
-}
+.exit-tab.open{ right:-12px }
 </style>
 </head>
 
@@ -195,7 +156,7 @@ html,body{
 
 <div class="status-bar">
   <div id="time"></div>
-  <div>🪫 23%</div>
+  <div>🔋 100%</div>
 </div>
 
 <div class="weather-date">
@@ -225,28 +186,11 @@ html,body{
   <div class="modal" id="modalBox">
     <div class="close-btn" id="close">✖</div>
     <div class="modal-content" id="modalContent"></div>
-    <div class="nav-zone nav-left" id="prev">&lt;</div>
-    <div class="nav-zone nav-right" id="next">&gt;</div>
+    <div class="image-index" id="imgIndex"></div>
   </div>
 </div>
 
 <script>
-  /* 圖片預載 */
-  const preloadImages = [
-  '/monitor0314/images/photo123-1.jpg',
-  '/monitor0314/images/photo123-2.jpg',
-  '/monitor0314/images/photo123-3.jpg',
-  '/monitor0314/images/map123-1.png',
-  '/monitor0314/images/map123-2.png',
-  '/monitor0314/images/map123-3.png',
-  '/monitor0314/images/calendar123.jpg'
-];
-
-preloadImages.forEach(src => {
-  const img = new Image();
-  img.src = src;
-});
-
 /* time/date */
 const timeEl=document.getElementById('time');
 const dateEl=document.getElementById('current-date');
@@ -260,31 +204,59 @@ dateEl.textContent=`${new Date().getFullYear()}/${new Date().getMonth()+1}/${new
 const modal=document.getElementById('modal');
 const modalBox=document.getElementById('modalBox');
 const modalContent=document.getElementById('modalContent');
-const prev=document.getElementById('prev');
-const next=document.getElementById('next');
+const imgIndex=document.getElementById('imgIndex');
 let imgs=[],idx=0;
+let startX=0;
 
 document.getElementById('close').onclick=()=>modal.style.display='none';
 
 function openText(html){
   modalBox.classList.remove('image-mode');
-  prev.style.display=next.style.display='none';
+  imgIndex.style.display='none';
   modalContent.innerHTML=html;
   modal.style.display='flex';
 }
 
-function openViewer(list){
-  imgs=list; idx=0;
-  modalBox.classList.add('image-mode');
+function renderImage(){
   modalContent.innerHTML=`<img src="${imgs[idx]}">`;
-  prev.style.display=next.style.display='flex';
+  imgIndex.textContent=`${idx+1} / ${imgs.length}`;
+}
+
+function openViewer(list){
+  imgs=list;
+  idx=0;
+  modalBox.classList.add('image-mode');
+  imgIndex.style.display='block';
+  renderImage();
   modal.style.display='flex';
 }
 
-prev.onclick=()=>{idx=(idx-1+imgs.length)%imgs.length;modalContent.innerHTML=`<img src="${imgs[idx]}">`;};
-next.onclick=()=>{idx=(idx+1)%imgs.length;modalContent.innerHTML=`<img src="${imgs[idx]}">`;};
+/* swipe */
+modalContent.addEventListener('touchstart',e=>{
+  startX=e.touches[0].clientX;
+});
 
-/* message data */
+modalContent.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-startX;
+  if(Math.abs(dx)>50){
+    idx = dx<0 ? (idx+1)%imgs.length : (idx-1+imgs.length)%imgs.length;
+    renderImage();
+  }
+});
+
+modalContent.addEventListener('mousedown',e=>{
+  startX=e.clientX;
+  modalContent.onmouseup=ev=>{
+    const dx=ev.clientX-startX;
+    if(Math.abs(dx)>50){
+      idx = dx<0 ? (idx+1)%imgs.length : (idx-1+imgs.length)%imgs.length;
+      renderImage();
+    }
+    modalContent.onmouseup=null;
+  };
+});
+
+/* messages */
 const messages=[
   {dir:'↗',num:'+123153483',date:'1/26',full:'2026/01/26',text:'我要訂八杯奶茶，半糖去冰，晚點會有助理過去領。'},
   {dir:'↙',num:'+123586812',date:'2/20',full:'2026/02/20',text:'里夫斯先生，您要的資訊已經傳到您的信箱，請注意查收。'},
