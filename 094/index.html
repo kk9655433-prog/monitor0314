@@ -4,10 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>後門侵入中…………</title>
+
 <style>
-body {
+html, body {
   margin: 0;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+}
+
+body {
   background: url('/monitor0314/images/background.jpg') no-repeat center center;
   background-size: cover;
   display: flex;
@@ -15,11 +20,10 @@ body {
   align-items: center;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
-/* 禁止右鍵 */
-document.addEventListener('contextmenu', e=>e.preventDefault());
+
 /* 整個區塊 */
 .container {
-  background: rgba(0,0,0,0.6); /* 半透明黑底 */
+  background: rgba(0,0,0,0.6);
   padding: 40px 32px;
   border-radius: 16px;
   text-align: center;
@@ -49,8 +53,8 @@ document.addEventListener('contextmenu', e=>e.preventDefault());
   border-radius: 10px;
   border: none;
   outline: none;
-  background: white;
-  color: black;
+  background: #ffffff;
+  color: #000000;
 }
 
 /* 按鈕 */
@@ -86,7 +90,7 @@ button:active {
 
 .modal-box {
   background: #1e1e1e;
-  color: #fff;
+  color: #ffffff;
   padding: 28px 32px;
   border-radius: 14px;
   width: 300px;
@@ -106,6 +110,7 @@ button:active {
 }
 </style>
 </head>
+
 <body>
 <div class="container">
   <div class="title">第四組</div>
@@ -126,6 +131,8 @@ button:active {
 </div>
 
 <script>
+document.addEventListener('contextmenu', e => e.preventDefault());
+
 const inputs = [
   document.getElementById("d1"),
   document.getElementById("d2"),
@@ -145,7 +152,6 @@ function showError() {
   modal.classList.remove("hidden");
 }
 
-// 自動跳格 & 退格回退
 inputs.forEach((input, i) => {
   input.addEventListener("input", () => {
     input.value = input.value.replace(/[^0-9]/g, "");
@@ -176,7 +182,6 @@ function checkPassword() {
   }
 }
 
-// 載入時自動 focus 第一格
 window.addEventListener("load", () => {
   inputs[0].focus();
 });
