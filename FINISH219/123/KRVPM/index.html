@@ -275,11 +275,17 @@ let imgs=[],idx=0,startX=0;
 document.getElementById('close').onclick=()=>modal.style.display='none';
 
 /* messages */
+/* messages */
 const messages=[
   {dir:'↗',num:'+123153483',date:'1/26',full:'2026/01/26',text:'我要訂八杯奶茶，半糖去冰，晚點會有助理過去領。'},
   {dir:'↙',num:'+123586812',date:'2/20',full:'2026/02/20',text:'里夫斯先生，您要的資訊已經傳到您的信箱，請注意查收。'},
   {dir:'↗',num:'+125378953',date:'3/06',full:'2026/03/06',text:'幫我點忙'}
 ];
+
+/* 生成第一層預覽文字，超過第8個字加… */
+messages.forEach(m=>{
+  m.preview8 = m.text.length > 8 ? m.text.slice(0,8)+'…' : m.text;
+});
 
 function openMessageList(){
   modalBox.classList.remove('image-mode');
@@ -295,7 +301,7 @@ function openMessageList(){
           <div>${m.dir}${m.num}</div>
           <div>${m.date}</div>
         </div>
-        <div class="msg-preview">${m.text}</div>
+        <div class="msg-preview">${m.preview8}</div>
       </div>
     `).join('')}
   `;
