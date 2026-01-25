@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>假手機首頁</title>
+<title>192.168.001.123</title>
 <style>
   html, body {
     margin: 0;
@@ -12,7 +12,7 @@
     height: 100%;
     font-family: system-ui, sans-serif;
     background-color: black;
-    background-image: url('/monitor0314/images/background058.jpg');
+    background-image: url('/monitor0314/images/background123.jpg');
     background-size: cover;
     background-position: center;
     color: white;
@@ -107,17 +107,17 @@
 </div>
 
 <div class="main-icons">
-  <img src="/monitor0314/icons/map.png" id="map" alt="地圖">
-  <img src="/monitor0314/icons/plurk.png" id="plurk" alt="噗浪">
-  <img src="/monitor0314/icons/photo.png" id="photo" alt="相簿">
-  <img src="/monitor0314/icons/tinder.png" id="tinder" alt="社交">
+  <img src="/monitor0314/icons/map123.png" id="map" alt="地圖">
+  <img src="/monitor0314/icons/calculator123.png" id="calculator" alt="計算機">
+  <img src="/monitor0314/icons/photo123.png" id="photo" alt="相簿">
+  <img src="/monitor0314/icons/calendar123.png" id="calendar" alt="日歷">
 </div>
 
 <div class="bottom-bar">
-  <img src="/monitor0314/icons/phone.png" id="phone" alt="電話">
-  <img src="/monitor0314/icons/messege.png" id="message" alt="訊息">
-  <img src="/monitor0314/icons/google.png" id="google" alt="GOOGOO">
-  <img src="/monitor0314/icons/camere.png" id="camera" alt="相機">
+  <img src="/monitor0314/icons/phone123.png" id="phone" alt="電話">
+  <img src="/monitor0314/icons/messege123.png" id="message" alt="訊息">
+  <img src="/monitor0314/icons/google123.png" id="google" alt="GOOGOO">
+  <img src="/monitor0314/icons/camere123.png" id="camera" alt="相機">
 </div>
 
 <!-- Modal -->
@@ -185,8 +185,9 @@
     modalOverlay.style.display = 'flex';
   };
 
-  document.getElementById('plurk').onclick = () => {
-    window.location.href = 'https://www.plurk.com/p/3i8qk281r6';
+  document.getElementById('calculator').onclick = () => {
+    modalBody.innerHTML = '<p>你無法操作這項功能</p>';
+    modalOverlay.style.display = 'flex';
   };
 
   const photoImages = ['/monitor0314/images/photo1.jpg','/monitor0314/images/photo2.jpg','/monitor0314/images/photo3.jpg'];
@@ -195,25 +196,25 @@
     modalOverlay.style.display = 'flex';
   };
 
-  document.getElementById('tinder').onclick = () => {
-    modalBody.innerHTML = '<img src="/monitor0314/images/tinder_display.jpg">';
+  document.getElementById('calendar').onclick = () => {
+    modalBody.innerHTML = '<img src="/monitor0314/images/calendar123.jpg">';
     modalOverlay.style.display = 'flex';
   };
 
   // 預載圖片
   const preloadImages = [
-    '/monitor0314/icons/phone.png',
-    '/monitor0314/icons/messege.png',
-    '/monitor0314/icons/google.png',
-    '/monitor0314/icons/camere.png',
-    '/monitor0314/icons/map.png',
-    '/monitor0314/icons/plurk.png',
-    '/monitor0314/icons/photo.png',
-    '/monitor0314/icons/tinder.png',
-    '/monitor0314/images/background058.jpg',
+    '/monitor0314/icons/phone123.png',
+    '/monitor0314/icons/messege123.png',
+    '/monitor0314/icons/chrome123.png',
+    '/monitor0314/icons/camere123.png',
+    '/monitor0314/icons/map123.png',
+    '/monitor0314/icons/calculator123',
+    '/monitor0314/icons/photo123.png',
+    '/monitor0314/icons/calendar123',
+    '/monitor0314/images/background123.jpg',
     ...mapImages,
     ...photoImages,
-    '/monitor0314/images/tinder_display.jpg'
+    '/monitor0314/images/calendar123.jpg'
   ];
   preloadImages.forEach(src=>{
     const img = new Image();
