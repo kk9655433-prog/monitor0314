@@ -5,221 +5,168 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>192.168.001.123</title>
 <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    font-family: system-ui, sans-serif;
-    background-color: black;
-    background-image: url('/monitor0314/images/background123.jpg');
-    background-size: cover;
-    background-position: center;
-    color: white;
-    overflow: hidden;
-  }
-  .status-bar {
-    width: 100%;
-    padding: 4px 10px;
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    box-sizing: border-box;
-  }
-  .weather-date {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 16px;
-  }
-  .weather-date div {
-    margin: 4px 0;
-  }
-  .main-icons {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 25px;
-    margin-top: 60px;
-  }
-  .main-icons img, .bottom-bar img {
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-  }
-  .bottom-bar {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    background: rgba(0,0,0,0.6);
-  }
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-  }
-  .modal {
-    background: black;
-    padding: 15px;
-    border-radius: 8px;
-    max-width: 90%;
-    max-height: 90%;
-    overflow: auto;
-    position: relative;
-    text-align: center;
-  }
-  .modal .close-btn {
-    position: absolute;
-    top: 5px;
-    right: 8px;
-    font-size: 20px;
-    color: white;
-    cursor: pointer;
-  }
-  .modal img {
-    max-width: 100%;
-    margin: 5px 0;
-    cursor: pointer;
-  }
+html,body{
+  margin:0;width:100%;height:100%;
+  font-family:system-ui,sans-serif;
+  background:black url('/monitor0314/images/background123.jpg') center/cover no-repeat;
+  color:white;overflow:hidden
+}
+.status-bar{
+  display:flex;justify-content:space-between;
+  padding:4px 10px;font-size:14px
+}
+.weather-date{text-align:center;margin-top:20px;font-size:16px}
+.weather-date div{margin:4px 0}
+.main-icons{
+  display:flex;justify-content:center;flex-wrap:wrap;
+  gap:25px;margin-top:60px
+}
+.main-icons img,.bottom-bar img{
+  width:50px;height:50px;cursor:pointer
+}
+.bottom-bar{
+  position:fixed;bottom:0;width:100%;
+  display:flex;justify-content:space-around;
+  padding:10px 0;background:rgba(0,0,0,.6)
+}
+
+/* Modal */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.8);
+  display:none;align-items:center;justify-content:center;
+  z-index:999
+}
+.modal{
+  position:relative;
+  background:black;
+  max-width:90%;max-height:90%;
+  overflow:hidden;border-radius:8px
+}
+.close-btn{
+  position:absolute;top:6px;right:10px;
+  font-size:20px;cursor:pointer;z-index:5
+}
+.viewer{
+  position:relative;width:80vw;height:80vh
+}
+.viewer img{
+  width:100%;height:100%;
+  object-fit:contain
+}
+.nav{
+  position:absolute;top:0;bottom:0;width:25%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.35);
+  font-size:48px;cursor:pointer;user-select:none
+}
+.nav.left{left:0}
+.nav.right{right:0}
+
+/* Exit IP tab */
+.exit-tab{
+  position:fixed;
+  right:-60px;
+  top:50%;
+  transform:translateY(-50%);
+  width:80px;height:60px;
+  background:#1faa59;
+  border-radius:30px 0 0 30px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:600;
+  transition:.25s;
+  cursor:pointer;
+  z-index:50
+}
+.exit-tab.open{right:0;width:140px}
 </style>
 </head>
+
 <body>
 
 <div class="status-bar">
-  <div class="time" id="time">12:00</div>
-  <div class="battery">🔋 100%</div>
+  <div id="time">12:00</div>
+  <div>🔋100%</div>
 </div>
 
 <div class="weather-date">
   <div>天氣: 晴天 🌞</div>
   <div>溫度: 23°C</div>
   <div>濕度: 15%</div>
-  <div id="current-date">1/25</div>
+  <div id="current-date"></div>
 </div>
 
 <div class="main-icons">
-  <img src="/monitor0314/icons/map123.png" id="map" alt="地圖">
-  <img src="/monitor0314/icons/calculator123.png" id="calculator" alt="計算機">
-  <img src="/monitor0314/icons/photo123.png" id="photo" alt="相簿">
-  <img src="/monitor0314/icons/calendar123.png" id="calendar" alt="日歷">
+  <img src="/monitor0314/icons/map123.png" id="map">
+  <img src="/monitor0314/icons/calculator123.png" id="calculator">
+  <img src="/monitor0314/icons/photo123.png" id="photo">
+  <img src="/monitor0314/icons/calendar123.png" id="calendar">
 </div>
 
 <div class="bottom-bar">
-  <img src="/monitor0314/icons/phone123.png" id="phone" alt="電話">
-  <img src="/monitor0314/icons/messege123.png" id="message" alt="訊息">
-  <img src="/monitor0314/icons/chrome123.png" id="google" alt="GOOGOO">
-  <img src="/monitor0314/icons/camera123.png" id="camera" alt="相機">
+  <img src="/monitor0314/icons/phone123.png" id="phone">
+  <img src="/monitor0314/icons/messege123.png" id="message">
+  <img src="/monitor0314/icons/chrome123.png" id="google">
+  <img src="/monitor0314/icons/camera123.png" id="camera">
 </div>
 
-<!-- Modal -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal" id="modalContent">
-    <span class="close-btn" id="closeModal">✖</span>
-    <div id="modalBody"></div>
+<div class="exit-tab" id="exitTab">退出IP</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="close-btn" id="close">✖</div>
+    <div class="viewer">
+      <div class="nav left" id="prev">&lt;</div>
+      <img id="viewerImg">
+      <div class="nav right" id="next">&gt;</div>
+    </div>
   </div>
 </div>
 
 <script>
-  // 更新時間
-  function updateTime() {
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2,'0');
-    const minutes = String(now.getMinutes()).padStart(2,'0');
-    document.getElementById('time').textContent = `${hours}:${minutes}`;
-  }
-  setInterval(updateTime, 1000);
-  updateTime();
+/* Time */
+const t=()=>{const n=new Date();
+time.textContent=n.toTimeString().slice(0,5)}
+setInterval(t,1000);t()
+current-date.textContent=`${new Date().getMonth()+1}/${new Date().getDate()}`
 
-  // 更新日期
-  function updateDate() {
-    const now = new Date();
-    document.getElementById('current-date').textContent = `${now.getMonth()+1}/${now.getDate()}`;
-  }
-  updateDate();
+/* Viewer logic */
+const modal=document.getElementById('modal')
+const img=document.getElementById('viewerImg')
+let list=[],idx=0
+const openViewer=(arr)=>{
+  list=arr;idx=0;img.src=list[0]
+  modal.style.display='flex'
+}
+prev.onclick=()=>{idx=(idx-1+list.length)%list.length;img.src=list[idx]}
+next.onclick=()=>{idx=(idx+1)%list.length;img.src=list[idx]}
+close.onclick=()=>modal.style.display='none'
 
-  // Modal 控制
-  const modalOverlay = document.getElementById('modalOverlay');
-  const modalBody = document.getElementById('modalBody');
-  const closeModal = document.getElementById('closeModal');
-  closeModal.onclick = () => { modalOverlay.style.display='none'; modalBody.innerHTML=''; };
+map.onclick=()=>openViewer([
+'/monitor0314/images/map1.jpg',
+'/monitor0314/images/map2.jpg',
+'/monitor0314/images/map3.jpg'
+])
 
-  // 點擊事件
-  document.getElementById('phone').onclick = () => {
-    modalBody.innerHTML = '<p>暫無新通話</p>';
-    modalOverlay.style.display = 'flex';
-  };
+photo.onclick=()=>openViewer([
+'/monitor0314/images/photo1.jpg',
+'/monitor0314/images/photo2.jpg',
+'/monitor0314/images/photo3.jpg'
+])
 
-  const messages = ['訊息1內容','訊息2內容','訊息3內容'];
-  let msgIndex = 0;
-  document.getElementById('message').onclick = () => {
-    modalBody.innerHTML = `<p>${messages[msgIndex]}</p><button id="nextMsg">下一封</button>`;
-    modalOverlay.style.display = 'flex';
-    document.getElementById('nextMsg').onclick = () => {
-      msgIndex = (msgIndex + 1) % messages.length;
-      modalBody.innerHTML = `<p>${messages[msgIndex]}</p><button id="nextMsg">下一封</button>`;
-      document.getElementById('nextMsg').onclick = arguments.callee;
-    };
-  };
+calendar.onclick=()=>{img.src='/monitor0314/images/calendar123.jpg';modal.style.display='flex'}
+calculator.onclick=camera.onclick=()=>{alert('你無法操作這項功能')}
+google.onclick=()=>location.href='https://www.google.com'
 
-  document.getElementById('google').onclick = () => {
-    window.location.href = 'https://www.google.com';
-  };
-
-  document.getElementById('camera').onclick = () => {
-    modalBody.innerHTML = '<p>你無法操作這項功能</p>';
-    modalOverlay.style.display = 'flex';
-  };
-
-  const mapImages = ['/monitor0314/images/map1.jpg','/monitor0314/images/map2.jpg','/monitor0314/images/map3.jpg'];
-  document.getElementById('map').onclick = () => {
-    modalBody.innerHTML = mapImages.map(src=>`<img src="${src}">`).join('');
-    modalOverlay.style.display = 'flex';
-  };
-
-  document.getElementById('calculator').onclick = () => {
-    modalBody.innerHTML = '<p>你無法操作這項功能</p>';
-    modalOverlay.style.display = 'flex';
-  };
-
-  const photoImages = ['/monitor0314/images/photo1.jpg','/monitor0314/images/photo2.jpg','/monitor0314/images/photo3.jpg'];
-  document.getElementById('photo').onclick = () => {
-    modalBody.innerHTML = photoImages.map(src=>`<img src="${src}">`).join('');
-    modalOverlay.style.display = 'flex';
-  };
-
-  document.getElementById('calendar').onclick = () => {
-    modalBody.innerHTML = '<img src="/monitor0314/images/calendar123.jpg">';
-    modalOverlay.style.display = 'flex';
-  };
-
-  // 預載圖片
-  const preloadImages = [
-    '/monitor0314/icons/phone123.png',
-    '/monitor0314/icons/messege123.png',
-    '/monitor0314/icons/chrome123.png',
-    '/monitor0314/icons/camera123.png',
-    '/monitor0314/icons/map123.png',
-    '/monitor0314/icons/calculator123',
-    '/monitor0314/icons/photo123.png',
-    '/monitor0314/icons/calendar123',
-    '/monitor0314/images/background123.jpg',
-    ...mapImages,
-    ...photoImages,
-    '/monitor0314/images/calendar123.jpg'
-  ];
-  preloadImages.forEach(src=>{
-    const img = new Image();
-    img.src = src;
-  });
+/* Exit tab */
+const tab=document.getElementById('exitTab')
+tab.onclick=(e)=>{
+  e.stopPropagation()
+  tab.classList.contains('open')
+  ? location.href='https://kk9655433-prog.github.io/monitor0314/FINISH219/'
+  : tab.classList.add('open')
+}
+document.body.onclick=()=>tab.classList.remove('open')
 </script>
 
 </body>
