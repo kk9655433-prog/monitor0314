@@ -109,6 +109,7 @@ html,body{
   padding:8px 0;
   border-bottom:1px solid rgba(255,255,255,.25);
   cursor:pointer;
+  margin-bottom:16px; /* 增加格子間距 */
 }
 
 .msg-line1{
@@ -118,7 +119,8 @@ html,body{
 }
 
 .msg-preview{
-  font-size:13px;
+  font-size:14px; /* 稍大文字 */
+  line-height:1.6; /* 增加閱讀間距 */
   opacity:.8;
   white-space:nowrap;
   overflow:hidden;
@@ -133,15 +135,15 @@ html,body{
 
 /* image index */
 .image-index{
-  position:absolute;
-  bottom:12px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:14px;
-  background:rgba(0,0,0,.6);
-  padding:4px 10px;
+  position:relative; /* 改成相對定位，不壓住圖片 */
+  display:block;
+  text-align:center;
+  margin:8px auto 0 auto; /* 圖片下方置中 */
+  font-size:16px;
+  background:rgba(0,0,0,.5);
+  padding:4px 12px;
   border-radius:12px;
-  z-index:6;
+  z-index:5;
 }
 
 /* exit tab */
@@ -253,9 +255,9 @@ function openMessageList(){
   modal.style.display='flex';
 
   modalContent.innerHTML = `
-    <div class="msg-header">訊息</div>
-    ${messages.map((m,i)=>`
-      <div class="msg-item" onclick="openMessageDetail(${i})">
+  <div class="msg-header" style="font-size:18px; font-weight:bold;">訊息</div>
+  ${messages.map((m,i)=>`
+    <div class="msg-item" onclick="openMessageDetail(${i})" style="margin-bottom:25px;">
         <div class="msg-line1">
           <div>${m.dir}${m.num}</div>
           <div>${m.date}</div>
@@ -276,15 +278,20 @@ window.openMessageDetail=function(i){
   const status = m.dir==='↗' ? '已寄出' : '已讀取';
 
   modalContent.innerHTML = `
-    <div class="msg-back" onclick="openMessageList()">← 訊息</div>
-    <div>${m.full}</div>
+  <div class="msg-back" onclick="openMessageList()" style="font-size:18px; font-weight:bold;">← 訊息</div>
+  <div style="margin-top:12px; font-size:16px; font-weight:bold;">${m.full}</div>
     <div>${m.num}　${status}</div>
     <div style="margin-top:12px;">${m.text}</div>
   `;
 };
 
 /* icons */
-document.getElementById('phone').onclick=()=>openText('<p>暫無新通話</p>');
+document.getElementById('phone').onclick = ()=>{
+  openText(`
+    <div style="font-size:18px; font-weight:bold; margin-bottom:12px;">通話</div>
+    <p>暫無新通話</p>
+  `);
+};
 document.getElementById('camera').onclick=()=>openText('<p>你無法操作這項功能</p>');
 document.getElementById('calculator').onclick=()=>openText('<p>你無法操作這項功能</p>');
 document.getElementById('message').onclick=openMessageList;
