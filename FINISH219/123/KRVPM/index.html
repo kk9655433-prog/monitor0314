@@ -16,6 +16,7 @@ html,body{
   overflow:hidden;
 }
 
+/* status */
 .status-bar{
   display:flex;
   justify-content:space-between;
@@ -82,19 +83,21 @@ html,body{
   z-index:5;
 }
 
-.viewer{
+.modal-content{
   width:100%;
   height:100%;
   display:flex;
   align-items:center;
   justify-content:center;
+  text-align:center;
 }
 
-.viewer img{
+.modal-content img{
   max-width:100%;
   max-height:100%;
 }
 
+/* image viewer */
 .nav-zone{
   position:absolute;
   top:0;
@@ -112,28 +115,32 @@ html,body{
 .nav-left{ left:0; }
 .nav-right{ right:0; }
 
-/* 退出IP滑窗 */
+/* exit IP tab */
 .exit-tab{
   position:fixed;
-  right:-70px;
+  right:-78px;
   top:50%;
   transform:translateY(-50%);
-  width:120px;
-  height:44px;
+  width:110px;
+  height:42px;
   background:#1fbf5b;
-  border-radius:22px;
+  color:black;
   display:flex;
   align-items:center;
   justify-content:center;
   font-size:14px;
-  color:black;
   cursor:pointer;
   transition:.25s;
   z-index:10;
+
+  border-top-left-radius:21px;
+  border-bottom-left-radius:21px;
+  border-top-right-radius:0;
+  border-bottom-right-radius:0;
 }
 
 .exit-tab.open{
-  right:-10px;
+  right:-12px;
 }
 </style>
 </head>
@@ -141,7 +148,7 @@ html,body{
 <body>
 
 <div class="status-bar">
-  <div id="time">00:00</div>
+  <div id="time"></div>
   <div>🔋 100%</div>
 </div>
 
@@ -171,15 +178,14 @@ html,body{
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <div class="close-btn" id="close">✖</div>
-    <div class="viewer">
-      <div class="nav-zone nav-left" id="prev">&lt;</div>
-      <img id="viewerImg">
-      <div class="nav-zone nav-right" id="next">&gt;</div>
-    </div>
+    <div class="modal-content" id="modalContent"></div>
+    <div class="nav-zone nav-left" id="prev">&lt;</div>
+    <div class="nav-zone nav-right" id="next">&gt;</div>
   </div>
 </div>
 
 <script>
+/* time/date */
 const timeEl=document.getElementById('time');
 const dateEl=document.getElementById('current-date');
 setInterval(()=>{
@@ -188,50 +194,64 @@ setInterval(()=>{
 },1000);
 dateEl.textContent=`${new Date().getMonth()+1}/${new Date().getDate()}`;
 
+/* modal */
 const modal=document.getElementById('modal');
-const imgEl=document.getElementById('viewerImg');
+const modalContent=document.getElementById('modalContent');
+const prev=document.getElementById('prev');
+const next=document.getElementById('next');
 let imgs=[],idx=0;
+
+function openText(text){
+  prev.style.display=next.style.display='none';
+  modalContent.innerHTML=`<p>${text}</p>`;
+  modal.style.display='flex';
+}
 
 function openViewer(list){
   imgs=list; idx=0;
-  imgEl.src=imgs[idx];
+  modalContent.innerHTML=`<img src="${imgs[idx]}">`;
+  prev.style.display=next.style.display='flex';
   modal.style.display='flex';
 }
 
 document.getElementById('close').onclick=()=>modal.style.display='none';
-document.getElementById('prev').onclick=()=>{idx=(idx-1+imgs.length)%imgs.length;imgEl.src=imgs[idx];}
-document.getElementById('next').onclick=()=>{idx=(idx+1)%imgs.length;imgEl.src=imgs[idx];}
+prev.onclick=()=>{idx=(idx-1+imgs.length)%imgs.length;modalContent.innerHTML=`<img src="${imgs[idx]}">`;};
+next.onclick=()=>{idx=(idx+1)%imgs.length;modalContent.innerHTML=`<img src="${imgs[idx]}">`;};
 
+/* icons */
+document.getElementById('phone').onclick=()=>openText('暫無新通話');
+document.getElementById('camera').onclick=()=>openText('你無法操作這項功能');
+document.getElementById('calculator').onclick=()=>openText('你無法操作這項功能');
 document.getElementById('map').onclick=()=>openViewer([
   '/monitor0314/images/map1.jpg',
   '/monitor0314/images/map2.jpg',
   '/monitor0314/images/map3.jpg'
 ]);
-
 document.getElementById('photo').onclick=()=>openViewer([
   '/monitor0314/images/photo1.jpg',
   '/monitor0314/images/photo2.jpg',
   '/monitor0314/images/photo3.jpg'
 ]);
-
-document.getElementById('phone').onclick=()=>alert('暫無新通話');
-document.getElementById('camera').onclick=()=>alert('你無法操作這項功能');
-document.getElementById('calculator').onclick=()=>alert('你無法操作這項功能');
 document.getElementById('calendar').onclick=()=>openViewer(['/monitor0314/images/calendar123.jpg']);
 document.getElementById('google').onclick=()=>location.href='https://www.google.com';
 
+/* exit tab logic */
 const exitTab=document.getElementById('exitTab');
+let armed=false;
+
 exitTab.onclick=e=>{
   e.stopPropagation();
-  exitTab.classList.toggle('open');
-  if(exitTab.classList.contains('open')){
-    exitTab.textContent='退出IP';
-    exitTab.onclick=()=>location.href='https://kk9655433-prog.github.io/monitor0314/FINISH219/';
+  if(!exitTab.classList.contains('open')){
+    exitTab.classList.add('open');
+    armed=true;
+  }else if(armed){
+    location.href='https://kk9655433-prog.github.io/monitor0314/FINISH219/';
   }
 };
 
 document.body.onclick=()=>{
   exitTab.classList.remove('open');
+  armed=false;
 };
 </script>
 
