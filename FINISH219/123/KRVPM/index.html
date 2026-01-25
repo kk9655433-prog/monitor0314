@@ -130,15 +130,15 @@ html,body{
 }
 
 .msg-line1 div:first-child{
-  max-width:70%;  /* 左側電話最大寬度 */
+  max-width:calc(100% - 50px); /* 保留右側空間給日期 */
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
 }
-
 .msg-line1 div:last-child{
-  flex-shrink:0;   /* 日期固定不被壓縮 */
-  margin-left:8px; /* 左側電話和日期間隔 */
+  flex-shrink:0;       /* 日期不被壓縮 */
+  margin-left:8px;
+  text-align:right;
 }
 
 
@@ -159,10 +159,9 @@ html,body{
 
 /* image index */
 .image-index{
-  position:static; /* 不用絕對定位 */
   display:block;
   text-align:center;
-  margin:8px auto 12px auto; /* 圖片下面 */
+  margin:8px auto 12px auto;
   font-size:16px;
   background:rgba(0,0,0,.5);
   padding:4px 12px;
@@ -227,7 +226,9 @@ html,body{
   <div class="modal" id="modalBox">
     <div class="close-btn" id="close">✖</div>
     <div class="modal-content" id="modalContent"></div>
-    <div class="image-index" id="imgIndex" style="position:static; text-align:center; margin:8px auto 12px auto; display:block;"></div>
+  </div>
+  <div class="image-index" id="imgIndex"></div> <!-- 放在 modalBox 外面 -->
+</div>
 
   </div>
 </div>
