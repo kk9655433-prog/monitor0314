@@ -4,10 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>後門侵入中………</title>
+
 <style>
-body {
+html, body {
   margin: 0;
-  height: 100vh;
+  height: 100%;
+}
+
+body {
   background: url('/monitor0314/images/background.jpg') no-repeat center center;
   background-size: cover;
   display: flex;
@@ -15,11 +19,10 @@ body {
   align-items: center;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
-/* 禁止右鍵 */
-document.addEventListener('contextmenu', e=>e.preventDefault());
-/* 整個區塊 */
+
+/* 主容器 */
 .container {
-  background: rgba(0,0,0,0.6); /* 半透明黑底 */
+  background: rgba(0,0,0,0.6);
   padding: 40px 32px;
   border-radius: 16px;
   text-align: center;
@@ -69,11 +72,11 @@ button:active {
   transform: scale(0.97);
 }
 
-/* 自製彈窗 */
+/* 彈窗 */
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0,0,0,0.75);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -106,14 +109,18 @@ button:active {
 }
 </style>
 </head>
+
 <body>
+
 <div class="container">
   <div class="title">第三組</div>
+
   <div class="inputs">
-    <input type="text" inputmode="numeric" maxlength="1" id="d1" autocomplete="off">
-    <input type="text" inputmode="numeric" maxlength="1" id="d2" autocomplete="off">
-    <input type="text" inputmode="numeric" maxlength="1" id="d3" autocomplete="off">
+    <input inputmode="numeric" maxlength="1" id="d1" autocomplete="off">
+    <input inputmode="numeric" maxlength="1" id="d2" autocomplete="off">
+    <input inputmode="numeric" maxlength="1" id="d3" autocomplete="off">
   </div>
+
   <button id="submitBtn">確定</button>
 </div>
 
@@ -126,35 +133,41 @@ button:active {
 </div>
 
 <script>
+// 禁止右鍵
+document.addEventListener('contextmenu', e => e.preventDefault());
+
 const inputs = [
   document.getElementById("d1"),
   document.getElementById("d2"),
   document.getElementById("d3")
 ];
+
 const submitBtn = document.getElementById("submitBtn");
 const modal = document.getElementById("modal");
 const modalBtn = document.getElementById("modalBtn");
 
-modalBtn.addEventListener("click", () => {
-  modal.classList.add("hidden");
+function resetInputs() {
   inputs.forEach(i => i.value = "");
   inputs[0].focus();
+}
+
+modalBtn.addEventListener("click", () => {
+  modal.classList.add("hidden");
+  resetInputs();
 });
 
 function showError() {
   modal.classList.remove("hidden");
 }
 
-// 自動跳格 & 退格回退
+// 自動跳格 / 回退
 inputs.forEach((input, i) => {
   input.addEventListener("input", () => {
-    input.value = input.value.replace(/[^0-9]/g, "");
-    if (input.value && inputs[i + 1]) {
-      inputs[i + 1].focus();
-    }
+    input.value = input.value.replace(/\D/g, "");
+    if (input.value && inputs[i + 1]) inputs[i + 1].focus();
   });
 
-  input.addEventListener("keydown", (e) => {
+  input.addEventListener("keydown", e => {
     if (e.key === "Backspace" && !input.value && inputs[i - 1]) {
       inputs[i - 1].focus();
     }
@@ -169,17 +182,15 @@ submitBtn.addEventListener("click", checkPassword);
 
 function checkPassword() {
   const pwd = inputs.map(i => i.value).join("");
-  if (pwd === "093") {
-    window.location.href = "/monitor0314/093/";
-  } else {
-    showError();
+  if (pwd === "094") {
+    window.location.href = "/monitor0314/094/";
+    return;
   }
+  showError();
 }
 
-// 載入時自動 focus 第一格
-window.addEventListener("load", () => {
-  inputs[0].focus();
-});
+window.addEventListener("load", () => inputs[0].focus());
 </script>
+
 </body>
 </html>
