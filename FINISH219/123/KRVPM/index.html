@@ -123,25 +123,22 @@ html,body{
 }
 
 .msg-line1 {
-  display: flex;
-  justify-content: space-between; /* 兩端對齊 */
+  display: grid;
+  grid-template-columns: 1fr auto; 
   align-items: center;
-  font-size: 14px;
-  width: 100%;
 }
 
 .msg-line1 div:first-child {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 70%; 
 }
 
 .msg-line1 div:last-child {
-  white-space: nowrap;
-  flex-shrink: 0;  
+  white-space: nowrap; 
   text-align: right;
 }
+
 
 .msg-preview{
   font-size:14px; 
