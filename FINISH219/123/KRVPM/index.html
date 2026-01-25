@@ -126,14 +126,19 @@ html,body{
   display:flex;
   justify-content:space-between;
   font-size:14px;
-  white-space:nowrap;
+  align-items:center;
 }
+
 .msg-line1 div:first-child{
+  max-width:70%;  /* 左側電話最大寬度 */
   overflow:hidden;
   text-overflow:ellipsis;
+  white-space:nowrap;
 }
+
 .msg-line1 div:last-child{
-  flex-shrink:0; /* 日期固定不被壓縮 */
+  flex-shrink:0;   /* 日期固定不被壓縮 */
+  margin-left:8px; /* 左側電話和日期間隔 */
 }
 
 
