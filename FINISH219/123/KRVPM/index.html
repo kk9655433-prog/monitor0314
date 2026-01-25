@@ -284,9 +284,9 @@ const messages=[
   {dir:'↗',num:'+125378953',date:'3/06     ',full:'2026/03/06',text:'幫我點忙'}
 ];
 
-/* 生成第一層預覽文字，超過第8個字加… */
+/* 生成第一層預覽文字，超過第15個字加… */
 messages.forEach(m=>{
-  m.preview8 = m.text.length > 8 ? m.text.slice(0,15)+'…' : m.text;
+  m.preview15 = m.text.length > 15 ? m.text.slice(0,15)+'…' : m.text;
 });
 
 function openMessageList(){
@@ -303,7 +303,7 @@ function openMessageList(){
           <div>${m.dir}${m.num}</div>
           <div>${m.date}</div>
         </div>
-        <div class="msg-preview">${m.preview8}</div>
+        <div class="msg-preview">${m.preview15}</div>
       </div>
     `).join('')}
   `;
