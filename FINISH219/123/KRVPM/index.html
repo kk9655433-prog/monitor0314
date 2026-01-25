@@ -123,9 +123,9 @@ html,body{
 }
 
 .msg-line1 {
-  display: grid;
-  grid-template-columns: 1fr auto; 
-  align-items: center;
+  position: relative;       /* 父容器相對定位 */
+  padding-right: 80px;      /* 預留右側空間給日期 */
+  font-size: 14px;
 }
 
 .msg-line1 div:first-child {
@@ -135,9 +135,13 @@ html,body{
 }
 
 .msg-line1 div:last-child {
-  white-space: nowrap; 
-  text-align: right;
+  position: absolute;       /* 直接固定在右側 */
+  right: 0;                 /* 緊貼右邊 */
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;      /* 日期完整顯示 */
 }
+
 
 
 .msg-preview{
