@@ -4,13 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>192.168.001.058</title>
-
   <style>
     body {
       margin: 0;
       height: 100vh;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -18,7 +17,7 @@
 
     /* 背景層 */
     .bg {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
@@ -29,12 +28,12 @@
       background-position: top center;
       background-size: cover;
       transition: filter 0.25s ease;
-      z-index: 0; /* 背景層在最底層 */
+      z-index: 0;
     }
 
-    /* 黑框文字區塊 */
+    /* 黑框彈窗 */
     .text-box {
-      position: relative; /* 高於背景層 */
+      position: relative;
       z-index: 1;
       padding: 20px 32px;
       border-radius: 12px;
@@ -44,7 +43,6 @@
       flex-direction: column;
       align-items: center;
       gap: 18px;
-
       opacity: 0;
       transform: scale(0);
     }
@@ -109,7 +107,7 @@
     // 1 秒後黑框彈出 + 背景模糊
     setTimeout(() => {
       textBox.classList.add('show');
-      bg.style.filter = 'blur(5px)'; // 🔧 背景圖片模糊，黑框不受影響
+      bg.style.filter = 'blur(5px)'; // 只有背景模糊，黑框清楚
 
       // 倒數開始
       let sec = 3;
