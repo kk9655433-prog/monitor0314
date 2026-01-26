@@ -226,6 +226,7 @@ html,body{
   <img src="/monitor0314/icons/photo100.png" id="photo">
   <img src="/monitor0314/icons/youtube100.png" id="youtube">
   <img src="/monitor0314/icons/play100.png" id="play">
+  <img src="/monitor0314/icons/plurk100.png" id="plurk">
 </div>
 
  
@@ -338,11 +339,13 @@ document.getElementById('phone').onclick = ()=>{
   `);
 };
 document.getElementById('camera').onclick=()=>openText('<p>你無法操作這項功能</p>');
-document.getElementById('map').onclick=()=>openText('<p>你無法操作這項功能</p>');
+document.getElementById('map').onclick=()=>openText('<p>沒有開啟定位</p>');
+document.getElementById('play').onclick=()=>openText('<p>你無法操作這項功能</p>');
 document.getElementById('calculator').onclick=()=>openText('<p>你無法操作這項功能</p>');
 document.getElementById('youtube').onclick=()=>openText('<p>你無法操作這項功能</p>');
 document.getElementById('message').onclick=openMessageList;
 document.getElementById('google').onclick=()=>location.href='https://www.google.com';
+document.getElementById('plurk').onclick=()=>location.href='https://www.plurk.com/p/3i8qk281r6';
 
 /* modal functions */
 function openText(html){
