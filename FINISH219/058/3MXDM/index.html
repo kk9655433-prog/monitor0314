@@ -54,12 +54,66 @@
     .countdown {
       margin-top: 10px;
       font-size: 16px;
-      opacity: 0.7;
       letter-spacing: 1px;
+      color: #eaeaea; /* 保留原顏色 */
+      animation: breathe 1.2s infinite;
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* 背景黃色錯誤文字跑馬燈 */
+    .error-row {
+      position: absolute;
+      width: 200%; /* 文字超長方便水平滾動 */
+      color: yellow;
+      font-weight: bold;
+      white-space: nowrap;
+      font-size: 20px;
+      opacity: 0.8;
+      transform: rotate(-10deg); /* 🔧 可調整傾斜角度 */
+      pointer-events: none;
+      animation: marquee 15s linear infinite;
+    }
+
+    /* 每一行動畫不同起始位置，避免整齊死板 */
+    .error-row:nth-child(1) { top: 0%; animation-delay: 0s; }
+    .error-row:nth-child(2) { top: 8%; animation-delay: 2s; }
+    .error-row:nth-child(3) { top: 16%; animation-delay: 4s; }
+    .error-row:nth-child(4) { top: 24%; animation-delay: 6s; }
+    .error-row:nth-child(5) { top: 32%; animation-delay: 8s; }
+    .error-row:nth-child(6) { top: 40%; animation-delay: 10s; }
+    .error-row:nth-child(7) { top: 48%; animation-delay: 12s; }
+    .error-row:nth-child(8) { top: 56%; animation-delay: 14s; }
+    .error-row:nth-child(9) { top: 64%; animation-delay: 16s; }
+    .error-row:nth-child(10){ top: 72%; animation-delay: 18s; }
+    .error-row:nth-child(11){ top: 80%; animation-delay: 20s; }
+    .error-row:nth-child(12){ top: 88%; animation-delay: 22s; }
+
+    @keyframes marquee {
+      0% { transform: translateX(0) rotate(-10deg); }
+      100% { transform: translateX(-50%) rotate(-10deg); }
     }
   </style>
 </head>
 <body>
+  
+  <!-- 背景錯誤文字多排 -->
+  <div class="error-row">Warning: System Error Detected! Warning: Unauthorized Access! Warning: Check Configuration! Warning: Warnings Everywhere!</div>
+  <div class="error-row">Warning: System Error Detected! Warning: Unauthorized Access! Warning: Check Configuration! Warning: Warnings Everywhere!</div>
+  <div class="error-row">Warning: System Error Detected! Warning: Unauthorized Access! Warning: Check Configuration! Warning: Warnings Everywhere!</div>
+  <div class="error-row">Warning: System Error Detected! Warning: Unauthorized Access! Warning: Check Configuration! Warning: Warnings Everywhere!</div>
+  <div class="error-row">Warning: System Error Detected! Warning: Unauthorized Access! Warning: Check Configuration! Warning: Warnings Everywhere!</div>
+  <div class="error-row">Warning: System Error Detected! Warning: Unauthorized Access! Warning: Check Configuration! Warning: Warnings Everywhere!</div>
+  <div class="error-row">Warning: System Error Detected! Warning: Unauthorized Access! Warning: Check Configuration! Warning: Warnings Everywhere!</div>
+  <div class="error-row">Warning: System Error Detected! Warning: Unauthorized Access! Warning: Check Configuration! Warning: Warnings Everywhere!</div>
+  <div class="error-row">Warning: System Error Detected! Warning: Unauthorized Access! Warning: Check Configuration! Warning: Warnings Everywhere!</div>
+  <div class="error-row">Warning: System Error Detected! Warning: Unauthorized Access! Warning: Check Configuration! Warning: Warnings Everywhere!</div>
+  <div class="error-row">Warning: System Error Detected! Warning: Unauthorized Access! Warning: Check Configuration! Warning: Warnings Everywhere!</div>
+  <div class="error-row">Warning: System Error Detected! Warning: Unauthorized Access! Warning: Check Configuration! Warning: Warnings Everywhere!</div>
+
   <div class="container">
    <div class="text-box">
     <img src="/monitor0314/images/RRLOGO058.png" alt="" style="max-width: 80px; opacity: 0.9;">
