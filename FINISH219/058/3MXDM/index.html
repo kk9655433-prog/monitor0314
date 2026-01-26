@@ -45,6 +45,8 @@
       opacity: 0.85;
     }
 .text-box {
+  z-index: 2;
+  position: relative;
   padding: 20px 32px;
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.8);  /* 最後一個數字 0.6 = 60% 不透明 */
@@ -65,18 +67,19 @@
     }
 
     /* 背景黃色錯誤文字跑馬燈 */
-    .error-row {
-      position: absolute;
-      width: 200%; /* 文字超長方便水平滾動 */
-      color: yellow;
-      font-weight: bold;
-      white-space: nowrap;
-      font-size: 20px;
-      opacity: 0.8;
-      transform: rotate(-10deg); /* 🔧 可調整傾斜角度 */
-      pointer-events: none;
-      animation: marquee 15s linear infinite;
-    }
+.error-row {
+  position: absolute;
+  z-index: 1;   /* 確保在黑框下面 */
+  width: 200%;
+  color: yellow;
+  font-weight: bold;
+  white-space: nowrap;
+  font-size: 20px;
+  opacity: 0.8;
+  transform: rotate(-10deg); 
+  pointer-events: none;
+  animation: marquee 15s linear infinite;
+}
 
     /* 每一行動畫不同起始位置，避免整齊死板 */
     .error-row:nth-child(1) { top: 0%; animation-delay: 0s; }
