@@ -41,9 +41,9 @@ html,body{
 }
 
 .main-icons{
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
+  display:grid;
+  grid-template-columns: repeat(4, 1fr); /* 一行 4 個 */
+  justify-items:center;
   gap:25px;
   margin-top:60px;
 }
@@ -224,6 +224,7 @@ html,body{
   <img src="/monitor0314/icons/map100.png" id="map">
   <img src="/monitor0314/icons/calculator100.png" id="calculator">
   <img src="/monitor0314/icons/photo100.png" id="photo">
+  <img src="/monitor0314/icons/youtube100.png" id="youtube">
 </div>
 
  
@@ -338,6 +339,7 @@ document.getElementById('phone').onclick = ()=>{
 document.getElementById('camera').onclick=()=>openText('<p>你無法操作這項功能</p>');
 document.getElementById('map').onclick=()=>openText('<p>你無法操作這項功能</p>');
 document.getElementById('calculator').onclick=()=>openText('<p>你無法操作這項功能</p>');
+document.getElementById('youtube').onclick=()=>openText('<p>你無法操作這項功能</p>');
 document.getElementById('message').onclick=openMessageList;
 document.getElementById('google').onclick=()=>location.href='https://www.google.com';
 
