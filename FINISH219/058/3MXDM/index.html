@@ -12,7 +12,7 @@
       background-color: #990000; /* 紅底 */
       background-image: url('/monitor0314/images/background058.jpg');
       background-repeat: no-repeat;
-      background-position: center center;
+      background-position: top center;
       background-size: cover;
 
       display: flex;
@@ -92,9 +92,10 @@
     const textBox = document.getElementById('textBox');
     const secEl = document.getElementById('sec');
 
-    // 1 秒後黑框 + 文字爆炸跳出
+    // 1 秒後黑框彈窗
     setTimeout(() => {
       textBox.classList.add('show');
+      body.style.filter = 'blur(5px)'; // 🔧 可調整模糊度
 
       // 倒數開始
       let sec = 3;
