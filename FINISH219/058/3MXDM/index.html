@@ -5,14 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>192.168.001.058</title>
 
-  <!-- 保險用：3 秒後跳轉 -->
-  <meta http-equiv="refresh" content="3;url=https://kk9655433-prog.github.io/monitor0314/FINISH219/">
-
   <style>
     body {
       margin: 0;
       height: 100vh;
-      background-color: #000; /* 紅底#990000 */
+      background-color: #FF0000; /* 紅底 */
       background-image: url('/monitor0314/images/background0058.jpg');
       background-repeat: no-repeat;
       background-position: center center;
@@ -24,17 +21,25 @@
 
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       color: #eaeaea;
+      overflow: hidden;
     }
 
     .text-box {
       padding: 20px 32px;
       border-radius: 12px;
-      background: rgba(0, 0, 0, 0.8);  /* 🔧 可調整黑框透明度 */
+      background: rgba(0, 0, 0, 0.8);  
       box-shadow: 0 8px 24px rgba(0,0,0,0.4);
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 18px;
+
+      opacity: 0; /* 初始隱藏 */
+      transition: opacity 0.5s ease-in; /* 淡入效果 */
+    }
+
+    .text-box.show {
+      opacity: 1; /* 顯示 */
     }
 
     .title {
@@ -52,7 +57,7 @@
       margin-top: 10px;
       font-size: 16px;
       letter-spacing: 1px;
-      color: #eaeaea; /* 保留原顏色 */
+      color: #eaeaea; 
       animation: breathe 1.2s infinite;
     }
 
@@ -63,29 +68,35 @@
   </style>
 </head>
 <body>
-  <div class="text-box">
+  <div class="text-box" id="textBox">
     <img src="/monitor0314/images/RRLOGO058.png" alt="" style="max-width: 80px; opacity: 0.9;">
     <div class="title">走錯地方囉</div>
     <div class="desc">請您離開</div>
-
-    <!-- 倒數顯示 -->
     <div class="countdown">
       <span id="sec">3</span> 秒後自動離開
     </div>
   </div>
 
   <script>
-    let sec = 3;
+    const textBox = document.getElementById('textBox');
     const secEl = document.getElementById('sec');
 
-    const timer = setInterval(() => {
-      sec--;
-      if (sec <= 0) {
-        clearInterval(timer);
-        window.location.href = 'https://kk9655433-prog.github.io/monitor0314/FINISH219/';
-      } else {
-        secEl.textContent = sec;
-      }
+    // 1 秒後顯示黑框 + 文字
+    setTimeout(() => {
+      textBox.classList.add('show');
+
+      // 倒數開始
+      let sec = 3;
+      const timer = setInterval(() => {
+        sec--;
+        if (sec <= 0) {
+          clearInterval(timer);
+          // 這裡最後再跳轉
+          window.location.href = 'https://kk9655433-prog.github.io/monitor0314/FINISH219/';
+        } else {
+          secEl.textContent = sec;
+        }
+      }, 1000);
     }, 1000);
   </script>
 </body>
