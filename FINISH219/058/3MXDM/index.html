@@ -12,7 +12,7 @@
       background-color: #990000; /* 紅底 */
       background-image: url('/monitor0314/images/background058.jpg');
       background-repeat: no-repeat;
-      background-position: top center;
+      background-position: top center; /* 🔹 從頂部置頂 */
       background-size: cover;
 
       display: flex;
@@ -22,6 +22,7 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       color: #eaeaea;
       overflow: hidden;
+
       transition: filter 0.25s ease; /* 背景模糊過渡 */
     }
 
@@ -40,16 +41,16 @@
       transform: scale(0);
     }
 
-    /* 彈出動畫 */
+    /* ㄆㄤˋ彈出動畫 */
     .text-box.show {
       animation: explode 0.25s forwards;
     }
 
     @keyframes explode {
       0% { opacity: 0; transform: scale(0); }
-      50% { opacity: 1; transform: scale(1.2); } /* 放大 */
-      80% { transform: scale(0.85); }            /* 回縮 */
-      100% { opacity: 1; transform: scale(1); } /* 停留在螢幕上 */
+      50% { opacity: 1; transform: scale(1.2); }
+      80% { transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1); }
     }
 
     .title {
@@ -91,8 +92,9 @@
   <script>
     const textBox = document.getElementById('textBox');
     const secEl = document.getElementById('sec');
+    const body = document.body; // 🔹 一定要抓到 body
 
-    // 1 秒後黑框彈窗
+    // 1 秒後黑框彈窗 + 背景模糊
     setTimeout(() => {
       textBox.classList.add('show');
       body.style.filter = 'blur(5px)'; // 🔧 可調整模糊度
