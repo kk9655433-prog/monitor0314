@@ -24,29 +24,31 @@
       overflow: hidden;
     }
 
+    /* 黑框文字區塊 */
     .text-box {
       padding: 20px 32px;
       border-radius: 12px;
-      background: rgba(0, 0, 0, 0.8);  
+      background: rgba(0, 0, 0, 0.8);
       box-shadow: 0 8px 24px rgba(0,0,0,0.4);
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 18px;
 
-      opacity: 0;           /* 初始隱藏 */
-      transform: scale(0.5); /* 初始縮小 */
+      opacity: 0;
+      transform: scale(0);
     }
 
+    /* 彈出動畫 */
     .text-box.show {
-      animation: popIn 0.5s forwards; /* 彈跳動畫 */
+      animation: explode 0.25s forwards;
     }
 
-    @keyframes popIn {
-      0% { opacity: 0; transform: scale(0.5); }
-      50% { opacity: 1; transform: scale(1.2); } /* 彈大 */
-      70% { transform: scale(0.9); }             /* 微縮回 */
-      100% { transform: scale(1); }             /* 正常大小 */
+    @keyframes explode {
+      0% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1.5); } /* ㄆㄤˋ！一下放大 */
+      80% { transform: scale(0.85); }            /* 回縮 */
+      100% { opacity: 1; transform: scale(1); } /* 停留在螢幕上 */
     }
 
     .title {
@@ -60,11 +62,12 @@
       opacity: 0.85;
     }
 
+    /* 倒數呼吸效果 */
     .countdown {
       margin-top: 10px;
       font-size: 16px;
       letter-spacing: 1px;
-      color: #eaeaea; 
+      color: #eaeaea;
       animation: breathe 1.2s infinite;
     }
 
@@ -88,7 +91,7 @@
     const textBox = document.getElementById('textBox');
     const secEl = document.getElementById('sec');
 
-    // 1 秒後出現黑框 + 文字 + logo
+    // 1 秒後黑框 + 文字爆炸跳出
     setTimeout(() => {
       textBox.classList.add('show');
 
