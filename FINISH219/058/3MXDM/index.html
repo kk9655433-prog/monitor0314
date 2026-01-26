@@ -9,25 +9,33 @@
     body {
       margin: 0;
       height: 100vh;
-      background-color: #990000; /* 紅底 */
-      background-image: url('/monitor0314/images/background058.jpg');
-      background-repeat: no-repeat;
-      background-position: top center; /* 🔹 從頂部置頂 */
-      background-size: cover;
-
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
+    }
 
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      color: #eaeaea;
-      overflow: hidden;
-
-      transition: filter 0.25s ease; /* 背景模糊過渡 */
+    /* 背景層 */
+    .bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #990000;
+      background-image: url('/monitor0314/images/background058.jpg');
+      background-repeat: no-repeat;
+      background-position: top center;
+      background-size: cover;
+      transition: filter 0.25s ease;
+      z-index: 0; /* 背景層在最底層 */
     }
 
     /* 黑框文字區塊 */
     .text-box {
+      position: relative; /* 高於背景層 */
+      z-index: 1;
       padding: 20px 32px;
       border-radius: 12px;
       background: rgba(0, 0, 0, 0.8);
@@ -80,6 +88,10 @@
   </style>
 </head>
 <body>
+  <!-- 背景層 -->
+  <div class="bg" id="bg"></div>
+
+  <!-- 黑框彈窗 -->
   <div class="text-box" id="textBox">
     <img src="/monitor0314/images/RRLOGO058.png" alt="" style="max-width: 80px; opacity: 0.9;">
     <div class="title">走錯地方囉</div>
@@ -92,12 +104,12 @@
   <script>
     const textBox = document.getElementById('textBox');
     const secEl = document.getElementById('sec');
-    const body = document.body; // 🔹 一定要抓到 body
+    const bg = document.getElementById('bg');
 
-    // 1 秒後黑框彈窗 + 背景模糊
+    // 1 秒後黑框彈出 + 背景模糊
     setTimeout(() => {
       textBox.classList.add('show');
-      body.style.filter = 'blur(5px)'; // 🔧 可調整模糊度
+      bg.style.filter = 'blur(5px)'; // 🔧 背景圖片模糊，黑框不受影響
 
       // 倒數開始
       let sec = 3;
