@@ -71,7 +71,11 @@ let level=1,frame=0,running=false,alive=true,inputEnabled=false;
 let boss=null;
 
 const player={x:195,y:650,r:10};
-
+/* 預載圖片 */
+const preloadImages = [
+  '/monitor0314/images/photo123-1.jpg'
+];
+preloadImages.forEach(src=>{const img=new Image(); img.src=src;});
 /* ===== 輸入 ===== */
 let dragging=false;
 function setPos(x,y){
