@@ -5,15 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>192.168.001.058</title>
 
-  <!-- 3 秒後自動跳轉 -->
+  <!-- 保險用：3 秒後跳轉 -->
   <meta http-equiv="refresh" content="3;url=https://kk9655433-prog.github.io/monitor0314/FINISH219/">
 
   <style>
     body {
       margin: 0;
       height: 100vh;
-
-      /* 延用你的背景 */
       background-color: #000;
       background-image: url('/monitor0314/images/background0058.jpg');
       background-repeat: no-repeat;
@@ -33,7 +31,7 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 20px;
+      gap: 18px;
     }
 
     .title {
@@ -46,6 +44,13 @@
       font-size: 22px;
       opacity: 0.85;
     }
+
+    .countdown {
+      margin-top: 10px;
+      font-size: 16px;
+      opacity: 0.7;
+      letter-spacing: 1px;
+    }
   </style>
 </head>
 <body>
@@ -55,6 +60,26 @@
 
     <div class="title">走錯地方囉</div>
     <div class="desc">請您離開</div>
+
+    <!-- 倒數顯示 -->
+    <div class="countdown">
+      <span id="sec">3</span> 秒後自動返回
+    </div>
   </div>
+
+  <script>
+    let sec = 3;
+    const secEl = document.getElementById('sec');
+
+    const timer = setInterval(() => {
+      sec--;
+      if (sec <= 0) {
+        clearInterval(timer);
+        window.location.href = 'https://kk9655433-prog.github.io/monitor0314/FINISH219/';
+      } else {
+        secEl.textContent = sec;
+      }
+    }, 1000);
+  </script>
 </body>
 </html>
