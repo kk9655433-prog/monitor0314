@@ -226,6 +226,11 @@ html,body{
   <img src="/monitor0314/icons/calculator185.png" id="calculator">
   <img src="/monitor0314/icons/youtube185.png" id="youtube">
   <img src="/monitor0314/icons/photo185.png" id="photo">
+  <img src="/monitor0314/icons/IG185.png" id="IG">
+  <img src="/monitor0314/icons/camera185-1.png" id="camera1">
+  <img src="/monitor0314/icons/tiktok185.png" id="tiktok">
+  <img src="/monitor0314/icons/camera185-3.png" id="camera3">
+  <img src="/monitor0314/icons/camera185-4.png" id="camera4">
 </div>
 
  
@@ -343,13 +348,17 @@ document.getElementById('phone').onclick = ()=>{
   `);
 };
 document.getElementById('camera').onclick=()=>openText('<p>你無法操作這項功能</p>');
+document.getElementById('camera1').onclick=()=>openText('<p>你無法操作這項功能</p>');
+document.getElementById('camera3').onclick=()=>openText('<p>你無法操作這項功能</p>');
+document.getElementById('camera4').onclick=()=>openText('<p>她到底為什麼要這麼多相機軟體？</p>');
 document.getElementById('map').onclick=()=>openText('<p>沒有開啟定位</p>');
+document.getElementById('IG').onclick=()=>openText('<p>你無法操作這項功能</p>');
+document.getElementById('tiktok').onclick=()=>openText('<p>你無法操作這項功能</p>');
 document.getElementById('play').onclick=()=>openText('<p>你無法操作這項功能</p>');
 document.getElementById('calculator').onclick=()=>openText('<p>你無法操作這項功能</p>');
 document.getElementById('youtube').onclick=()=>openText('<p>你無法操作這項功能</p>');
 document.getElementById('message').onclick=openMessageList;
 document.getElementById('google').onclick=()=>location.href='https://www.google.com';
-document.getElementById('plurk').onclick=()=>location.href='https://www.plurk.com/p/3i8qk281r6';
 
 /* modal functions */
 function openText(html){
