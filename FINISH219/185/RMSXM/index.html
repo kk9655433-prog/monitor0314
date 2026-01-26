@@ -226,7 +226,6 @@ html,body{
   <img src="/monitor0314/icons/calculator185.png" id="calculator">
   <img src="/monitor0314/icons/youtube185.png" id="youtube">
   <img src="/monitor0314/icons/photo185.png" id="photo">
-  <img src="/monitor0314/icons/plurk185.png" id="plurk">
 </div>
 
  
@@ -253,9 +252,11 @@ html,body{
 <script>
 /* 預載圖片 */
 const preloadImages = [
-  '/monitor0314/images/photo100-1.jpg',
-  '/monitor0314/images/photo100-2.jpg',
-  '/monitor0314/images/photo100-3.jpg'
+  '/monitor0314/images/photo185-1.jpg',
+  '/monitor0314/images/photo185-2.jpg',
+  '/monitor0314/images/photo185-3.jpg',
+  '/monitor0314/images/photo185-4.jpg',
+  '/monitor0314/images/photo185-5.jpg'
 ];
 preloadImages.forEach(src=>{const img=new Image(); img.src=src;});
 
@@ -279,17 +280,20 @@ document.getElementById('close').onclick=()=>modal.style.display='none';
 
 /* messages */
 const messages=[
-  {dir:'↗',num:'+135778987',date:'1/26',full:'2026/01/26',text:'哈哈哈，你有沒有看到我剛剛傳給你的網址，他<br>們吵得那是什麼東西，笑死我了。'},
-  {dir:'↙',num:'+155384312',date:'1/29',full:'2026/01/29',text:'路易斯，管好你的嘴巴，不要再嘴這麼臭了，小<br>心惹禍上身'},
-  {dir:'↗',num:'+135778987',date:'1/29',full:'2026/01/29',text:'詹姆斯，多謝你的警告，但我就是活到這麼大了，<br>LOL。'},
-  {dir:'↙',num:'+155384312',date:'1/30',full:'2026/01/30',text:'行吧，你自己能保護好你自己就好。'},,
-  {dir:'↗',num:'+135778987',date:'2/10',full:'2026/02/10',text:'詹姆斯，你猜猜看，我拿到什麼了？哇靠，晚宴邀<br>請函，我即將也是個有名望的KOL了'},
-  {dir:'↗',num:'+135778987',date:'2/15',full:'2026/02/15',text:'詹姆斯，你怎麼了，好幾天沒回我訊息了，等你回信。'},
-  {dir:'↗',num:'+135778987',date:'2/16',full:'2026/02/16',text:'詹姆斯？'},
-  {dir:'↗',num:'+135778987',date:'3/13',full:'2026/03/14',text:'明天就是晚宴了，如果你還在就好了。'}
+  {dir:'↙',num:'+135789345',date:'1/29',full:'2026/01/29',text:'親愛的泰瑞莎，3/14的都奈橋建成一周年晚宴有<br>空嗎？我還缺一個女伴。妳的出現一定會為這場<br>晚宴錦上添花。'},
+  {dir:'↗',num:'+135789345',date:'1/29',full:'2026/01/29',text:'咦🥺～好感動❤️❤️布魯西寶貝好難得想起我耶<br>🥺🥺當然好啊❤️'},
+  {dir:'↙',num:'+155384312',date:'2/15',full:'2026/02/15',text:'泰瑞莎，記得明天有走秀。'},
+  {dir:'↙',num:'+155384312',date:'2/28',full:'2026/02/28',text:'泰瑞莎，記得明天要拍攝。'},
+  {dir:'↙',num:'+155384312',date:'3/6',full:'2026/03/06',text:'泰瑞莎，記得明天要拍攝。'},
+  {dir:'↙',num:'+155384312',date:'3/10',full:'2026/03/10',text:'泰瑞莎，妳又跑去哪裡了？'},
+  {dir:'↗',num:'+155384312',date:'3/10',full:'2026/03/10',text:'抱歉啦😆～妳那個商業餐會太無聊了❤️❤️我翹<br>班了！我說過我不喜歡跟拍攝無關的東西💥'},
+  {dir:'↗',num:'+135789345',date:'3/14',full:'2026/03/14',text:'布魯西～休息室好無聊🥺🥺～晚宴什麼時候結<br>束🥺～'},
+  {dir:'↗',num:'+135789345',date:'3/14',full:'2026/03/14',text:'布魯西～你可以帶一點餅乾回休息室🤲嗎？我有<br>點餓了🥺🥺'},
+  {dir:'↗',num:'+135789345',date:'3/14',full:'2026/03/14',text:'布魯西～看訊息看訊息看訊息~~😭😭😭'},
+  {dir:'↗',num:'+135789345',date:'3/14',full:'2026/03/14',text:'布魯西😣😣～～抱歉餅乾還是不用帶回來了我頭<br>還是好痛😷😷'}
 ];
 
-/* 生成第一層預覽文字，超過第15個字加… */
+/* 生成第一層預覽文字，超過第15個字加…❤️ 😆 😭 😣 🥺 🤲 💥 😷 */
 messages.forEach(m=>{
   m.preview15 = m.text.length > 15 ? m.text.slice(0,15)+'…' : m.text;
 });
@@ -406,9 +410,11 @@ modalContent.addEventListener('mousedown', e=>{
 /* icons click for viewers */
 
 document.getElementById('photo').onclick = ()=>openViewer([
-  '/monitor0314/images/photo100-1.jpg',
-  '/monitor0314/images/photo100-2.jpg',
-  '/monitor0314/images/photo100-3.jpg'
+  '/monitor0314/images/photo185-1.jpg',
+  '/monitor0314/images/photo185-2.jpg',
+  '/monitor0314/images/photo185-3.jpg',
+  '/monitor0314/images/photo185-4.jpg',
+  '/monitor0314/images/photo185-5.jpg'
 ]);
 
 /* exit tab */
