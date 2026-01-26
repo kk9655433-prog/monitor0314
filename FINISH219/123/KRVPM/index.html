@@ -142,7 +142,14 @@ html,body{
   white-space: nowrap;      /* 日期完整顯示 */
 }
 
+.msg-full-text{
+  max-width: 100%;
+  box-sizing: border-box;
 
+  /* 防止文字衝出視窗 */
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
 
 .msg-preview{
   font-size:14px; 
@@ -220,6 +227,8 @@ html,body{
   <img src="/monitor0314/icons/calendar123.png" id="calendar">
 </div>
 
+<div class="msg-full-text">${m.text}</div>
+  
 <div class="bottom-bar">
   <img src="/monitor0314/icons/phone123.png" id="phone">
   <img src="/monitor0314/icons/messege123.png" id="message">
