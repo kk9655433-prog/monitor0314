@@ -203,6 +203,24 @@ html,body{
   border-bottom-left-radius:21px;
 }
 .exit-tab.open{ right:-12px }
+  .weather-card{
+  width:260px;
+  margin:30px auto 0;
+  padding:18px;
+  border-radius:24px;
+  background:rgba(255,255,255,.12);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  box-shadow:0 10px 30px rgba(0,0,0,.45);
+  text-align:center;
+}
+.weather-card img{width:90px;height:90px;}
+.location{font-size:13px;letter-spacing:2px;opacity:.85;}
+.date{font-size:12px;opacity:.7;margin-top:2px;}
+.temp{font-size:60px;font-weight:200;margin:4px 0;}
+.desc{font-size:18px;margin-bottom:4px;}
+.meta{font-size:13px;opacity:.8;}
+
 </style>
 </head>
 
@@ -213,11 +231,13 @@ html,body{
   <div>🔋 64%</div>
 </div>
 
-<div class="weather-date">
-  <div>天氣：晴天 🌞</div>
-  <div>溫度：23°C</div>
-  <div>濕度：15%</div>
-  <div id="current-date"></div>
+<div class="weather-card">
+  <div class="location">GOTHAM</div>
+  <div class="date" id="weather-date">--</div>
+  <img id="weather-icon" src="">
+  <div class="temp" id="weather-temp">--°</div>
+  <div class="desc" id="weather-desc">載入中...</div>
+  <div class="meta" id="weather-humidity">濕度 --%</div>
 </div>
 
 <div class="main-icons">
@@ -427,6 +447,29 @@ document.body.onclick=()=>{
   exitTab.classList.remove('open');
   armed=false;
 };
+  const API_KEY = "fe47d3323214be59fd0b35a07b472a40";
+const LAT = 24.9886; // 文山
+const LON = 121.5726;
+
+async function loadWeatherCard(){
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&units=metric&lang=zh_tw&appid=${API_KEY}`;
+  const res = await fetch(url);
+  const data = await res.json();
+
+  document.getElementById("weather-temp").textContent = Math.round(data.main.temp)+"°";
+  document.getElementById("weather-desc").textContent = data.weather[0].description;
+  document.getElementById("weather-humidity").textContent = "濕度 "+data.main.humidity+"%";
+
+  const icon = data.weather[0].icon;
+  document.getElementById("weather-icon").src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+
+  const now = new Date();
+  document.getElementById("weather-date").textContent =
+    now.toLocaleDateString("zh-TW",{month:"long",day:"numeric",weekday:"short"});
+}
+
+loadWeatherCard();
+
 </script>
 
 </body>
