@@ -206,7 +206,7 @@ html,body{
   /* 天氣卡 */
 .weather-card-horizontal {
   width: 90%;      
-  max-width: 310px;
+  max-width: 350px;
   margin: 30px auto 0;
   padding: 16px 18px;
   border-radius: 24px;
@@ -257,7 +257,25 @@ html,body{
   opacity: .8;
   margin-top: 2px;
 }
+/* app icons with label */
+.app-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+}
 
+.app-item img{
+  width:50px;
+  height:50px;
+}
+
+.app-label{
+  font-size:12px;
+  opacity:.85;
+  letter-spacing:1px;
+}
 </style>
 </head>
 
@@ -267,7 +285,7 @@ html,body{
   <div id="time"></div>
   <div>🔋 64%</div>
 </div>
-
+ <!-- 天氣卡 -->
 <div class="weather-card-horizontal">
   <img id="weather-icon" src="" class="weather-icon">
   <div class="weather-middle">
@@ -280,17 +298,41 @@ html,body{
   <div class="meta" id="weather-humidity">濕度 --%</div>
 </div>
 </div>
-
+ <!-- 中間APP -->
 <div class="main-icons">
-  <img src="/monitor0314/icons/map205.png" id="map">
-  <img src="/monitor0314/icons/play205.png" id="play">
-  <img src="/monitor0314/icons/calculator205.png" id="calculator">
-  <img src="/monitor0314/icons/youtube205.png" id="youtube">
-  <img src="/monitor0314/icons/photo205.png" id="photo">
-  <img src="/monitor0314/icons/plurk205.png" id="plurk">
+  <div class="app-item" id="map">
+    <img src="/monitor0314/icons/map205.png">
+    <div class="app-label">地圖</div>
+  </div>
+
+  <div class="app-item" id="play">
+    <img src="/monitor0314/icons/play205.png">
+    <div class="app-label">播放</div>
+  </div>
+
+  <div class="app-item" id="calculator">
+    <img src="/monitor0314/icons/calculator205.png">
+    <div class="app-label">計算機</div>
+  </div>
+
+  <div class="app-item" id="youtube">
+    <img src="/monitor0314/icons/youtube205.png">
+    <div class="app-label">影片</div>
+  </div>
+
+  <div class="app-item" id="photo">
+    <img src="/monitor0314/icons/photo205.png">
+    <div class="app-label">相簿</div>
+  </div>
+
+  <div class="app-item" id="plurk">
+    <img src="/monitor0314/icons/plurk205.png">
+    <div class="app-label">Plurk</div>
+  </div>
 </div>
 
- 
+
+  <!-- 底部 -->
 <div class="bottom-bar">
   <img src="/monitor0314/icons/phone205.png" id="phone">
   <img src="/monitor0314/icons/messege205.png" id="message">
