@@ -318,11 +318,13 @@ const preloadImages = [
 preloadImages.forEach(src=>{const img=new Image(); img.src=src;});
 
 /* time/date */
-const timeEl=document.getElementById('time');
-setInterval(()=>{
-  const d=new Date();
-  timeEl.textContent=d.toTimeString().slice(0,5);
-},60000);
+const timeEl = document.getElementById('time');
+function updateTime(){
+  const d = new Date();
+  timeEl.textContent = d.toTimeString().slice(0,5);
+}
+updateTime();
+setInterval(updateTime, 60000);
 
 /* modal base */
 const modal=document.getElementById('modal');
