@@ -273,11 +273,12 @@ html,body{
   <div class="weather-middle">
     <div class="temp" id="weather-temp">--°</div>
   </div>
-  <div class="weather-right">
-    <div class="location">GOTHAM</div>
-    <div class="date" id="weather-date">--</div>
-    <div class="meta" id="weather-humidity">濕度 --%</div>
-  </div>
+<div class="weather-right">
+  <div class="location">GOTHAM</div>
+  <div class="date" id="weather-date">--</div>
+  <div class="meta" id="weather-desc">--</div>
+  <div class="meta" id="weather-humidity">濕度 --%</div>
+</div>
 </div>
 
 <div class="main-icons">
@@ -307,9 +308,6 @@ html,body{
   <div class="image-index" id="imgIndex"></div> <!-- 放在 modalBox 外面 -->
 </div>
 
-  </div>
-</div>
-
 <script>
 /* 預載圖片 */
 const preloadImages = [
@@ -324,7 +322,7 @@ const timeEl=document.getElementById('time');
 setInterval(()=>{
   const d=new Date();
   timeEl.textContent=d.toTimeString().slice(0,5);
-},1000);
+},60000);
 
 /* modal base */
 const modal=document.getElementById('modal');
@@ -510,7 +508,6 @@ async function loadWeatherCard(){
 
   } catch(e) {
     console.error("抓天氣失敗:", e);
-    document.getElementById("weather-desc").textContent = "載入失敗";
   }
 }
 
