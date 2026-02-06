@@ -363,12 +363,13 @@ const preloadImages = [
 preloadImages.forEach(src=>{const img=new Image(); img.src=src;});
 
 /* time/date */
-const timeEl=document.getElementById('time');
-const dateEl=document.getElementById('current-date');
-setInterval(()=>{
-  const d=new Date();
-  timeEl.textContent=d.toTimeString().slice(0,5);
-},1000);
+const timeEl = document.getElementById('time');
+function updateTime(){
+  const d = new Date();
+  timeEl.textContent = d.toTimeString().slice(0,5);
+}
+updateTime();
+setInterval(updateTime, 60000);
 dateEl.textContent=`${new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}`;
 
 /* modal base */
