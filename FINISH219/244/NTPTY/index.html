@@ -473,14 +473,14 @@ document.getElementById('close').onclick=()=>modal.style.display='none';
 
 /* messages */
 const messages=[
-  {dir:'↗',num:'+134537839',date:'1/26',full:'2026/01/26',text:'天啊，阿羅，你找的ST都太好看了吧！他們怎麼<br>可以這麼美麗！'},
-  {dir:'↙',num:'+134537839',date:'1/29',full:'2026/01/29',text:'我厲害吧，花光了我的<br>心惹禍上身'},
-  {dir:'↗',num:'+134537839',date:'1/29',full:'2026/01/29',text:'詹姆斯，多謝你的警告，但我就是活到這麼大了，<br>LOL。'},
-  {dir:'↙',num:'+134537839',date:'1/30',full:'2026/01/30',text:'行吧，你自己能保護好你自己就好。'},
-  {dir:'↗',num:'+134537839',date:'2/10',full:'2026/02/10',text:'詹姆斯，你猜猜看，我拿到什麼了？哇靠，晚宴邀<br>請函，我即將也是個有名望的KOL了'},
-  {dir:'↗',num:'+134537839',date:'2/15',full:'2026/02/15',text:'詹姆斯，你怎麼了，好幾天沒回我訊息了，等你回信。'},
-  {dir:'↗',num:'+134537839',date:'2/16',full:'2026/02/16',text:'詹姆斯？'},
-  {dir:'↗',num:'+134537839',date:'3/13',full:'2026/03/14',text:'明天就是晚宴了，如果你還在就好了。'}
+  {dir:'↗',num:'+134537839',date:'1/26',full:'2026/01/26',text:'天啊，阿羅，你找的ST都太好看了吧！他們怎麼<br>可以這麼美麗！我拍照拍得好爽！'},
+  {dir:'↙',num:'+134537839',date:'1/29',full:'2026/01/29',text:'有拍得開心就好....今天辛苦了，回頭請你喝飲<br>料！'},
+  {dir:'↗',num:'+134537839',date:'1/29',full:'2026/01/29',text:'當然沒問題啊！布魯斯的ST超級帥的!我把連結發<br>發給你了! <br><br>https://www.facebook.com/XROBIST357/'},
+  {dir:'↙',num:'+134537839',date:'1/30',full:'2026/01/30',text:'好耶！謝謝你，我這就來追蹤他！'},
+  {dir:'↗',num:'+134537839',date:'2/10',full:'2026/02/10',text:'而且我們所有的網站都是他一個人做出來的，很厲<br>害吧，他真的很強，人又很好！'},
+  {dir:'↗',num:'+134537839',date:'2/15',full:'2026/02/15',text:'天啊！太厲害了！甚至連這段文字都是他親手打出<br>來的耶！'},
+  {dir:'↗',num:'+134537839',date:'2/16',full:'2026/02/16',text:'對呀！夾帶私貨到這種程度，非常不簡單！'},
+  {dir:'↗',num:'+134537839',date:'3/14',full:'2026/03/14',text:'但還是希望你今天玩得開心喔！閱讀者'}
 ];
 
 /* 生成第一層預覽文字，超過第15個字加… */
@@ -494,6 +494,13 @@ function openMessageList(){
   imgIndex.style.display='none';
   modal.style.display='flex';
 
+function formatText(text){
+  return text.replace(
+    /(https?:\/\/[^\s<]+)/g,
+    '<a href="$1" target="_blank" style="color:#8bbcff;text-decoration:underline;">點我前往</a>'
+  );
+}
+  
   modalContent.innerHTML = `
   <div class="msg-header" style="font-size:18px; font-weight:bold;">訊息</div>
   ${messages.map((m,i)=>`
