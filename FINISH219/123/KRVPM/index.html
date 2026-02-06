@@ -203,6 +203,81 @@ html,body{
   border-bottom-left-radius:21px;
 }
 .exit-tab.open{ right:-12px }
+
+  /* 天氣卡 */
+.weather-card-horizontal {
+  width: 90%;      
+  max-width: 350px;
+  margin: 30px auto 0;
+  padding: 16px 18px;
+  border-radius: 24px;
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.45);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+}
+
+.weather-icon {
+  width: 70px;
+  height: 70px;
+}
+
+.weather-middle {
+  flex: 1;
+  text-align: center;
+}
+
+.temp {
+  font-size: 50px;
+  font-weight: 200;
+  margin: 0;
+}
+
+.weather-right {
+  text-align: right;
+}
+
+.location {
+  font-size: 13px;
+  letter-spacing: 2px;
+  opacity: .85;
+}
+
+.date {
+  font-size: 12px;
+  opacity: .7;
+  margin-top: 2px;
+}
+
+.meta {
+  font-size: 13px;
+  opacity: .8;
+  margin-top: 2px;
+}
+/* app icons with label */
+.app-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+}
+
+.app-item img{
+  width:50px;
+  height:50px;
+}
+
+.app-label{
+  font-size:12px;
+  opacity:.85;
+  letter-spacing:1px;
+}
+  
 </style>
 </head>
 
@@ -213,13 +288,21 @@ html,body{
   <div>🪫 28%</div>
 </div>
 
-<div class="weather-date">
-  <div>天氣：晴天 🌞</div>
-  <div>溫度：23°C</div>
-  <div>濕度：15%</div>
-  <div id="current-date"></div>
+ <!-- 天氣卡 -->
+<div class="weather-card-horizontal">
+  <img id="weather-icon" src="" class="weather-icon">
+  <div class="weather-middle">
+    <div class="temp" id="weather-temp">--°</div>
+  </div>
+<div class="weather-right">
+  <div class="location">GOTHAM</div>
+  <div class="date" id="weather-date">--</div>
+  <div class="meta" id="weather-desc">--</div>
+  <div class="meta" id="weather-humidity">濕度 --%</div>
 </div>
-
+</div>
+  
+ <!-- 中間APP -->
 <div class="main-icons">
   <img src="/monitor0314/icons/map123.png" id="map">
   <img src="/monitor0314/icons/calculator123.png" id="calculator">
@@ -434,6 +517,36 @@ document.body.onclick=()=>{
   exitTab.classList.remove('open');
   armed=false;
 };
+
+    /* 天氣卡 */
+async function loadWeatherCard(){
+  try {
+    const API_KEY = "fe47d3323214be59fd0b35a07b472a40";
+    const LAT = 24.9886;
+    const LON = 121.5726;
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&units=metric&lang=zh_tw&appid=${API_KEY}`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    document.getElementById("weather-temp").textContent = Math.round(data.main.temp) + "°";
+    document.getElementById("weather-desc").textContent = data.weather[0].description;
+    document.getElementById("weather-humidity").textContent = "濕度 " + data.main.humidity + "%";
+
+    const icon = data.weather[0].icon;
+    document.getElementById("weather-icon").src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+
+    const now = new Date();
+    document.getElementById("weather-date").textContent =
+      now.toLocaleDateString("zh-TW",{month:"long",day:"numeric",weekday:"short"});
+
+  } catch(e) {
+    console.error("抓天氣失敗:", e);
+  }
+}
+
+loadWeatherCard();
+
 </script>
 
 </body>
