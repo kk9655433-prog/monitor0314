@@ -423,6 +423,17 @@ html,body{
 
 
 <script>
+// 電量顯示
+  function setBattery(percent){
+  const bar = document.getElementById('batteryBar');
+  const text = document.getElementById('batteryText');
+  const pct = Math.min(Math.max(percent,0),100); // 0~100限制
+  bar.style.width = pct + '%';
+  text.textContent = pct + '%';
+}
+
+setBattery(37);
+
 /* 預載圖片 */
 const preloadImages = [
   '/monitor0314/images/photo244-1.jpg',
@@ -637,16 +648,6 @@ async function loadWeatherCard(){
 
 loadWeatherCard();
 
-// 電量顯示
-  function setBattery(percent){
-  const bar = document.getElementById('batteryBar');
-  const text = document.getElementById('batteryText');
-  const pct = Math.min(Math.max(percent,0),100); // 0~100限制
-  bar.style.width = pct + '%';
-  text.textContent = pct + '%';
-}
-
-setBattery(37);
 
 </script>
 
