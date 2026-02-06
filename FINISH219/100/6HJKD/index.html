@@ -285,8 +285,14 @@ html,body{
 <body>
 
 <div class="status-bar">
-  <div id="time"></div>
-  <div>🔋 64%</div>
+  <div class="status-left">
+    <img src="/monitor0314/icons/wifi.png" class="status-icon">
+    <img src="/monitor0314/icons/signal.png" class="status-icon">
+  </div>
+  <div class="battery-container">
+    <div class="battery-bar" id="batteryBar"></div>
+    <div class="battery-text" id="batteryText">64%</div>
+  </div>
 </div>
 
  <!-- 天氣卡 -->
