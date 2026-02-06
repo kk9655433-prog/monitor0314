@@ -523,12 +523,19 @@ window.openMessageDetail=function(i){
   modal.style.display='flex';
 
   const status = m.dir==='↗' ? '已寄出' : '已讀取';
+  
+  function formatText(text){
+    return text.replace(
+      /(https?:\/\/[^\s<]+)/g,
+      '<a href="$1" target="_blank" style="color:#8bbcff;text-decoration:underline;">點我前往</a>'
+    );
+  }
 
   modalContent.innerHTML = `
-  <div class="msg-back" onclick="openMessageList()" style="font-size:18px; font-weight:bold;">← 訊息</div>
-  <div style="margin-top:12px; font-size:16px; font-weight:bold;">${m.full}</div>
+    <div class="msg-back" onclick="openMessageList()" style="font-size:18px; font-weight:bold;">← 訊息</div>
+    <div style="margin-top:12px; font-size:16px; font-weight:bold;">${m.full}</div>
     <div>${m.num}　${status}</div>
-    <div style="margin-top:12px;">${m.text}</div>
+    <div style="margin-top:12px;">${formatText(m.text)}</div>
   `;
 };
 
