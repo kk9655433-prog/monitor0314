@@ -304,10 +304,26 @@ html,body{
   
  <!-- 中間APP -->
 <div class="main-icons">
-  <img src="/monitor0314/icons/map123.png" id="map">
-  <img src="/monitor0314/icons/calculator123.png" id="calculator">
-  <img src="/monitor0314/icons/photo123.png" id="photo">
-  <img src="/monitor0314/icons/calendar123.png" id="calendar">
+
+  <div class="app-item" id="map">
+    <img src="/monitor0314/icons/map123.png">
+    <div class="app-label">地圖</div>
+  </div>
+
+  <div class="app-item" id="calculator">
+    <img src="/monitor0314/icons/calculator123.png">
+    <div class="app-label">計算機</div>
+  </div>
+
+  <div class="app-item" id="photo">
+    <img src="/monitor0314/icons/photo123.png">
+    <div class="app-label">照片</div>
+  </div>
+
+  <div class="app-item" id="calendar">
+    <img src="/monitor0314/icons/calendar123.png">
+    <div class="app-label">行事曆</div>
+  </div>
 </div>
 
  
@@ -501,6 +517,9 @@ document.getElementById('photo').onclick = ()=>openViewer([
   '/monitor0314/images/photo123-3.jpg'
 ]);
 
+document.getElementById('calculator').onclick =
+  ()=>openText('<p>你無法操作這項功能</p>');
+  
 /* exit tab */
 const exitTab=document.getElementById('exitTab');
 let armed=false;
