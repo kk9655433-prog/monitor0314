@@ -15,18 +15,14 @@ html,body{
 .desktop{
   height:100%;
   padding:20px;
-  display:grid;
-  grid-auto-flow: column;           /* 關鍵：直排 → 滿了再右移 */
-  grid-auto-rows: 100px;            /* 每格高度 */
-  grid-template-columns: repeat(auto-fill, 100px);
-  gap:16px;
-  align-content:start;
+  display:block;              /* 不用 flex */
+  column-width:100px;         /* 一欄約 100px */
+  column-gap:20px;            /* 欄與欄距離 */
 }
 
 .icon{
   width:80px;
   margin-bottom:16px;
-  break-inside:avoid;         /* 不要被切到兩欄 */
   display:flex;
   flex-direction:column;
   align-items:center;
