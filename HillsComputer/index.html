@@ -225,9 +225,8 @@ html,body{
 </div>
 
 <div class="modal" id="modal">
-  <div class="modal-content">
-    <button class="close-btn" id="closeBtn">X</button>
-    <div id="modalBody"></div>
+  <div class="modal-content" id="xpModalContent">
+  <div id="modalBody"></div>
   </div>
 </div>
 
@@ -254,9 +253,35 @@ const modalBody = document.getElementById('modalBody');
 const closeBtn = document.getElementById('closeBtn');
 closeBtn.onclick = () => closeModal();
 
-function openModal(html){
-  modalBody.innerHTML = html;
+function openModal(contentHTML){
   modal.classList.add('active');
+
+  modalBody.innerHTML = `
+    <div style="
+      width:600px;
+      max-width:90vw;
+      background:#ece9d8;
+      border:2px solid #0054e3;
+      box-shadow:4px 4px 15px rgba(0,0,0,.5);
+      font-family:Tahoma, sans-serif;
+    ">
+      <div style="
+        background:linear-gradient(#0054e3,#003399);
+        color:white;
+        padding:6px 10px;
+        font-weight:bold;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+      ">
+        視窗
+        <span style='cursor:pointer;' onclick='closeModal()'>✕</span>
+      </div>
+      <div style="padding:16px;">
+        ${contentHTML}
+      </div>
+    </div>
+  `;
 }
 function closeModal(){
   modal.classList.remove('active');
@@ -336,24 +361,41 @@ function passwordGate({length,password,onSuccess,hint}) {
 
 /* ========= icon 行為路由 ========= */
 const handlers = {
-  image: icon => openModal(`<img src="${icon.dataset.src}" style="max-width:90vw;max-height:90vh;">`),
-  gallery: icon => openGallery(JSON.parse(icon.dataset.images)),
+  image: icon => openModal(`<img src="${icon.dataset.src}" style="max-width:100%;height:auto;">`),
+  gallery: icon => {
+    let i = 0;
+    const images = JSON.parse(icon.dataset.images);
+    const render = ()=>{
+      openModal(`
+        <div style="text-align:center;">
+          <img src="${images[i]}" style="max-width:100%;height:auto;">
+          <div style="margin-top:8px;">${i+1}/${images.length}</div>
+          <div style="margin-top:6px;">
+            <button onclick="prevImg()">‹</button>
+            <button onclick="nextImg()">›</button>
+          </div>
+        </div>
+      `);
+    };
+    window.prevImg = ()=>{ i=(i-1+images.length)%images.length; render(); };
+    window.nextImg = ()=>{ i=(i+1)%images.length; render(); };
+    render();
+  },
   mail: icon => passwordGate({
     length:3,
     password:icon.dataset.password,
     hint: icon.dataset.hint,
-    onSuccess:()=>openGallery(JSON.parse(icon.dataset.images))
+    onSuccess:()=>handlers.gallery(icon)
   }),
   pdf: icon => passwordGate({
     length:4,
     password:icon.dataset.password,
     hint: icon.dataset.hint,
-    onSuccess:()=>openModal(
-      `<iframe src="${icon.dataset.src}" style="width:90vw;height:80vh;" title="${icon.dataset.title||'PDF'}"></iframe>`
-    )
+    onSuccess:()=>openModal(`<iframe src="${icon.dataset.src}" style="width:100%;height:400px;"></iframe>`)
   }),
   url: icon => window.open(icon.dataset.src,'_blank')
 };
+
 
 /* ========= icon 綁定 ========= */
 document.querySelectorAll('.icon').forEach(icon=>{
