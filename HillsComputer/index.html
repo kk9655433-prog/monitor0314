@@ -451,40 +451,56 @@ sampleFolder.onclick = () => {
   sampleFolderContent.querySelectorAll('.folder-icon').forEach(icon=>{
     icon.onclick = ()=>{
       const fileName = icon.dataset.name+'.doc';
-      openModal(`
-        <div style="
-          width:760px;
-          max-width:90vw;
-          max-height:85vh;
-          background:#f5f5f5;
-          border:1px solid #888;
-          box-shadow:0 0 25px rgba(0,0,0,.6);
-          display:flex;
-          flex-direction:column;
-        ">
-          <div style="
-            background:#dcdcdc;
-            padding:8px 12px;
-            font-weight:bold;
-            border-bottom:1px solid #999;
-            font-size:15px;
-            flex-shrink:0;
-          ">
-            ${fileName}
-          </div>
-          <div style="
-            padding:32px 40px;
-            background:white;
-            font-size:18px;
-            line-height:1.9;
-            color:#000;
-            overflow-y:auto;
-            flex-grow:1;
-          ">
-            ${icon.dataset.text}
-          </div>
-        </div>
-      `);
+modalBody.innerHTML = `
+  <div style="
+    position:relative;
+    width:90vw;
+    max-width:760px;
+    max-height:85vh;
+    background:#f5f5f5;
+    border:1px solid #888;
+    box-shadow:0 0 25px rgba(0,0,0,.6);
+    display:flex;
+    flex-direction:column;
+  ">
+    <button style="
+      position:absolute;
+      top:8px; right:12px;
+      background:#ff4c4c;
+      border:none;
+      color:white;
+      padding:4px 10px;
+      border-radius:6px;
+      cursor:pointer;
+      z-index:10;
+    " onclick="closeModal()">✕</button>
+
+    <div style="
+      background:#dcdcdc;
+      padding:8px 12px;
+      font-weight:bold;
+      border-bottom:1px solid #999;
+      font-size:15px;
+      flex-shrink:0;
+    ">
+      ${fileName}
+    </div>
+    <div style="
+      padding:16px;
+      background:white;
+      font-size:18px;
+      line-height:1.6;
+      color:#000;
+      overflow:auto;
+      flex-grow:1;
+      word-break:break-word;
+    ">
+      ${icon.dataset.text}
+    </div>
+  </div>
+`;
+modal.classList.add('active');
+
     };
   });
 };
@@ -498,52 +514,41 @@ trash.addEventListener('dragover',e=>e.preventDefault());
 trash.addEventListener('drop',e=>{
   if(e.dataTransfer.getData('x')!=='book') return;
 
-  openModal(`
-    <div style="
-      width:360px;
-      background:#ece9d8;
-      border:2px solid #0054e3;
-      box-shadow:4px 4px 15px rgba(0,0,0,.5);
-      font-family:Tahoma, sans-serif;
-    ">
-      <div style="
-        background:linear-gradient(#0054e3,#003399);
-        color:white;
-        padding:6px 10px;
-        font-weight:bold;
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-      ">
-        刪除檔案
-        <span style="cursor:pointer;" onclick="closeModal()">✕</span>
-      </div>
-
-      <div style="padding:16px; display:flex; gap:12px; align-items:flex-start;">
-        <img src="/monitor0314/icons/Trash.png" style="width:32px;height:32px;">
-        <div style="font-size:14px; line-height:1.6; color:#333;">
-          你確定要刪除「帳本」嗎？<br>
-          這個操作無法復原。
-        </div>
-      </div>
-
-      <div style="padding:10px; text-align:right; background:#f3f3f3;">
-        <button id="xpYes" style="
-          padding:4px 14px;
-          margin-right:6px;
-          border:1px solid #7f9db9;
-          background:linear-gradient(#ffffff,#dcdcdc);
-          cursor:pointer;
-        ">是(Y)</button>
-        <button id="xpNo" style="
-          padding:4px 14px;
-          border:1px solid #7f9db9;
-          background:linear-gradient(#ffffff,#dcdcdc);
-          cursor:pointer;
-        ">否(N)</button>
-      </div>
+modalBody.innerHTML = `
+  <div style="
+    padding:16px; 
+    display:flex; 
+    gap:12px; 
+    align-items:flex-start;
+    background:#ece9d8;
+    border:1px solid #ccc;
+    box-shadow:2px 2px 12px rgba(0,0,0,.3);
+  ">
+    <img src="/monitor0314/icons/Trash.png" style="width:32px;height:32px;">
+    <div style="font-size:14px; line-height:1.6; color:#333;">
+      你確定要刪除「帳本」嗎？<br>
+      這個操作無法復原。
     </div>
-  `);
+  </div>
+
+  <div style="padding:10px; text-align:right; background:#f3f3f3;">
+    <button id="xpYes" style="
+      padding:4px 14px;
+      margin-right:6px;
+      border:1px solid #7f9db9;
+      background:linear-gradient(#ffffff,#dcdcdc);
+      cursor:pointer;
+    ">是(Y)</button>
+    <button id="xpNo" style="
+      padding:4px 14px;
+      border:1px solid #7f9db9;
+      background:linear-gradient(#ffffff,#dcdcdc);
+      cursor:pointer;
+    ">否(N)</button>
+  </div>
+`;
+modal.classList.add('active'); // 保留原 modal 顯示
+
 
   document.getElementById('xpYes').onclick = ()=>{
     book.remove();
