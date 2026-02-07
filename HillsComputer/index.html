@@ -54,12 +54,12 @@ html,body{
   pointer-events:auto;
 }
 .modal-content{
-  background:#1e1e1e;
-  color:white;
-  padding:20px;
-  border-radius:12px;
+  width:600px;
   max-width:90vw;
-  max-height:90vh;
+  background:#ece9d8;
+  border:2px solid #0054e3;
+  box-shadow:4px 4px 15px rgba(0,0,0,.5);
+  font-family:Tahoma, sans-serif;
   position:relative;
 }
 .modal-content video,
@@ -253,18 +253,11 @@ const modalBody = document.getElementById('modalBody');
 const closeBtn = document.getElementById('closeBtn');
 closeBtn.onclick = () => closeModal();
 
-function openModal(contentHTML){
+function openModal(contentHTML, title='視窗'){
   modal.classList.add('active');
 
   modalBody.innerHTML = `
-    <div style="
-      width:600px;
-      max-width:90vw;
-      background:#ece9d8;
-      border:2px solid #0054e3;
-      box-shadow:4px 4px 15px rgba(0,0,0,.5);
-      font-family:Tahoma, sans-serif;
-    ">
+    <div>
       <div style="
         background:linear-gradient(#0054e3,#003399);
         color:white;
@@ -273,16 +266,20 @@ function openModal(contentHTML){
         display:flex;
         justify-content:space-between;
         align-items:center;
+        cursor:move;
       ">
-        視窗
-        <span style='cursor:pointer;' onclick='closeModal()'>✕</span>
+        <span>${title}</span>
+        <span id="modalCloseBtn" style='cursor:pointer;'>✕</span>
       </div>
       <div style="padding:16px;">
         ${contentHTML}
       </div>
     </div>
   `;
+
+  document.getElementById('modalCloseBtn').onclick = closeModal;
 }
+
 function closeModal(){
   modal.classList.remove('active');
   modalBody.innerHTML = '';
@@ -361,7 +358,7 @@ function passwordGate({length,password,onSuccess,hint}) {
 
 /* ========= icon 行為路由 ========= */
 const handlers = {
-  image: icon => openModal(`<img src="${icon.dataset.src}" style="max-width:100%;height:auto;">`),
+  image: icon => openModal(`<img src="${icon.dataset.src}" style="max-width:100%;height:auto;">`, icon.innerText),
   gallery: icon => {
     let i = 0;
     const images = JSON.parse(icon.dataset.images);
