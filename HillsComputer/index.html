@@ -250,8 +250,6 @@ html,body{
 /* ========= 基本節點 ========= */
 const modal = document.getElementById('modal');
 const modalBody = document.getElementById('modalBody');
-const closeBtn = document.getElementById('closeBtn');
-closeBtn.onclick = () => closeModal();
 
 function openModal(contentHTML, title='視窗'){
   modal.classList.add('active');
@@ -395,11 +393,13 @@ const handlers = {
 
 
 /* ========= icon 綁定 ========= */
-document.querySelectorAll('.icon').forEach(icon=>{
-  icon.addEventListener('click',()=>{
-    const type = icon.dataset.type;
-    if(!type || type==='folder') return;
-    handlers[type]?.(icon);
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.icon').forEach(icon=>{
+    icon.addEventListener('click',()=>{
+      const type = icon.dataset.type;
+      if(!type || type==='folder') return;
+      handlers[type]?.(icon);
+    });
   });
 });
 
@@ -592,9 +592,9 @@ makeDraggable(sampleFolderWin);
   });
 }
 
-window.addEventListener('load', layoutDesktop);
+window.addEventListener('DOMContentLoaded', layoutDesktop);
 window.addEventListener('resize', layoutDesktop);
-
+  
 </script>
 </body>
 </html>
