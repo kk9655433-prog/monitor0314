@@ -15,13 +15,15 @@ html,body{
 .desktop{
   height:100%;
   padding:20px;
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  align-items:flex-start;
+  display:block;              /* 不用 flex */
+  column-width:100px;         /* 一欄約 100px */
+  column-gap:20px;            /* 欄與欄距離 */
 }
+
 .icon{
   width:80px;
+  margin-bottom:16px;
+  break-inside:avoid;         /* 不要被切到兩欄 */
   display:flex;
   flex-direction:column;
   align-items:center;
