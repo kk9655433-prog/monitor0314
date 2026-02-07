@@ -111,22 +111,24 @@ html,body{
   flex-direction:column;
 }
 .folder-titlebar{
-  background:#0a64ad; 
-  color:white;
-  display:flex; 
-  justify-content:space-between; 
-  align-items:center;
-  padding:2px 6px;
-  cursor:move;
+  background: linear-gradient(#0054e3,#003399);
+  color: white;
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  padding: 6px 10px;
+  cursor: move;
+  font-weight: bold;
 }
-.folder-content{
-  flex-grow:1;
-  padding:10px; 
-  display:flex; 
-  flex-wrap:wrap; 
-  gap:12px;
-  overflow:auto;
-  background:white; /* 內容白底 */
+
+.folder-window .close-btn{
+  background: transparent; /* 改透明，X在標題欄裡 */
+  color: white;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
 }
 .folder-window .close-btn{
   background:#0a64ad;
@@ -270,11 +272,13 @@ html,body{
 const modal = document.getElementById('modal');
 const modalBody = document.getElementById('modalBody');
 
-function openModal(contentHTML, title='視窗'){
+function openModal(contentHTML, title='視窗', size='normal'){
   modal.classList.add('active');
 
+  let width = size==='small' ? '300px' : '600px';
+
   modalBody.innerHTML = `
-    <div>
+    <div class="modal-inner" style="width:${width}; max-width:80vw;">
       <div style="
         background:linear-gradient(#0054e3,#003399);
         color:white;
@@ -293,6 +297,7 @@ function openModal(contentHTML, title='視窗'){
       </div>
     </div>
   `;
+
 
   document.getElementById('modalCloseBtn').onclick = closeModal;
 }
@@ -553,7 +558,8 @@ openModal(`
       cursor:pointer;
     ">否(N)</button>
   </div>
-`, '刪除確認');
+`, '刪除確認', 'small'); // 我們可以加個 small 參數
+
 
 document.getElementById('xpYes').onclick = ()=>{ 
   book.remove(); 
