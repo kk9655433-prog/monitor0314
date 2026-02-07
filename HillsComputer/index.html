@@ -262,6 +262,24 @@ html,body{
 </div>
 
 <script>
+  /* ========= 預載圖片/影片 ========= */
+document.querySelectorAll('.icon img').forEach(img=>new Image().src=img.src);
+document.querySelectorAll('.icon[data-images]').forEach(icon=>{
+  JSON.parse(icon.dataset.images).forEach(src=>new Image().src=src);
+});
+const videos=[
+  '/monitor0314/videos/video1.mp4',
+  '/monitor0314/videos/video2.mp4',
+  '/monitor0314/videos/video3.mp4',
+  '/monitor0314/videos/video4.mp4'
+];
+// 影片預載
+videos.forEach(v=>{
+  const vid = document.createElement('video');
+  vid.src = v;
+  vid.preload = 'auto';
+});
+  
 const modal = document.getElementById('modal');
 const modalBody = document.getElementById('modalBody');
 
