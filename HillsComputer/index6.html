@@ -13,13 +13,12 @@ html,body{
   font-family:system-ui;
 }
 .desktop{
-  position:relative;   /* ← 讓 icon 用座標定位 */
+  position:relative;
   height:100%;
   padding:20px;
 }
-
 .icon{
-  position:absolute;  /* ← 由 JS 控制 top / left */
+  position:absolute;
   width:80px;
   display:flex;
   flex-direction:column;
@@ -31,7 +30,6 @@ html,body{
   text-shadow:0 2px 4px black;
   user-select:none;
 }
-
 .icon img{
   width:48px;
   height:48px;
@@ -125,7 +123,6 @@ html,body{
 .folder-icon img{
   width:48px; height:48px; margin-bottom:6px;
 }
-
 /* 日曆左右控制樣式 */
 .gallery-container{
   position:relative;
@@ -154,71 +151,42 @@ html,body{
   <div class="icon" data-type="image" data-src="/monitor0314/images/PC.png">
     <img src="/monitor0314/icons/Desktop.png">我的電腦
   </div>
-
   <div class="icon" id="trash">
     <img src="/monitor0314/icons/Trash.png">資源回收桶
   </div>
-
-  <div class="icon"
-       data-type="mail"
-       data-password="528"
-       data-hint="記事本"
-       data-images='[
-       "/monitor0314/images/mail01.jpg",
-       "/monitor0314/images/mail02.jpg",
-       "/monitor0314/images/mail03.jpg",
-       "/monitor0314/images/mail04.jpg",
-       "/monitor0314/images/mail05.jpg",
-       "/monitor0314/images/mail06.jpg",
-       "/monitor0314/images/mail07.jpg",
-       "/monitor0314/images/mail08.jpg",
-       "/monitor0314/images/mail09.jpg",
-       "/monitor0314/images/mail10.jpg"
-       ]'>
+  <div class="icon" data-type="mail" data-password="528" data-hint="記事本"
+    data-images='[
+      "/monitor0314/images/mail01.jpg","/monitor0314/images/mail02.jpg",
+      "/monitor0314/images/mail03.jpg","/monitor0314/images/mail04.jpg",
+      "/monitor0314/images/mail05.jpg","/monitor0314/images/mail06.jpg",
+      "/monitor0314/images/mail07.jpg","/monitor0314/images/mail08.jpg",
+      "/monitor0314/images/mail09.jpg","/monitor0314/images/mail10.jpg"
+    ]'>
     <img src="/monitor0314/icons/email.png">電子郵件
   </div>
-
   <div class="icon" data-type="gallery"
     data-images='[
-      "/monitor0314/images/Calendar01.jpg",
-      "/monitor0314/images/Calendar02.jpg",
-      "/monitor0314/images/Calendar03.jpg",
-      "/monitor0314/images/Calendar04.jpg",
-      "/monitor0314/images/Calendar05.jpg",
-      "/monitor0314/images/Calendar06.jpg",
-      "/monitor0314/images/Calendar07.jpg",
-      "/monitor0314/images/Calendar08.jpg",
-      "/monitor0314/images/Calendar09.jpg",
-      "/monitor0314/images/Calendar10.jpg",
-      "/monitor0314/images/Calendar11.jpg",
-      "/monitor0314/images/Calendar12.jpg"
+      "/monitor0314/images/Calendar01.jpg","/monitor0314/images/Calendar02.jpg",
+      "/monitor0314/images/Calendar03.jpg","/monitor0314/images/Calendar04.jpg",
+      "/monitor0314/images/Calendar05.jpg","/monitor0314/images/Calendar06.jpg",
+      "/monitor0314/images/Calendar07.jpg","/monitor0314/images/Calendar08.jpg",
+      "/monitor0314/images/Calendar09.jpg","/monitor0314/images/Calendar10.jpg",
+      "/monitor0314/images/Calendar11.jpg","/monitor0314/images/Calendar12.jpg"
     ]'>
     <img src="/monitor0314/icons/Calendar.png">日曆
   </div>
-
   <div class="icon" data-type="folder" id="sampleFolder">
     <img src="/monitor0314/icons/File.png">資料夾
   </div>
-
   <div class="icon" data-type="url" data-src="https://www.google.com/">
     <img src="/monitor0314/icons/google.png">GOOGOO
   </div>
-
-  <div class="icon"
-       id="accountBook"
-       draggable="true"
-       data-type="pdf"
-       data-password="0519"
-       data-hint="紀念日"
-       data-src="/monitor0314/another/ledger.pdf"
-       data-title="帳本PDF">
+  <div class="icon" id="accountBook" draggable="true" data-type="pdf" data-password="0519" data-hint="紀念日" data-src="/monitor0314/another/ledger.pdf" data-title="帳本PDF">
     <img src="/monitor0314/icons/Notepad.png">帳本
   </div>
-
   <div class="icon" data-type="image" data-src="/monitor0314/images/family.jpg">
     <img src="/monitor0314/icons/photo.png">瑪莉亞與喬登
   </div>
-
   <div class="icon" data-type="folder" id="monitorFolder">
     <img src="/monitor0314/icons/monitor.png">監視器
   </div>
@@ -248,314 +216,159 @@ html,body{
 </div>
 
 <script>
-/* ========= 基本節點 ========= */
+/* 基本節點 */
 const modal = document.getElementById('modal');
 const modalBody = document.getElementById('modalBody');
 const closeBtn = document.getElementById('closeBtn');
-closeBtn.onclick = () => closeModal();
-
-function openModal(html){
-  modalBody.innerHTML = html;
-  modal.classList.add('active');
-}
-function closeModal(){
-  modal.classList.remove('active');
-  modalBody.innerHTML = '';
-  document.onkeydown = null;
-}
+closeBtn.onclick = ()=>closeModal();
+function openModal(html){ modalBody.innerHTML=html; modal.classList.add('active'); }
+function closeModal(){ modal.classList.remove('active'); modalBody.innerHTML=''; document.onkeydown=null; }
 
 /* 禁止右鍵 */
 document.addEventListener('contextmenu', e=>e.preventDefault());
 
-/* ========= 預載 ========= */
+/* 預載 */
 document.querySelectorAll('.icon img').forEach(img=>new Image().src=img.src);
-document.querySelectorAll('.icon[data-images]').forEach(icon=>{
-  JSON.parse(icon.dataset.images).forEach(src=>new Image().src=src);
-});
+document.querySelectorAll('.icon[data-images]').forEach(icon=>JSON.parse(icon.dataset.images).forEach(src=>new Image().src=src));
 
-/* ========= 通用：Gallery ========= */
+/* Gallery */
 function openGallery(images){
-  let i = 0;
+  let i=0;
   const render = ()=>{
     openModal(`
       <div class="gallery-container">
         <div class="gallery-btn left">&#10094;</div>
-        <img src="${images[i]}" style="max-width:80vw;max-height:80vh;display:block;margin:0 auto;">
+        <img src="${images[i]}">
         <div class="gallery-btn right">&#10095;</div>
         <p style="text-align:center;">${i+1}/${images.length}</p>
       </div>
     `);
-    const c = modalBody.querySelector('.gallery-container');
-    c.querySelector('.left').onclick = ()=>{ i=(i-1+images.length)%images.length; render(); };
-    c.querySelector('.right').onclick = ()=>{ i=(i+1)%images.length; render(); };
+    const c=modalBody.querySelector('.gallery-container');
+    c.querySelector('.left').onclick=()=>{i=(i-1+images.length)%images.length; render();};
+    c.querySelector('.right').onclick=()=>{i=(i+1)%images.length; render();};
   };
   render();
 }
 
-/* ========= 通用：密碼閘 ========= */
-function passwordGate({length,password,onSuccess,hint}) {
+/* 密碼閘 */
+function passwordGate({length,password,onSuccess,hint}){
   openModal(`
     <p>請輸入密碼</p>
-    ${hint ? `<p style="text-align:center;color:#ccc;font-size:14px;">提示：${hint}</p>` : ''}
-    <div style="display:flex;gap:8px;justify-content:center;">
-      ${'<input class="pwd-box" maxlength="1">'.repeat(length)}
-    </div>
+    ${hint?`<p style="text-align:center;color:#ccc;font-size:14px;">提示：${hint}</p>`:''}
+    <div style="display:flex;gap:8px;justify-content:center;">${'<input class="pwd-box" maxlength="1">'.repeat(length)}</div>
     <button id="pwdConfirm">確定</button>
     <p id="err" style="color:red;display:none;text-align:center;">密碼錯誤</p>
   `);
-
-  const inputs = [...modalBody.querySelectorAll('.pwd-box')];
+  const inputs=[...modalBody.querySelectorAll('.pwd-box')];
   inputs[0].focus();
   inputs.forEach((input,idx)=>{
-    input.addEventListener('input',()=>{
-      input.value = input.value.replace(/\D/g,'');
-      if(input.value && inputs[idx+1]) inputs[idx+1].focus();
-    });
-    input.addEventListener('keydown',e=>{
-      if(e.key==='Backspace' && !input.value && idx>0){
-        inputs[idx-1].focus();
-      }
-    });
+    input.addEventListener('input',()=>{ input.value=input.value.replace(/\D/g,''); if(input.value && inputs[idx+1]) inputs[idx+1].focus(); });
+    input.addEventListener('keydown',e=>{ if(e.key==='Backspace' && !input.value && idx>0) inputs[idx-1].focus(); });
   });
-
   function check(){
-    const val = inputs.map(i=>i.value).join('');
-    if(val === password){
-      document.onkeydown = null;
-      onSuccess();
-    } else {
-      document.getElementById('err').style.display='block';
-      inputs.forEach(i=>i.value='');
-      inputs[0].focus();
-    }
+    const val=inputs.map(i=>i.value).join('');
+    if(val===password){ document.onkeydown=null; onSuccess(); }
+    else{ document.getElementById('err').style.display='block'; inputs.forEach(i=>i.value=''); inputs[0].focus(); }
   }
-
-  document.getElementById('pwdConfirm').onclick = check;
-  document.onkeydown = e=>{ if(e.key==='Enter') check(); };
+  document.getElementById('pwdConfirm').onclick=check;
+  document.onkeydown=e=>{ if(e.key==='Enter') check(); };
 }
 
-/* ========= icon 行為路由 ========= */
-const handlers = {
-  image: icon => openModal(`<img src="${icon.dataset.src}" style="max-width:90vw;max-height:90vh;">`),
-  gallery: icon => openGallery(JSON.parse(icon.dataset.images)),
-  mail: icon => passwordGate({
-    length:3,
-    password:icon.dataset.password,
-    hint: icon.dataset.hint,
-    onSuccess:()=>openGallery(JSON.parse(icon.dataset.images))
-  }),
-  pdf: icon => passwordGate({
-    length:4,
-    password:icon.dataset.password,
-    hint: icon.dataset.hint,
-    onSuccess:()=>openModal(
-      `<iframe src="${icon.dataset.src}" style="width:90vw;height:80vh;" title="${icon.dataset.title||'PDF'}"></iframe>`
-    )
-  }),
-  url: icon => window.open(icon.dataset.src,'_blank')
+/* Icon 行為路由 */
+const handlers={
+  image: icon=>openModal(`<img src="${icon.dataset.src}" style="max-width:90vw;max-height:90vh;">`),
+  gallery: icon=>openGallery(JSON.parse(icon.dataset.images)),
+  mail: icon=>passwordGate({length:3,password:icon.dataset.password,hint:icon.dataset.hint,onSuccess:()=>openGallery(JSON.parse(icon.dataset.images))}),
+  pdf: icon=>passwordGate({length:4,password:icon.dataset.password,hint:icon.dataset.hint,onSuccess:()=>openModal(`<iframe src="${icon.dataset.src}" style="width:90vw;height:80vh;" title="${icon.dataset.title||'PDF'}"></iframe>`) }),
+  url: icon=>window.open(icon.dataset.src,'_blank')
 };
 
-/* ========= icon 綁定 ========= */
+/* Icon 綁定 */
 document.querySelectorAll('.icon').forEach(icon=>{
-  icon.addEventListener('click',()=>{
-    const type = icon.dataset.type;
-    if(!type || type==='folder') return;
-    handlers[type]?.(icon);
-  });
+  icon.addEventListener('click',()=>{ const type=icon.dataset.type; if(!type || type==='folder') return; handlers[type]?.(icon); });
 });
 
-/* ========= 監視器資料夾 ========= */
+/* 監視器資料夾 */
 const monitorFolder=document.getElementById('monitorFolder');
 const folderWin=document.getElementById('monitorFolderWindow');
 const folderContent=document.getElementById('folderContent');
 const folderCloseBtn=document.getElementById('folderCloseBtn');
-const videos=[
-  '/monitor0314/videos/video1.mp4',
-  '/monitor0314/videos/video2.mp4',
-  '/monitor0314/videos/video3.mp4',
-  '/monitor0314/videos/video4.mp4'
-];
+const videos=['/monitor0314/videos/video1.mp4','/monitor0314/videos/video2.mp4','/monitor0314/videos/video3.mp4','/monitor0314/videos/video4.mp4'];
 monitorFolder.onclick=()=>{
-  folderContent.innerHTML=videos.map((v,i)=>`
-    <div class="folder-icon" data-video="${v}">
-      <img src="/monitor0314/icons/monitor.png">
-      <div>監視器 ${i+1}</div>
-    </div>`).join('');
+  folderContent.innerHTML=videos.map((v,i)=>`<div class="folder-icon" data-video="${v}"><img src="/monitor0314/icons/monitor.png"><div>監視器 ${i+1}</div></div>`).join('');
   folderWin.style.display='block';
-  folderContent.querySelectorAll('.folder-icon').forEach(icon=>{
-    icon.onclick=()=>openModal(
-      `<video src="${icon.dataset.video}" controls autoplay style="max-width:80vw;max-height:80vh;"></video>`
-    );
-  });
+  folderContent.querySelectorAll('.folder-icon').forEach(icon=>{ icon.onclick=()=>openModal(`<video src="${icon.dataset.video}" controls autoplay style="max-width:80vw;max-height:80vh;"></video>`); });
 };
 folderCloseBtn.onclick=()=>folderWin.style.display='none';
 
-/* ========= 一般資料夾 ========= */
-const sampleFolder = document.getElementById('sampleFolder');
-const sampleFolderWin = document.getElementById('sampleFolderWindow');
-const sampleFolderContent = document.getElementById('sampleFolderContent');
-const sampleFolderClose = document.getElementById('sampleFolderClose');
-const sampleFiles = [
+/* 一般資料夾 */
+const sampleFolder=document.getElementById('sampleFolder');
+const sampleFolderWin=document.getElementById('sampleFolderWindow');
+const sampleFolderContent=document.getElementById('sampleFolderContent');
+const sampleFolderClose=document.getElementById('sampleFolderClose');
+const sampleFiles=[
   {name:'03/14會議紀錄', text:'不重要的內文'.repeat(90), icon:'/monitor0314/icons/Doc.png'},
   {name:'02/18會議紀錄', text:'不重要的內文'.repeat(90), icon:'/monitor0314/icons/Doc.png'},
   {name:'02/26被質訊內容', text:'不重要的內文'.repeat(90), icon:'/monitor0314/icons/Doc.png'}
 ];
-
-sampleFolder.onclick = () => {
-  sampleFolderContent.innerHTML = sampleFiles.map(file => `
-    <div class="folder-icon" data-name="${file.name}" data-text="${file.text}">
-      <img src="${file.icon}">
-      <div>${file.name}</div>
-    </div>
-  `).join('');
+sampleFolder.onclick=()=>{
+  sampleFolderContent.innerHTML=sampleFiles.map(f=>`<div class="folder-icon" data-name="${f.name}" data-text="${f.text}"><img src="${f.icon}"><div>${f.name}</div></div>`).join('');
   sampleFolderWin.style.display='block';
   sampleFolderContent.querySelectorAll('.folder-icon').forEach(icon=>{
-    icon.onclick = ()=>{
-      const fileName = icon.dataset.name+'.doc';
-      openModal(`
-        <div style="
-          width:760px;
-          max-width:90vw;
-          max-height:85vh;
-          background:#f5f5f5;
-          border:1px solid #888;
-          box-shadow:0 0 25px rgba(0,0,0,.6);
-          display:flex;
-          flex-direction:column;
-        ">
-          <div style="
-            background:#dcdcdc;
-            padding:8px 12px;
-            font-weight:bold;
-            border-bottom:1px solid #999;
-            font-size:15px;
-            flex-shrink:0;
-          ">
-            ${fileName}
-          </div>
-          <div style="
-            padding:32px 40px;
-            background:white;
-            font-size:18px;
-            line-height:1.9;
-            color:#000;
-            overflow-y:auto;
-            flex-grow:1;
-          ">
-            ${icon.dataset.text}
-          </div>
-        </div>
-      `);
+    icon.onclick=()=>{
+      const fileName=icon.dataset.name+'.doc';
+      openModal(`<div style="width:760px; max-width:90vw; max-height:85vh; background:#f5f5f5; border:1px solid #888; box-shadow:0 0 25px rgba(0,0,0,.6); display:flex; flex-direction:column;">
+        <div style="background:#dcdcdc; padding:8px 12px; font-weight:bold; border-bottom:1px solid #999; font-size:15px; flex-shrink:0;">${fileName}</div>
+        <div style="padding:32px 40px; background:white; font-size:18px; line-height:1.9; color:#000; overflow-y:auto; flex-grow:1;">${icon.dataset.text}</div>
+      </div>`);
     };
   });
 };
-sampleFolderClose.onclick = ()=>sampleFolderWin.style.display='none';
+sampleFolderClose.onclick=()=>sampleFolderWin.style.display='none';
 
-/* ========= 拖曳 ========= */
+/* 拖曳帳本到垃圾桶 */
 const book=document.getElementById('accountBook');
 const trash=document.getElementById('trash');
 book.addEventListener('dragstart',e=>e.dataTransfer.setData('x','book'));
 trash.addEventListener('dragover',e=>e.preventDefault());
 trash.addEventListener('drop',e=>{
   if(e.dataTransfer.getData('x')!=='book') return;
-
-  openModal(`
-    <div style="
-      width:360px;
-      background:#ece9d8;
-      border:2px solid #0054e3;
-      box-shadow:4px 4px 15px rgba(0,0,0,.5);
-      font-family:Tahoma, sans-serif;
-    ">
-      <div style="
-        background:linear-gradient(#0054e3,#003399);
-        color:white;
-        padding:6px 10px;
-        font-weight:bold;
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-      ">
-        刪除檔案
-        <span style="cursor:pointer;" onclick="closeModal()">✕</span>
-      </div>
-
-      <div style="padding:16px; display:flex; gap:12px; align-items:flex-start;">
-        <img src="/monitor0314/icons/Trash.png" style="width:32px;height:32px;">
-        <div style="font-size:14px; line-height:1.6; color:#333;">
-          你確定要刪除「帳本」嗎？<br>
-          這個操作無法復原。
-        </div>
-      </div>
-
-      <div style="padding:10px; text-align:right; background:#f3f3f3;">
-        <button id="xpYes" style="
-          padding:4px 14px;
-          margin-right:6px;
-          border:1px solid #7f9db9;
-          background:linear-gradient(#ffffff,#dcdcdc);
-          cursor:pointer;
-        ">是(Y)</button>
-        <button id="xpNo" style="
-          padding:4px 14px;
-          border:1px solid #7f9db9;
-          background:linear-gradient(#ffffff,#dcdcdc);
-          cursor:pointer;
-        ">否(N)</button>
-      </div>
+  openModal(`<div style="width:360px;background:#ece9d8;border:2px solid #0054e3;box-shadow:4px4px15px rgba(0,0,0,.5); font-family:Tahoma,sans-serif;">
+    <div style="background:linear-gradient(#0054e3,#003399);color:white;padding:6px 10px;font-weight:bold;display:flex;justify-content:space-between;align-items:center;">
+      刪除檔案 <span style="cursor:pointer;" onclick="closeModal()">✕</span>
     </div>
-  `);
-
-  document.getElementById('xpYes').onclick = ()=>{
-    book.remove();
-    closeModal();
-  };
-  document.getElementById('xpNo').onclick = closeModal;
+    <div style="padding:16px; display:flex; gap:12px; align-items:flex-start;">
+      <img src="/monitor0314/icons/Trash.png" style="width:32px;height:32px;">
+      <div style="font-size:14px; line-height:1.6; color:#333;">你確定要刪除「帳本」嗎？<br>這個操作無法復原。</div>
+    </div>
+    <div style="padding:10px; text-align:right; background:#f3f3f3;">
+      <button id="xpYes" style="padding:4px 14px; margin-right:6px; border:1px solid #7f9db9; background:linear-gradient(#fff,#dcdcdc); cursor:pointer;">是(Y)</button>
+      <button id="xpNo" style="padding:4px 14px; border:1px solid #7f9db9; background:linear-gradient(#fff,#dcdcdc); cursor:pointer;">否(N)</button>
+    </div>
+  </div>`);
+  document.getElementById('xpYes').onclick=()=>{book.remove(); closeModal();};
+  document.getElementById('xpNo').onclick=closeModal;
 });
 
-
-/* ========= 視窗拖曳 ========= */
+/* 視窗拖曳 */
 function makeDraggable(win){
-  let drag=false,ox,oy;
+  let drag=false, ox, oy;
   const title=win.querySelector('.folder-titlebar');
-  title.onmousedown=e=>{
-    drag=true; ox=e.clientX-win.offsetLeft; oy=e.clientY-win.offsetTop;
-  };
-  document.onmousemove=e=>{
-    if(drag){ win.style.left=(e.clientX-ox)+'px'; win.style.top=(e.clientY-oy)+'px'; }
-  };
-  document.onmouseup=()=>drag=false;
+  title.addEventListener('mousedown', e=>{ drag=true; ox=e.clientX-win.offsetLeft; oy=e.clientY-win.offsetTop; win.style.transition='none'; });
+  document.addEventListener('mousemove', e=>{ if(drag){ win.style.left=e.clientX-ox+'px'; win.style.top=e.clientY-oy+'px'; } });
+  document.addEventListener('mouseup', ()=>{ drag=false; win.style.transition='all .2s'; });
 }
-makeDraggable(folderWin);
 makeDraggable(sampleFolderWin);
+makeDraggable(folderWin);
 
-  function layoutDesktop(){
-  const desktop = document.querySelector('.desktop');
-  const icons = [...desktop.querySelectorAll('.icon')];
-
-  const padding = 20;
-  const colWidth = 100;   // 每一欄寬
-  const rowHeight = 110; // 每一格高
-
-  const maxHeight = desktop.clientHeight - padding;
-
-  let x = padding;
-  let y = padding;
-
-  icons.forEach(icon=>{
-    if(y + rowHeight > maxHeight){
-      y = padding;
-      x += colWidth;
-    }
-    icon.style.left = x + 'px';
-    icon.style.top = y + 'px';
-    y += rowHeight;
-  });
+/* 桌面 ICON 排版 */
+function layoutDesktop(){
+  const icons=document.querySelectorAll('.desktop .icon');
+  const col=5, gapX=100, gapY=100;
+  icons.forEach((icon,i)=>{ const x=(i%col)*gapX; const y=Math.floor(i/col)*gapY; icon.style.left=x+'px'; icon.style.top=y+'px'; });
 }
-
-window.addEventListener('load', layoutDesktop);
 window.addEventListener('resize', layoutDesktop);
-
+layoutDesktop();
 </script>
 </body>
 </html>
