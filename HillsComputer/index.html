@@ -129,12 +129,13 @@ html,body{
   background:white; /* 內容白底 */
 }
 .folder-window .close-btn{
-  background:#ff4c4c; /* X 按鈕 */
+  background:#0a64ad;
   color:white;
   border:none;
-  padding:4px 10px;
-  border-radius:6px;
+  padding:4px 6px;
+  border-radius:4px;
   cursor:pointer;
+  font-weight:bold;
   z-index:10;
 }
 .folder-icon{
@@ -532,57 +533,34 @@ trash.addEventListener('dragover',e=>e.preventDefault());
 trash.addEventListener('drop',e=>{
   if(e.dataTransfer.getData('x')!=='book') return;
 
-modalBody.innerHTML = `
-  <div style="
-    position:relative;
-    width:90vw;
-    max-width:400px;
-    background:#ece9d8;
-    border:1px solid #ccc;
-    box-shadow:2px 2px 12px rgba(0,0,0,.3);
-    display:flex;
-    flex-direction:column;
-  ">
-    <div style="
-      background:#0a64ad;
-      color:white;
-      font-weight:bold;
-      padding:6px 10px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-    ">
-      <span>刪除確認</span>
-      <button id="modalCloseBtn" style="
-        background:none;
-        border:none;
-        color:white;
-        font-size:16px;
-        cursor:pointer;
-      ">✕</button>
-    </div>
-    <div style="padding:16px; font-size:14px; color:#333;">
-      <img src="/monitor0314/icons/Trash.png" style="width:32px;height:32px; vertical-align:middle; margin-right:8px;">
-      你確定要刪除「帳本」嗎？<br>這個操作無法復原。
-    </div>
-    <div style="padding:10px; text-align:right; background:#f3f3f3;">
-      <button id="xpYes" style="
-        padding:4px 14px;
-        margin-right:6px;
-        border:1px solid #7f9db9;
-        background:linear-gradient(#ffffff,#dcdcdc);
-        cursor:pointer;
-      ">是(Y)</button>
-      <button id="xpNo" style="
-        padding:4px 14px;
-        border:1px solid #7f9db9;
-        background:linear-gradient(#ffffff,#dcdcdc);
-        cursor:pointer;
-      ">否(N)</button>
-    </div>
+openModal(`
+  <div style="padding:16px; font-size:14px; color:#333; display:flex; align-items:center; gap:8px;">
+    <img src="/monitor0314/icons/Trash.png" style="width:32px;height:32px;">
+    你確定要刪除「帳本」嗎？<br>這個操作無法復原。
   </div>
-`;
-document.getElementById('modalCloseBtn').onclick = closeModal;
+  <div style="padding:10px; text-align:right;">
+    <button id="xpYes" style="
+      padding:4px 14px;
+      margin-right:6px;
+      border:1px solid #7f9db9;
+      background:linear-gradient(#ffffff,#dcdcdc);
+      cursor:pointer;
+    ">是(Y)</button>
+    <button id="xpNo" style="
+      padding:4px 14px;
+      border:1px solid #7f9db9;
+      background:linear-gradient(#ffffff,#dcdcdc);
+      cursor:pointer;
+    ">否(N)</button>
+  </div>
+`, '刪除確認');
+
+document.getElementById('xpYes').onclick = ()=>{ 
+  book.remove(); 
+  closeModal(); 
+};
+document.getElementById('xpNo').onclick = closeModal;
+
 
 
 
