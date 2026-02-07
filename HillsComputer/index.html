@@ -13,14 +13,13 @@ html,body{
   font-family:system-ui;
 }
 .desktop{
+  position:relative;   /* ← 讓 icon 用座標定位 */
   height:100%;
   padding:20px;
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  align-items:flex-start;
 }
+
 .icon{
+  position:absolute;  /* ← 由 JS 控制 top / left */
   width:80px;
   display:flex;
   flex-direction:column;
@@ -474,6 +473,34 @@ function makeDraggable(win){
 }
 makeDraggable(folderWin);
 makeDraggable(sampleFolderWin);
+
+  function layoutDesktop(){
+  const desktop = document.querySelector('.desktop');
+  const icons = [...desktop.querySelectorAll('.icon')];
+
+  const padding = 20;
+  const colWidth = 100;   // 每一欄寬
+  const rowHeight = 110; // 每一格高
+
+  const maxHeight = desktop.clientHeight - padding;
+
+  let x = padding;
+  let y = padding;
+
+  icons.forEach(icon=>{
+    if(y + rowHeight > maxHeight){
+      y = padding;
+      x += colWidth;
+    }
+    icon.style.left = x + 'px';
+    icon.style.top = y + 'px';
+    y += rowHeight;
+  });
+}
+
+window.addEventListener('load', layoutDesktop);
+window.addEventListener('resize', layoutDesktop);
+
 </script>
 </body>
 </html>
