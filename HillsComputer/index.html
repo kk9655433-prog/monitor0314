@@ -456,7 +456,12 @@ const trash=document.getElementById('trash');
 book.addEventListener('dragstart',e=>e.dataTransfer.setData('x','book'));
 trash.addEventListener('dragover',e=>e.preventDefault());
 trash.addEventListener('drop',e=>{
-  if(e.dataTransfer.getData('x')==='book') book.remove();
+  if(e.dataTransfer.getData('x')==='book'){
+    const ok = confirm("你確定要刪除帳本嗎？\n這個操作無法復原。");
+    if(ok){
+      book.remove();
+    }
+  }
 });
 
 /* ========= 視窗拖曳 ========= */
