@@ -115,16 +115,6 @@ html,body{
   font-size: 16px;
   font-weight: bold;
 }
-.folder-window .close-btn{
-  background:#0a64ad;
-  color:white;
-  border:none;
-  padding:4px 6px;
-  border-radius:4px;
-  cursor:pointer;
-  font-weight:bold;
-  z-index:10;
-}
 .folder-icon{
   width:80px; text-align:center; cursor:pointer;
 }
@@ -278,7 +268,6 @@ function openModal(contentHTML, title='視窗', size='normal'){
   width:${width};
   max-width:90vw;
   max-height:85vh;
-  overflow:auto;
   background:#ece9d8;
   border:2px solid #0054e3;
   box-shadow:4px 4px 15px rgba(0,0,0,.5);
@@ -323,24 +312,7 @@ document.querySelectorAll('.icon[data-images]').forEach(icon=>{
   JSON.parse(icon.dataset.images).forEach(src=>new Image().src=src);
 });
 
-/* ========= 通用：Gallery ========= */
-function openGallery(images){
-  let i = 0;
-  const render = ()=>{
-    openModal(`
-      <div class="gallery-container">
-        <div class="gallery-btn left">&#10094;</div>
-        <img src="${images[i]}" style="max-width:80vw;max-height:80vh;display:block;margin:0 auto;">
-        <div class="gallery-btn right">&#10095;</div>
-        <p style="text-align:center;">${i+1}/${images.length}</p>
-      </div>
-    `);
-    const c = modalBody.querySelector('.gallery-container');
-    c.querySelector('.left').onclick = ()=>{ i=(i-1+images.length)%images.length; render(); };
-    c.querySelector('.right').onclick = ()=>{ i=(i+1)%images.length; render(); };
-  };
-  render();
-}
+
 
 /* ========= 通用：密碼閘 ========= */
 function passwordGate({length,password,onSuccess,hint}) {
@@ -623,17 +595,6 @@ document.getElementById('xpYes').onclick = ()=>{
   closeModal(); 
 };
 document.getElementById('xpNo').onclick = closeModal;
-
-
-
-
-  document.getElementById('xpYes').onclick = ()=>{
-    book.remove();
-    closeModal();
-  };
-  document.getElementById('xpNo').onclick = closeModal;
-});
-
 
 /* ========= 視窗拖曳 ========= */
 function makeDraggable(win){
