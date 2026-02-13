@@ -443,7 +443,7 @@ window.addEventListener('resize', layoutDesktop);
 
 document.querySelectorAll('.desktop .icon').forEach(icon => {
   const type = icon.dataset.type;
-  if(type && handlers[type]) {
+  if(type && type !== 'folder' && handlers[type]) {
     icon.onclick = () => handlers[type](icon);
   }
 });
