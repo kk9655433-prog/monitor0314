@@ -447,23 +447,143 @@ document.querySelectorAll('.desktop .icon').forEach(icon => {
     icon.onclick = () => handlers[type](icon);
   }
 });
-  // 資料夾
+/* ========= 一般資料夾 ========= */
 const sampleFolder = document.getElementById('sampleFolder');
-const sampleFolderWindow = document.getElementById('sampleFolderWindow');
-document.getElementById('sampleFolderClose').onclick = () => sampleFolderWindow.style.display='none';
+const sampleFolderWin = document.getElementById('sampleFolderWindow');
+const sampleFolderContent = document.getElementById('sampleFolderContent');
+const sampleFolderClose = document.getElementById('sampleFolderClose');
+
+const sampleFiles = [
+  {name:'03/14會議紀錄', text:'不重要的內文'.repeat(90), icon:'/monitor0314/icons/Doc.png'},
+  {name:'02/18會議紀錄', text:'不重要的內文'.repeat(90), icon:'/monitor0314/icons/Doc.png'},
+  {name:'02/26被質訊內容', text:'不重要的內文'.repeat(90), icon:'/monitor0314/icons/Doc.png'}
+];
 
 sampleFolder.onclick = () => {
-  sampleFolderWindow.style.display = 'flex';
+  sampleFolderContent.innerHTML = sampleFiles.map(file => `
+    <div class="folder-icon" data-name="${file.name}" data-text="${file.text}">
+      <img src="${file.icon}">
+      <div>${file.name}</div>
+    </div>
+  `).join('');
+
+  sampleFolderWin.style.display='block';
+
+  sampleFolderContent.querySelectorAll('.folder-icon').forEach(icon=>{
+    icon.onclick = ()=>{
+      const fileName = icon.dataset.name+'.doc';
+      modalBody.innerHTML = `
+        <div style="
+          position:relative;
+          width:90vw; max-width:760px; max-height:85vh;
+          background:#f5f5f5; border:1px solid #888; box-shadow:0 0 25px rgba(0,0,0,.6);
+          display:flex; flex-direction:column;">
+          <button style="
+            position:absolute; top:8px; right:12px;
+            background:#ff4c4c; border:none; color:white;
+            padding:4px 10px; border-radius:6px; cursor:pointer; z-index:10;"
+            onclick="closeModal()">✕</button>
+          <div style="
+            background:#dcdcdc; padding:8px 12px; font-weight:bold;
+            border-bottom:1px solid #999; font-size:15px; flex-shrink:0;">
+            ${fileName}
+          </div>
+          <div style="
+            padding:16px; background:white; font-size:18px;
+            line-height:1.6; color:#000; overflow:auto;
+            flex-grow:1; word-break:break-word;">
+            ${icon.dataset.text}
+          </div>
+        </div>
+      `;
+      modal.classList.add('active');
+    };
+  });
 };
 
-// 監視器
-const monitorFolder = document.getElementById('monitorFolder');
-const monitorFolderWindow = document.getElementById('monitorFolderWindow');
-document.getElementById('folderCloseBtn').onclick = () => monitorFolderWindow.style.display='none';
+sampleFolderClose.onclick = ()=>sampleFolderWin.style.display='none';
 
-monitorFolder.onclick = () => {
-  monitorFolderWindow.style.display = 'flex';
+/* ========= 拖曳帳本 ========= */
+const book=document.getElementById('accountBook');
+const trash=document.getElementById('trash');
+
+book.addEventListener('dragstart', e=>e.dataTransfer.setData('x','book'));
+trash.addEventListener('dragover', e=>e.preventDefault());
+trash.addEventListener('drop', e=>{
+  if(e.dataTransfer.getData('x')!=='book') return;
+  openModal(
+    `<div style="padding:16px; font-size:14px; color:#333; display:flex; align-items:center; gap:8px;">
+      <img src="/monitor0314/icons/Trash.png" style="width:32px;height:32px;">
+      你確定要刪除「帳本」嗎？<br>這個操作無法復原。
+    </div>
+    <div style="padding:10px; text-align:right;">
+      <button id="xpYes" style="padding:4px 14px; margin-right:6px; border:1px solid #7f9db9; background:linear-gradient(#ffffff,#dcdcdc); cursor:pointer;">是(Y)</button>
+      <button id="xpNo" style="padding:4px 14px; border:1px solid #7f9db9; background:linear-gradient(#ffffff,#dcdcdc); cursor:pointer;">否(N)</button>
+    </div>`,
+    '刪除確認',
+    'small'
+  );
+  document.getElementById('xpYes').onclick = ()=>{ book.remove(); closeModal(); };
+  document.getElementById('xpNo').onclick = closeModal;
+});
+
+/* ========= 資料夾拖曳 ========= */
+function makeDraggable(win){
+  let drag=false, ox, oy;
+  const title=win.querySelector('.folder-titlebar');
+  title.onmousedown = e => { drag=true; ox=e.clientX-win.offsetLeft; oy=e.clientY-win.offsetTop; };
+  document.onmousemove = e => { if(drag){ win.style.left=(e.clientX-ox)+'px'; win.style.top=(e.clientY-oy)+'px'; } };
+  document.onmouseup = ()=>drag=false;
+}
+
+makeDraggable(document.getElementById('monitorFolderWindow'));
+makeDraggable(sampleFolderWin);
+
+/* ========= 監視器資料夾 ========= */
+const monitorFolder=document.getElementById('monitorFolder');
+const folderWin=document.getElementById('monitorFolderWindow');
+const folderContent=document.getElementById('folderContent');
+const folderCloseBtn=document.getElementById('folderCloseBtn');
+
+const videos=[
+  '/monitor0314/videos/video1.mp4',
+  '/monitor0314/videos/video2.mp4',
+  '/monitor0314/videos/video3.mp4',
+  '/monitor0314/videos/video4.mp4'
+];
+
+monitorFolder.onclick = ()=>{
+  folderContent.innerHTML = videos.map((v,i)=>`
+    <div class="folder-icon" data-video="${v}">
+      <img src="/monitor0314/icons/monitor.png">
+      <div>監視器 ${i+1}</div>
+    </div>
+  `).join('');
+
+  folderWin.style.display='block';
+
+  folderContent.querySelectorAll('.folder-icon').forEach(icon=>{
+    icon.onclick = ()=>{
+      modal.classList.add('active');
+      modalBody.innerHTML = `
+        <div style="
+          position:relative;
+          display:flex; justify-content:center; align-items:center;
+          height:80vh;">
+          <button onclick="closeModal()" style="
+            position:absolute; top:-40px; right:0;
+            background:#ff4c4c; border:none; color:white;
+            padding:4px 10px; border-radius:6px; cursor:pointer;">✕</button>
+          <video src="${icon.dataset.video}" controls autoplay style="max-width:90vw; max-height:80vh;">
+          </video>
+        </div>
+      `;
+    };
+  });
 };
+
+folderCloseBtn.onclick = ()=>folderWin.style.display='none';
+
 </script>
 
 </body>
