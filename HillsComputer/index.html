@@ -48,8 +48,6 @@ html,body{
   pointer-events:none;
   transition:.3s;
   z-index:9999;
-  overflow:auto;
-  padding:40px 20px;
 }
 .modal.active{
   opacity:1;
@@ -139,6 +137,33 @@ html,body{
   gap:20px;
   padding:15px;
   align-content:flex-start;
+}
+  .side-btn{
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:80px;   /* ← 控制可點擊區寬度 */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+  color:white;
+  background:rgba(0,0,0,0.25);
+  cursor:pointer;
+  user-select:none;
+  transition:background .2s;
+}
+
+.side-btn:hover{
+  background:rgba(0,0,0,0.45);
+}
+
+.left-side{
+  left:0;
+}
+
+.right-side{
+  right:0;
 }
 /* 日曆左右控制樣式 */
 .gallery-container{
@@ -387,25 +412,45 @@ const handlers = {
          style="max-width:100%; max-height:70vh; height:auto;">
   </div>
 `, icon.innerText),
-  gallery: icon => {
-    let i = 0;
-    const images = JSON.parse(icon.dataset.images);
-    const render = ()=>{
-      openModal(`
-        <div style="text-align:center;">
-          <img src="${images[i]}" style="max-width:100%; max-height:70vh; height:auto;">
-          <div style="margin-top:8px;">${i+1}/${images.length}</div>
-          <div style="margin-top:6px;">
-            <button onclick="prevImg()">‹</button>
-            <button onclick="nextImg()">›</button>
-          </div>
-        </div>
-      `);
+gallery: icon => {
+  let i = 0;
+  const images = JSON.parse(icon.dataset.images);
+
+  const render = () => {
+    openModal(`
+      <div style="
+        position:relative;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+      ">
+        
+        <div class="side-btn left-side">❮</div>
+
+        <img src="${images[i]}" 
+             style="max-width:80vw; max-height:70vh; height:auto;">
+
+        <div class="side-btn right-side">❯</div>
+
+      </div>
+      <div style="text-align:center;margin-top:10px;">
+        ${i+1} / ${images.length}
+      </div>
+    `);
+
+    document.querySelector('.left-side').onclick = () => {
+      i = (i - 1 + images.length) % images.length;
+      render();
     };
-    window.prevImg = ()=>{ i=(i-1+images.length)%images.length; render(); };
-    window.nextImg = ()=>{ i=(i+1)%images.length; render(); };
-    render();
-  },
+
+    document.querySelector('.right-side').onclick = () => {
+      i = (i + 1) % images.length;
+      render();
+    };
+  };
+
+  render();
+}
   mail: icon => passwordGate({
     length:3,
     password:icon.dataset.password,
