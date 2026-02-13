@@ -447,6 +447,23 @@ document.querySelectorAll('.desktop .icon').forEach(icon => {
     icon.onclick = () => handlers[type](icon);
   }
 });
+  // 資料夾
+const sampleFolder = document.getElementById('sampleFolder');
+const sampleFolderWindow = document.getElementById('sampleFolderWindow');
+document.getElementById('sampleFolderClose').onclick = () => sampleFolderWindow.style.display='none';
+
+sampleFolder.onclick = () => {
+  sampleFolderWindow.style.display = 'flex';
+};
+
+// 監視器
+const monitorFolder = document.getElementById('monitorFolder');
+const monitorFolderWindow = document.getElementById('monitorFolderWindow');
+document.getElementById('folderCloseBtn').onclick = () => monitorFolderWindow.style.display='none';
+
+monitorFolder.onclick = () => {
+  monitorFolderWindow.style.display = 'flex';
+};
 </script>
 
 </body>
