@@ -188,7 +188,7 @@ html,body{
   </div>
 
   <div class="icon" data-type="gallery"
-    data-images='[
+    data-images='[ 
       "/monitor0314/images/Calendar01.jpg",
       "/monitor0314/images/Calendar02.jpg",
       "/monitor0314/images/Calendar03.jpg",
@@ -293,7 +293,6 @@ function openModal(contentHTML, title='視窗', size='normal'){
     </div>
   `;
 
-
   document.getElementById('modalCloseBtn').onclick = closeModal;
 }
 
@@ -311,8 +310,6 @@ document.querySelectorAll('.icon img').forEach(img=>new Image().src=img.src);
 document.querySelectorAll('.icon[data-images]').forEach(icon=>{
   JSON.parse(icon.dataset.images).forEach(src=>new Image().src=src);
 });
-
-
 
 /* ========= 通用：密碼閘 ========= */
 function passwordGate({length,password,onSuccess,hint}) {
@@ -376,14 +373,10 @@ gallery: icon => {
         align-items:center;
         justify-content:center;
       ">
-        
         <div class="side-btn left-side">❮</div>
-
         <img src="${images[i]}" 
              style="max-width:80vw; max-height:70vh; height:auto;">
-
         <div class="side-btn right-side">❯</div>
-
       </div>
       <div style="text-align:center;margin-top:10px;">
         ${i+1} / ${images.length}
@@ -418,70 +411,6 @@ gallery: icon => {
   url: icon => window.open(icon.dataset.src,'_blank')
 };
 
-
-/* ========= icon 綁定 ========= */
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.icon').forEach(icon=>{
-    icon.addEventListener('click',()=>{
-      const type = icon.dataset.type;
-      if(!type || type==='folder') return;
-      handlers[type]?.(icon);
-    });
-  });
-});
-
-/* ========= 監視器資料夾 ========= */
-const monitorFolder=document.getElementById('monitorFolder');
-const folderWin=document.getElementById('monitorFolderWindow');
-const folderContent=document.getElementById('folderContent');
-const folderCloseBtn=document.getElementById('folderCloseBtn');
-const videos=[
-  '/monitor0314/videos/video1.mp4',
-  '/monitor0314/videos/video2.mp4',
-  '/monitor0314/videos/video3.mp4',
-  '/monitor0314/videos/video4.mp4'
-];
-monitorFolder.onclick=()=>{
-  folderContent.innerHTML=videos.map((v,i)=>`
-    <div class="folder-icon" data-video="${v}">
-      <img src="/monitor0314/icons/monitor.png">
-      <div>監視器 ${i+1}</div>
-    </div>`).join('');
-  folderWin.style.display='block';
-  folderContent.querySelectorAll('.folder-icon').forEach(icon=>{
-    icon.onclick=()=>{
-  modal.classList.add('active');
-  modalBody.innerHTML = `
-    <div style="
-      position:relative;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height:80vh;
-    ">
-      <button onclick="closeModal()" style="
-        position:absolute;
-        top:-40px;
-        right:0;
-        background:#ff4c4c;
-        border:none;
-        color:white;
-        padding:4px 10px;
-        border-radius:6px;
-        cursor:pointer;
-      ">✕</button>
-
-      <video src="${icon.dataset.video}" controls autoplay
-        style="max-width:90vw; max-height:80vh;">
-      </video>
-    </div>
-  `;
-};
-
-  });
-};
-folderCloseBtn.onclick=()=>folderWin.style.display='none';
-
 /* ========= 一般資料夾 ========= */
 const sampleFolder = document.getElementById('sampleFolder');
 const sampleFolderWin = document.getElementById('sampleFolderWindow');
@@ -504,7 +433,7 @@ sampleFolder.onclick = () => {
   sampleFolderContent.querySelectorAll('.folder-icon').forEach(icon=>{
     icon.onclick = ()=>{
       const fileName = icon.dataset.name+'.doc';
-modalBody.innerHTML = `
+      modalBody.innerHTML = `
   <div style="
     position:relative;
     width:90vw;
@@ -553,13 +482,12 @@ modalBody.innerHTML = `
   </div>
 `;
 modal.classList.add('active');
-
     };
   });
 };
 sampleFolderClose.onclick = ()=>sampleFolderWin.style.display='none';
 
-/* ========= 拖曳 ========= */
+/* ========= 拖曳帳本 ========= */
 const book=document.getElementById('accountBook');
 const trash=document.getElementById('trash');
 book.addEventListener('dragstart',e=>e.dataTransfer.setData('x','book'));
@@ -587,16 +515,16 @@ openModal(`
       cursor:pointer;
     ">否(N)</button>
   </div>
-`, '刪除確認', 'small'); // 我們可以加個 small 參數
-
+`, '刪除確認', 'small');
 
 document.getElementById('xpYes').onclick = ()=>{ 
   book.remove(); 
   closeModal(); 
 };
 document.getElementById('xpNo').onclick = closeModal;
+});
 
-/* ========= 視窗拖曳 ========= */
+/* ========= 資料夾拖曳 ========= */
 function makeDraggable(win){
   let drag=false,ox,oy;
   const title=win.querySelector('.folder-titlebar');
@@ -608,10 +536,62 @@ function makeDraggable(win){
   };
   document.onmouseup=()=>drag=false;
 }
-makeDraggable(folderWin);
+makeDraggable(document.getElementById('monitorFolderWindow'));
 makeDraggable(sampleFolderWin);
 
-  function layoutDesktop(){
+/* ========= 監視器資料夾 ========= */
+const monitorFolder=document.getElementById('monitorFolder');
+const folderWin=document.getElementById('monitorFolderWindow');
+const folderContent=document.getElementById('folderContent');
+const folderCloseBtn=document.getElementById('folderCloseBtn');
+const videos=[
+  '/monitor0314/videos/video1.mp4',
+  '/monitor0314/videos/video2.mp4',
+  '/monitor0314/videos/video3.mp4',
+  '/monitor0314/videos/video4.mp4'
+];
+monitorFolder.onclick=()=>{
+  folderContent.innerHTML=videos.map((v,i)=>`
+    <div class="folder-icon" data-video="${v}">
+      <img src="/monitor0314/icons/monitor.png">
+      <div>監視器 ${i+1}</div>
+    </div>`).join('');
+  folderWin.style.display='block';
+  folderContent.querySelectorAll('.folder-icon').forEach(icon=>{
+    icon.onclick=()=>{
+      modal.classList.add('active');
+      modalBody.innerHTML = `
+      <div style="
+        position:relative;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        height:80vh;
+      ">
+        <button onclick="closeModal()" style="
+          position:absolute;
+          top:-40px;
+          right:0;
+          background:#ff4c4c;
+          border:none;
+          color:white;
+          padding:4px 10px;
+          border-radius:6px;
+          cursor:pointer;
+        ">✕</button>
+
+        <video src="${icon.dataset.video}" controls autoplay
+          style="max-width:90vw; max-height:80vh;">
+        </video>
+      </div>
+      `;
+    };
+  });
+};
+folderCloseBtn.onclick=()=>folderWin.style.display='none';
+
+/* ========= 布局桌面 ========= */
+function layoutDesktop(){
   const desktop = document.querySelector('.desktop');
   const icons = [...desktop.querySelectorAll('.icon')];
 
@@ -635,9 +615,10 @@ makeDraggable(sampleFolderWin);
   });
 }
 
-window.addEventListener('DOMContentLoaded', layoutDesktop);
+/* ========= 初始化 ========= */
+window.addEventListener('load', layoutDesktop);
 window.addEventListener('resize', layoutDesktop);
-  
+
 </script>
 </body>
 </html>
