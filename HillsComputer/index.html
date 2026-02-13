@@ -619,6 +619,13 @@ function layoutDesktop(){
 window.addEventListener('load', layoutDesktop);
 window.addEventListener('resize', layoutDesktop);
 
+document.querySelectorAll('.desktop .icon').forEach(icon => {
+  const type = icon.dataset.type;
+  if(type && handlers[type]) {
+    icon.onclick = () => handlers[type](icon);
+  }
+});
+  
 </script>
 </body>
 </html>
