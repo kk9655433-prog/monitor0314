@@ -48,6 +48,8 @@ html,body{
   pointer-events:none;
   transition:.3s;
   z-index:9999;
+  overflow:auto;
+  padding:40px 20px;
 }
 .modal.active{
   opacity:1;
@@ -267,12 +269,16 @@ function openModal(contentHTML, title='視窗', size='normal'){
   let width = size==='small' ? '300px' : '600px';
 
   modalBody.innerHTML = `
-    <div class="modal-inner" style="
+<div class="modal-inner" style="
   width:${width};
   max-width:90vw;
+  max-height:85vh;
+  overflow:auto;
   background:#ece9d8;
   border:2px solid #0054e3;
   box-shadow:4px 4px 15px rgba(0,0,0,.5);
+  display:flex;
+  flex-direction:column;
 ">
       <div style="
         background:linear-gradient(#0054e3,#003399);
@@ -375,14 +381,19 @@ function passwordGate({length,password,onSuccess,hint}) {
 
 /* ========= icon 行為路由 ========= */
 const handlers = {
-  image: icon => openModal(`<img src="${icon.dataset.src}" style="max-width:100%;height:auto;">`, icon.innerText),
+  image: icon => openModal(`
+  <div style="text-align:center;">
+    <img src="${icon.dataset.src}" 
+         style="max-width:100%; max-height:70vh; height:auto;">
+  </div>
+`, icon.innerText),
   gallery: icon => {
     let i = 0;
     const images = JSON.parse(icon.dataset.images);
     const render = ()=>{
       openModal(`
         <div style="text-align:center;">
-          <img src="${images[i]}" style="max-width:100%;height:auto;">
+          <img src="${images[i]}" style="max-width:100%; max-height:70vh; height:auto;">
           <div style="margin-top:8px;">${i+1}/${images.length}</div>
           <div style="margin-top:6px;">
             <button onclick="prevImg()">‹</button>
