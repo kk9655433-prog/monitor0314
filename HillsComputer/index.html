@@ -265,7 +265,7 @@ function openModal(contentHTML, title='視窗', size='normal'){
 
   modalBody.innerHTML = `
 <div class="modal-inner" style="
-  width:${width};
+  width:auto;
   max-width:90vw;
   max-height:85vh;
   background:#ece9d8;
@@ -360,7 +360,7 @@ const handlers = {
     <img src="${icon.dataset.src}" 
          style="max-width:100%; max-height:70vh; height:auto;">
   </div>
-`, icon.innerText),
+`, icon.dataset.title || icon.innerText)
 gallery: icon => {
   let i = 0;
   const images = JSON.parse(icon.dataset.images);
@@ -402,12 +402,16 @@ gallery: icon => {
     hint: icon.dataset.hint,
     onSuccess:()=>handlers.gallery(icon)
   }),
-  pdf: icon => passwordGate({
-    length:4,
-    password:icon.dataset.password,
-    hint: icon.dataset.hint,
-    onSuccess:()=>openModal(`<iframe src="${icon.dataset.src}" style="width:100%;height:400px;"></iframe>`)
-  }),
+pdf: icon => passwordGate({
+  length:4,
+  password:icon.dataset.password,
+  hint: icon.dataset.hint,
+  onSuccess:()=>openModal(
+    `<iframe src="${icon.dataset.src}" style="width:100%;height:400px;"></iframe>`,
+    icon.dataset.title || icon.innerText
+  )
+})
+
   url: icon => window.open(icon.dataset.src,'_blank')
 };
 
