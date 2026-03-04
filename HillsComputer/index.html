@@ -168,24 +168,38 @@ html,body{
     <img src="/monitor0314/icons/Trash.png">資源回收桶
   </div>
 
-  <div class="icon"
-       data-type="mail"
-       data-password="528"
-       data-hint="記事本"
-       data-images='[
-       "/monitor0314/images/mail01.jpg",
-       "/monitor0314/images/mail02.jpg",
-       "/monitor0314/images/mail03.jpg",
-       "/monitor0314/images/mail04.jpg",
-       "/monitor0314/images/mail05.jpg",
-       "/monitor0314/images/mail06.jpg",
-       "/monitor0314/images/mail07.jpg",
-       "/monitor0314/images/mail08.jpg",
-       "/monitor0314/images/mail09.jpg",
-       "/monitor0314/images/mail10.jpg"
-       ]'>
-    <img src="/monitor0314/icons/email.png">電子郵件
-  </div>
+<div class="icon"
+     data-type="mail"
+     data-password="508"
+     data-hint="　"
+     data-mails='[
+       {
+         "fromName":"寄件人 A",
+         "fromEmail":"senderA@gmail.com",
+         "toName":"我",
+         "subject":"信件標題A",
+         "date":"2026-03-05",
+         "body":"詳細內文詳細內文詳細內文詳細內文詳細內文詳細內文詳細內文詳細內文詳細內文詳細內文"
+       },
+       {
+         "fromName":"寄件人 B",
+         "fromEmail":"senderB@gmail.com",
+         "toName":"我",
+         "subject":"信件標題B",
+         "date":"2026-03-04",
+         "body":"這是B的詳細內文。這是B的詳細內文。這是B的詳細內文。這是B的詳細內文。這是B的詳細內文。"
+       },
+       {
+         "fromName":"寄件人 C",
+         "fromEmail":"senderC@gmail.com",
+         "toName":"我",
+         "subject":"信件標題C",
+         "date":"2026-03-03",
+         "body":"這是C的詳細內文。這是C的詳細內文。這是C的詳細內文。這是C的詳細內文。"
+       }
+     ]'>
+  <img src="/monitor0314/icons/email.png">電子郵件
+</div>
 
   <div class="icon" data-type="gallery"
     data-images='[ 
@@ -389,12 +403,109 @@ const handlers = {
     render();
   },
 
-  mail: icon => passwordGate({
-    length:3,
-    password:icon.dataset.password,
-    hint: icon.dataset.hint,
-    onSuccess:()=>handlers.gallery(icon)
-  }),
+mail: icon => passwordGate({
+  length:3,
+  password: icon.dataset.password,
+  hint: icon.dataset.hint,
+  onSuccess: () => {
+    const mails = JSON.parse(icon.dataset.mails || '[]');
+
+    const esc = (s='') => String(s).replace(/[&<>"']/g, m => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[m]));
+
+    const snippet = (s='', n=36) => {
+      const t = String(s).replace(/\s+/g,' ').trim();
+      return t.length > n ? t.slice(0, n) + '…' : t;
+    };
+
+    const openList = () => {
+      const rows = mails.map((m, idx) => `
+        <div class="mail-row" data-idx="${idx}" style="
+          display:flex; align-items:flex-start; gap:12px;
+          padding:10px 8px; border-bottom:1px solid #c9c9c9;
+          cursor:pointer;
+        ">
+          <div style="min-width:92px; font-weight:700; color:#000;">
+            ${esc(m.fromName)}
+          </div>
+
+          <div style="flex:1; min-width:0;">
+            <div style="color:#000; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+              ${esc(m.subject)}
+              <span style="font-weight:400; color:#666;">
+                - ${esc(snippet(m.body))}
+              </span>
+            </div>
+          </div>
+
+          <div style="min-width:92px; text-align:right; color:#000;">
+            ${esc(m.date)}
+          </div>
+        </div>
+      `).join('');
+
+      openModal(`
+        <div style="width:760px; max-width:90vw;">
+          <div style="font-size:13px; color:#444; margin-bottom:8px;">
+            收件匣
+          </div>
+          <div style="border:1px solid #b6b6b6; background:#fff;">
+            ${rows || `<div style="padding:14px; color:#666;">（沒有信件）</div>`}
+          </div>
+        </div>
+      `, '電子郵件');
+
+      modalBody.querySelectorAll('.mail-row').forEach(r => {
+        r.onclick = () => openDetail(parseInt(r.dataset.idx, 10));
+      });
+    };
+
+    const openDetail = (idx) => {
+      const m = mails[idx];
+      if (!m) return;
+
+      openModal(`
+        <div style="width:760px; max-width:90vw;">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+            <button id="mailBack" style="
+              padding:4px 10px;
+              border:1px solid #7f9db9;
+              background:linear-gradient(#ffffff,#dcdcdc);
+              cursor:pointer;
+              font-size:13px;
+            ">← 回上一頁</button>
+          </div>
+
+          <div style="font-size:20px; font-weight:800; color:#000; margin-bottom:10px;">
+            ${esc(m.subject)}
+          </div>
+
+          <div style="font-size:14px; color:#000; line-height:1.5; margin-bottom:12px;">
+            <div><b>${esc(m.fromName)}</b> (${esc(m.fromEmail)})</div>
+            <div>寄給 ${esc(m.toName || '我')}</div>
+            <div style="color:#666; margin-top:4px;">${esc(m.date)}</div>
+          </div>
+
+          <div style="
+            border:1px solid #b6b6b6;
+            background:#fff;
+            padding:14px;
+            font-size:16px;
+            color:#000;
+            line-height:1.7;
+            white-space:pre-wrap;
+            word-break:break-word;
+          ">${esc(m.body)}</div>
+        </div>
+      `, '電子郵件');
+
+      document.getElementById('mailBack').onclick = openList;
+    };
+
+    openList();
+  }
+}),
 
   pdf: icon => passwordGate({
   length:4,
